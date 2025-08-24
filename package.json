@@ -1,0 +1,30 @@
+{
+  "name": "ai-description-generator",
+  "version": "1.0.0",
+  "description": "SolTecGen AI Product Description Generator - Transform Product URLs into Converting Copy",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build process required for static site'",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [
+    "ai",
+    "product-descriptions",
+    "ecommerce",
+    "openai",
+    "stripe",
+    "seo"
+  ],
+  "author": "SolTecGen",
+  "license": "ISC",
+  "dependencies": {
+    "openai": "^4.52.7"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.32.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

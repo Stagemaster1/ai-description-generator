@@ -1,0 +1,270 @@
+const { OpenAI } = require('openai');
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// Brand tone configurations
+const brandTones = {
+  luxury: "Write in a sophisticated, premium tone that emphasizes quality, exclusivity, and elegance. Use refined language that appeals to discerning customers who value luxury.",
+  casual: "Write in a friendly, conversational tone that feels approachable and relatable. Use everyday language that connects with customers on a personal level.",
+  professional: "Write in an authoritative, professional tone that builds trust and credibility. Use clear, confident language that demonstrates expertise.",
+  fun: "Write in a playful, energetic tone that's engaging and memorable. Use creative language that brings personality and excitement to the product.",
+  minimalist: "Write in a clean, concise tone that focuses on essential information. Use simple, direct language that communicates clearly without unnecessary flourishes."
+};
+
+exports.handler = async (event, context) => {
+  // Enable CORS
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  };
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: ''
+    };
+  }
+
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({ error: 'Method not allowed' })
+    };
+  }
+
+  try {
+    const { productUrl, productInfo, brandTone, targetAudience, keyFeatures, userId, inputMode } = JSON.parse(event.body);
+
+    // Validate required fields
+    if (!brandTone) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Brand tone is required' })
+      };
+    }
+
+    // Validate that we have either URL or product info
+    if (!productUrl && !productInfo) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Product URL or barcode product information is required' })
+      };
+    }
+
+    // Validate brand tone
+    if (!brandTones[brandTone]) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Invalid brand tone' })
+      };
+    }
+
+    // Extract or use provided product information
+    let finalProductInfo;
+    if (inputMode === 'barcode' && productInfo) {
+      // Use barcode-provided product info
+      finalProductInfo = {
+        productType: determineProductType(productInfo.name, productInfo.category),
+        platform: productInfo.source || 'Barcode Database',
+        url: null,
+        barcode: productInfo.barcode,
+        name: productInfo.name,
+        brand: productInfo.brand,
+        category: productInfo.category,
+        description: productInfo.description,
+        additionalInfo: productInfo.additionalInfo
+      };
+    } else {
+      // Extract product information from URL
+      finalProductInfo = extractProductInfo(productUrl);
+    }
+
+    // Generate the description using OpenAI
+    const description = await generateDescription({
+      productUrl,
+      productInfo: finalProductInfo,
+      brandTone,
+      targetAudience,
+      keyFeatures,
+      inputMode
+    });
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        description,
+        success: true 
+      })
+    };
+
+  } catch (error) {
+    console.error('OpenAI API Error:', error);
+    
+    // Handle specific OpenAI errors
+    if (error.status === 429) {
+      return {
+        statusCode: 429,
+        headers,
+        body: JSON.stringify({ 
+          error: 'Rate limit exceeded. Please try again in a moment.',
+          retry_after: 60
+        })
+      };
+    }
+
+    if (error.status === 401) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ 
+          error: 'API configuration error. Please contact support.'
+        })
+      };
+    }
+
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ 
+        error: 'Failed to generate description. Please try again.',
+        message: error.message 
+      })
+    };
+  }
+};
+
+function extractProductInfo(productUrl) {
+  const urlLower = productUrl.toLowerCase();
+  let productType = 'product';
+  let platform = 'unknown';
+  
+  // Detect platform
+  if (urlLower.includes('aliexpress')) platform = 'AliExpress';
+  else if (urlLower.includes('amazon')) platform = 'Amazon';
+  else if (urlLower.includes('ebay')) platform = 'eBay';
+  else if (urlLower.includes('shopify')) platform = 'Shopify';
+  
+  // Extract product type from URL
+  if (urlLower.includes('watch') || urlLower.includes('clock')) productType = 'timepiece';
+  else if (urlLower.includes('phone') || urlLower.includes('mobile')) productType = 'smartphone';
+  else if (urlLower.includes('headphone') || urlLower.includes('earphone') || urlLower.includes('audio')) productType = 'audio device';
+  else if (urlLower.includes('shirt') || urlLower.includes('dress') || urlLower.includes('clothing') || urlLower.includes('fashion')) productType = 'fashion item';
+  else if (urlLower.includes('laptop') || urlLower.includes('computer')) productType = 'computer';
+  else if (urlLower.includes('kitchen') || urlLower.includes('cook')) productType = 'kitchen appliance';
+  else if (urlLower.includes('book')) productType = 'book';
+  else if (urlLower.includes('toy') || urlLower.includes('game')) productType = 'toy/game';
+  else if (urlLower.includes('beauty') || urlLower.includes('cosmetic')) productType = 'beauty product';
+  else if (urlLower.includes('home') || urlLower.includes('decor')) productType = 'home decor item';
+  
+  return {
+    productType,
+    platform,
+    url: productUrl
+  };
+}
+
+function determineProductType(productName, category) {
+  if (!productName && !category) return 'product';
+  
+  const text = `${productName || ''} ${category || ''}`.toLowerCase();
+  
+  if (text.includes('watch') || text.includes('clock') || text.includes('timepiece')) return 'timepiece';
+  if (text.includes('phone') || text.includes('mobile') || text.includes('smartphone')) return 'smartphone';
+  if (text.includes('headphone') || text.includes('earphone') || text.includes('audio') || text.includes('speaker')) return 'audio device';
+  if (text.includes('shirt') || text.includes('dress') || text.includes('clothing') || text.includes('apparel') || text.includes('fashion')) return 'fashion item';
+  if (text.includes('laptop') || text.includes('computer') || text.includes('pc')) return 'computer';
+  if (text.includes('kitchen') || text.includes('cook') || text.includes('appliance')) return 'kitchen appliance';
+  if (text.includes('book') || text.includes('novel') || text.includes('magazine')) return 'book';
+  if (text.includes('toy') || text.includes('game') || text.includes('play')) return 'toy/game';
+  if (text.includes('beauty') || text.includes('cosmetic') || text.includes('makeup')) return 'beauty product';
+  if (text.includes('home') || text.includes('decor') || text.includes('furniture')) return 'home decor item';
+  if (text.includes('food') || text.includes('snack') || text.includes('drink') || text.includes('beverage')) return 'food/beverage';
+  if (text.includes('health') || text.includes('supplement') || text.includes('vitamin')) return 'health product';
+  if (text.includes('tool') || text.includes('hardware') || text.includes('equipment')) return 'tool/equipment';
+  
+  return 'product';
+}
+
+async function generateDescription({ productUrl, productInfo, brandTone, targetAudience, keyFeatures, inputMode }) {
+  const toneInstruction = brandTones[brandTone];
+  
+  // Build the prompt
+  let prompt = `Generate a compelling, SEO-optimized product description for an e-commerce listing.
+
+PRODUCT DETAILS:`;
+
+  if (inputMode === 'barcode' && productInfo.barcode) {
+    prompt += `
+- Product Name: ${productInfo.name || 'Unknown Product'}
+- Brand: ${productInfo.brand || 'Unknown Brand'}
+- Category: ${productInfo.category || 'General Product'}
+- Product Type: ${productInfo.productType}
+- Barcode/UPC: ${productInfo.barcode}
+- Source: ${productInfo.platform}`;
+    
+    if (productInfo.description) {
+      prompt += `\n- Existing Description: ${productInfo.description}`;
+    }
+  } else {
+    prompt += `
+- Product URL: ${productUrl}
+- Product Type: ${productInfo.productType}
+- Platform: ${productInfo.platform}`;
+  }
+
+  prompt += `\n\nBRAND TONE: ${toneInstruction}`;
+
+  if (targetAudience) {
+    prompt += `\nTARGET AUDIENCE: ${targetAudience}`;
+  }
+
+  if (keyFeatures) {
+    prompt += `\nKEY FEATURES TO HIGHLIGHT: ${keyFeatures}`;
+  }
+
+  prompt += `
+
+REQUIREMENTS:
+1. Create a compelling headline that grabs attention
+2. Write 2-3 paragraphs describing the product benefits and features
+3. Include SEO-friendly keywords naturally
+4. Focus on benefits, not just features
+5. Create urgency or desire to purchase
+6. Keep it between 150-300 words
+7. Make it conversion-focused
+
+Please generate a professional product description that matches the specified brand tone and appeals to the target audience.`;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert e-commerce copywriter specializing in creating high-converting product descriptions that boost sales and improve SEO rankings."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      max_tokens: 500,
+      temperature: 0.7,
+    });
+
+    return response.choices[0].message.content.trim();
+  } catch (error) {
+    console.error('OpenAI API call failed:', error);
+    throw error;
+  }
+}

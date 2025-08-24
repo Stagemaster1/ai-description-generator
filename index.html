@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolTecGen - AI Product Description Generator</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&vault=true&intent=subscription"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0f1c 0%, #1a1f2e 25%, #2d1b69 50%, #1e3a8a 75%, #0f172a 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            border-radius: 30%;
+            animation-delay: 7s;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #f59e0b, #ef4444);
+            border-radius: 50%;
+            animation-delay: 14s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(15px) rotate(240deg); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 0;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #fb7185);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .company-name {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+            align-items: start;
+        }
+
+        .generator-section, .pricing-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .generator-section:hover, .pricing-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .usage-tracker {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .usage-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .usage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Improved form select styling for better readability */
+        .form-select {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-select option {
+            background: #1e293b;
+            color: #ffffff;
+            padding: 10px;
+            border: none;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .results h3 {
+            color: #10b981;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .results-content {
+            color: #e2e8f0;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .pricing-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card.featured {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .pricing-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .plan-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .pricing-card .plan-name {
+            margin-top: 10px;
+        }
+
+        .pricing-card.featured .plan-name {
+            margin-top: 25px;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .plan-period {
+            color: #94a3b8;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .free-trial-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .plan-features li {
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .stats-section {
+            text-align: center;
+            padding: 60px 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            margin: 60px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #fb7185);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 1rem;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .header {
+                padding: 40px 0;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1.1rem;
+            }
+
+            .generator-section, .pricing-section {
+                padding: 30px 20px;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        .error {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .form-input.error, .form-select.error, .form-textarea.error {
+            border-color: #ef4444;
+        }
+
+        .success-animation {
+            animation: successPulse 0.6s ease-out;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .input-method-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .method-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .method-btn.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+            color: #60a5fa;
+        }
+
+        .method-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .input-group {
+            display: none;
+        }
+
+        .input-group.active {
+            display: block;
+        }
+
+        .barcode-lookup-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .barcode-lookup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .barcode-lookup-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .product-preview {
+            margin-top: 15px;
+            padding: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .preview-content {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .preview-image {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-details h4 {
+            color: #10b981;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .preview-details p {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+
+        .paypal-button-container {
+            margin-top: 15px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <div class="company-name">SolTecGen (Solid Technology Genius)</div>
+            <h1 class="logo">AI Description Generator</h1>
+            <p class="tagline">Transform Product URLs into Converting Copy</p>
+            <p class="subtitle">Generate SEO-optimized, brand-specific product descriptions that convert browsers into buyers. Save hours of writing time and boost your e-commerce sales.</p>
+        </header>
+
+        <div class="main-content">
+            <div class="generator-section">
+                <h2 class="section-title">🚀 Generate Your Description</h2>
+                
+                <div class="usage-tracker" id="usageTracker">
+                    <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 5px;">Monthly Usage</div>
+                    <div style="color: #ffffff; font-weight: 600;" id="usageText">0 of 5 free descriptions used</div>
+                    <div class="usage-bar">
+                        <div class="usage-fill" id="usageFill" style="width: 0%;"></div>
+                    </div>
+                    <div style="color: #94a3b8; font-size: 0.8rem; margin-top: 5px;">
+                        <span id="upgradePrompt">Upgrade for unlimited descriptions</span>
+                    </div>
+                </div>
+                
+                <form id="descriptionForm">
+                    <div class="form-group">
+                        <label class="form-label">Product Identification</label>
+                        <div class="input-method-selector">
+                            <button type="button" id="urlModeBtn" class="method-btn active">🔗 Product URL</button>
+                            <button type="button" id="barcodeModeBtn" class="method-btn">📊 Barcode/UPC</button>
+                        </div>
+                        
+                        <div id="urlInputGroup" class="input-group active">
+                            <input 
+                                type="url" 
+                                id="productUrl" 
+                                class="form-input" 
+                                placeholder="https://www.aliexpress.com/item/..." 
+                            >
+                            <div class="error" id="urlError"></div>
+                        </div>
+                        
+                        <div id="barcodeInputGroup" class="input-group">
+                            <input 
+                                type="text" 
+                                id="productBarcode" 
+                                class="form-input" 
+                                placeholder="Enter barcode/UPC (e.g., 123456789012)" 
+                                pattern="\d{8,13}"
+                                title="Enter 8-13 digit barcode or UPC"
+                            >
+                            <button type="button" id="lookupBarcodeBtn" class="barcode-lookup-btn">🔍 Lookup Product</button>
+                            <div class="error" id="barcodeError"></div>
+                        </div>
+                        
+                        <div id="productPreview" class="product-preview" style="display: none;">
+                            <div class="preview-content">
+                                <div class="preview-image">
+                                    <img id="previewImage" src="" alt="Product" />
+                                </div>
+                                <div class="preview-details">
+                                    <h4 id="previewName">Product Name</h4>
+                                    <p id="previewBrand">Brand</p>
+                                    <p id="previewCategory">Category</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brandTone" class="form-label">Brand Tone</label>
+                        <select id="brandTone" class="form-select" required>
+                            <option value="">Select your brand voice...</option>
+                            <option value="luxury">Luxury & Premium</option>
+                            <option value="casual">Casual & Friendly</option>
+                            <option value="professional">Professional & Authoritative</option>
+                            <option value="fun">Fun & Quirky</option>
+                            <option value="minimalist">Minimalist & Clean</option>
+                        </select>
+                        <div class="error" id="brandToneError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="targetAudience" class="form-label">Target Audience (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="targetAudience" 
+                            class="form-input" 
+                            placeholder="e.g., busy parents, fitness enthusiasts, tech professionals"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="keyFeatures" class="form-label">Key Features to Highlight (Optional)</label>
+                        <textarea 
+                            id="keyFeatures" 
+                            class="form-textarea" 
+                            placeholder="List the most important features you want to emphasize..."
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="generateBtn">
+                        Generate AI Description
+                    </button>
+                </form>
+
+                <div id="results" class="results" style="display: none;">
+                    <h3>✨ Your Optimized Product Description</h3>
+                    <div id="resultsContent" class="results-content"></div>
+                    <button type="button" class="btn-primary" id="copyBtn" style="margin-top: 15px;">
+                        📋 Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+
+            <div class="pricing-section">
+                <h2 class="section-title">💎 Choose Your Plan</h2>
+                
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="plan-name">Starter</div>
+                        <div class="free-trial-badge">🎉 First Month FREE</div>
+                        <div class="plan-price">$19.99</div>
+                        <div class="plan-period">per month after trial</div>
+                        <ul class="plan-features">
+                            <li>50 descriptions/month</li>
+                            <li>5 brand tones</li>
+                            <li>SEO optimization</li>
+                            <li>Email support</li>
+                        </ul>
+                        <div id="paypal-starter" class="paypal-button-container"></div>
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <div class="plan-name">Professional</div>
+                        <div class="plan-price">$49.99</div>
+                        <div class="plan-period">per month</div>
+                        <ul class="plan-features">
+                            <li>200 descriptions/month</li>
+                            <li>All brand tones</li>
+                            <li>Advanced SEO</li>
+                            <li>Bulk export</li>
+                            <li>Priority support</li>
+                        </ul>
+                        <div id="paypal-professional" class="paypal-button-container"></div>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="plan-name">Enterprise</div>
+                        <div class="plan-price">$99.99</div>
+                        <div class="plan-period">per month</div>
+                        <ul class="plan-features">
+                            <li>Unlimited descriptions</li>
+                            <li>Custom brand tones</li>
+                            <li>API access</li>
+                            <li>Team collaboration</li>
+                            <li>Dedicated support</li>
+                        </ul>
+                        <div id="paypal-enterprise" class="paypal-button-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 class="section-title">🎯 Trusted by E-commerce Leaders</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">10K+</span>
+                    <span class="stat-label">Descriptions Generated</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">250%</span>
+                    <span class="stat-label">Average Sales Increase</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">5min</span>
+                    <span class="stat-label">Average Time Saved</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Customer Satisfaction</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User state object
+        let userState = {
+            subscriptionType: 'free',
+            monthlyUsage: 0,
+            maxUsage: 5,
+            isSubscribed: false,
+            userId: null
+        };
+
+        // Global variables for product identification
+        let currentProductInfo = null;
+        let inputMode = 'url'; // 'url' or 'barcode'
+
+        // Initialize app when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserState();
+            updateUsageDisplay();
+            setupEventListeners();
+            setupPayPalButtons();
+            addEntranceAnimations();
+        });
+
+        function loadUserState() {
+            try {
+                const savedState = localStorage.getItem('userState');
+                if (savedState) {
+                    const parsed = JSON.parse(savedState);
+                    userState = { ...userState, ...parsed };
+                }
+                
+                // Generate user ID if not exists
+                if (!userState.userId) {
+                    userState.userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    saveUserState();
+                }
+            } catch (error) {
+                console.error('Error loading user state:', error);
+            }
+        }
+
+        function saveUserState() {
+            try {
+                localStorage.setItem('userState', JSON.stringify(userState));
+            } catch (error) {
+                console.error('Error saving user state:', error);
+            }
+        }
+
+        function setupEventListeners() {
+            const form = document.getElementById('descriptionForm');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmission);
+            }
+
+            const copyBtn = document.getElementById('copyBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', handleCopyToClipboard);
+            }
+
+            // Input method toggle buttons
+            const urlModeBtn = document.getElementById('urlModeBtn');
+            const barcodeModeBtn = document.getElementById('barcodeModeBtn');
+            
+            if (urlModeBtn) {
+                urlModeBtn.addEventListener('click', () => switchInputMode('url'));
+            }
+            
+            if (barcodeModeBtn) {
+                barcodeModeBtn.addEventListener('click', () => switchInputMode('barcode'));
+            }
+
+            // Barcode lookup button
+            const lookupBarcodeBtn = document.getElementById('lookupBarcodeBtn');
+            if (lookupBarcodeBtn) {
+                lookupBarcodeBtn.addEventListener('click', handleBarcodeLookup);
+            }
+        }
+
+        function handleFormSubmission(event) {
+            event.preventDefault();
+            generateDescription();
+        }
+
+        function handleCopyToClipboard() {
+            const text = document.getElementById('resultsContent').textContent;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showNotification('Description copied to clipboard!', 'success');
+                }).catch(function(error) {
+                    console.error('Copy failed:', error);
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showNotification('Description copied to clipboard!', 'success');
+            } catch (error) {
+                console.error('Fallback copy failed:', error);
+                showNotification('Unable to copy text. Please copy manually.', 'error');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function switchInputMode(mode) {
+            inputMode = mode;
+            currentProductInfo = null;
+            
+            // Update button states
+            const urlModeBtn = document.getElementById('urlModeBtn');
+            const barcodeModeBtn = document.getElementById('barcodeModeBtn');
+            const urlInputGroup = document.getElementById('urlInputGroup');
+            const barcodeInputGroup = document.getElementById('barcodeInputGroup');
+            const productPreview = document.getElementById('productPreview');
+            
+            if (mode === 'url') {
+                urlModeBtn.classList.add('active');
+                barcodeModeBtn.classList.remove('active');
+                urlInputGroup.classList.add('active');
+                barcodeInputGroup.classList.remove('active');
+            } else {
+                barcodeModeBtn.classList.add('active');
+                urlModeBtn.classList.remove('active');
+                barcodeInputGroup.classList.add('active');
+                urlInputGroup.classList.remove('active');
+            }
+            
+            productPreview.style.display = 'none';
+            clearErrors();
+        }
+
+        async function handleBarcodeLookup() {
+            const barcodeInput = document.getElementById('productBarcode');
+            const barcode = barcodeInput.value.trim();
+            
+            if (!barcode) {
+                showError('barcodeError', 'Please enter a barcode');
+                return;
+            }
+            
+            // Validate barcode format
+            if (!/^\d{8,13}$/.test(barcode.replace(/[\s-]/g, ''))) {
+                showError('barcodeError', 'Please enter a valid 8-13 digit barcode');
+                return;
+            }
+            
+            const lookupBtn = document.getElementById('lookupBarcodeBtn');
+            lookupBtn.disabled = true;
+            lookupBtn.textContent = '🔍 Looking up...';
+            
+            try {
+                const response = await fetch('/.netlify/functions/barcode-lookup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ barcode })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.product) {
+                    currentProductInfo = data.product;
+                    showProductPreview(data.product);
+                    showNotification('Product found! Ready to generate description.', 'success');
+                } else {
+                    showError('barcodeError', 'Product not found in barcode databases');
+                    showNotification('Product not found. You can still generate a description by filling in the details manually.', 'error');
+                }
+            } catch (error) {
+                console.error('Barcode lookup error:', error);
+                showError('barcodeError', 'Failed to lookup barcode. Please try again.');
+                showNotification('Lookup failed. Please try again.', 'error');
+            } finally {
+                lookupBtn.disabled = false;
+                lookupBtn.textContent = '🔍 Lookup Product';
+            }
+        }
+
+        function showProductPreview(product) {
+            const productPreview = document.getElementById('productPreview');
+            const previewImage = document.getElementById('previewImage');
+            const previewName = document.getElementById('previewName');
+            const previewBrand = document.getElementById('previewBrand');
+            const previewCategory = document.getElementById('previewCategory');
+            
+            previewName.textContent = product.name || 'Unknown Product';
+            previewBrand.textContent = product.brand || 'Unknown Brand';
+            previewCategory.textContent = product.category || 'General Product';
+            
+            if (product.imageUrl) {
+                previewImage.src = product.imageUrl;
+                previewImage.style.display = 'block';
+            } else {
+                previewImage.style.display = 'none';
+            }
+            
+            productPreview.style.display = 'block';
+        }
+
+        function setupPayPalButtons() {
+            // PayPal Starter Plan
+            if (typeof paypal !== 'undefined') {
+                paypal.Buttons({
+                    style: {
+                        color: 'blue',
+                        shape: 'rect',
+                        label: 'subscribe'
+                    },
+                    createSubscription: function(data, actions) {
+                        return actions.subscription.create({
+                            'plan_id': 'P-YOUR_STARTER_PLAN_ID' // Replace with actual plan ID
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        handlePayPalSuccess('starter', data.subscriptionID);
+                    },
+                    onError: function(err) {
+                        console.error('PayPal Error:', err);
+                        showNotification('Payment failed. Please try again.', 'error');
+                    }
+                }).render('#paypal-starter');
+
+                // PayPal Professional Plan
+                paypal.Buttons({
+                    style: {
+                        color: 'blue',
+                        shape: 'rect',
+                        label: 'subscribe'
+                    },
+                    createSubscription: function(data, actions) {
+                        return actions.subscription.create({
+                            'plan_id': 'P-YOUR_PROFESSIONAL_PLAN_ID' // Replace with actual plan ID
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        handlePayPalSuccess('professional', data.subscriptionID);
+                    },
+                    onError: function(err) {
+                        console.error('PayPal Error:', err);
+                        showNotification('Payment failed. Please try again.', 'error');
+                    }
+                }).render('#paypal-professional');
+
+                // PayPal Enterprise Plan
+                paypal.Buttons({
+                    style: {
+                        color: 'blue',
+                        shape: 'rect',
+                        label: 'subscribe'
+                    },
+                    createSubscription: function(data, actions) {
+                        return actions.subscription.create({
+                            'plan_id': 'P-YOUR_ENTERPRISE_PLAN_ID' // Replace with actual plan ID
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        handlePayPalSuccess('enterprise', data.subscriptionID);
+                    },
+                    onError: function(err) {
+                        console.error('PayPal Error:', err);
+                        showNotification('Payment failed. Please try again.', 'error');
+                    }
+                }).render('#paypal-enterprise');
+            }
+        }
+
+        function handlePayPalSuccess(planName, subscriptionId) {
+            // Update user state
+            const planLimits = {
+                starter: 50,
+                professional: 200,
+                enterprise: 999999
+            };
+            
+            userState.isSubscribed = true;
+            userState.subscriptionType = planName;
+            userState.maxUsage = planLimits[planName];
+            userState.subscriptionId = subscriptionId;
+            
+            saveUserState();
+            updateUsageDisplay();
+            
+            showNotification(`🎉 Successfully subscribed to ${planName.charAt(0).toUpperCase() + planName.slice(1)} plan!`, 'success');
+        }
+
+        async function handlePaymentButtonClick(button) {
+            try {
+                const planName = button.getAttribute('data-plan');
+                const price = button.getAttribute('data-price');
+                const limit = parseInt(button.getAttribute('data-limit'));
+
+                if (!planName || !price || !limit) {
+                    console.error('Missing payment button data attributes');
+                    return;
+                }
+
+                // Show loading state
+                button.disabled = true;
+                button.textContent = 'Processing...';
+
+                // Create checkout session
+                const response = await fetch('/.netlify/functions/stripe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'create_checkout_session',
+                        planName: planName,
+                        email: userState.email || ''
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.checkout_url) {
+                    // Redirect to Stripe Checkout
+                    window.location.href = data.checkout_url;
+                } else {
+                    throw new Error(data.error || 'Failed to create checkout session');
+                }
+
+            } catch (error) {
+                console.error('Payment button click error:', error);
+                showNotification('Payment processing error. Please try again.', 'error');
+                
+                // Reset button
+                button.disabled = false;
+                const originalText = button.getAttribute('data-plan') === 'starter' ? 'Start Free Trial' : 
+                                   button.getAttribute('data-plan') === 'professional' ? 'Choose Professional' : 
+                                   'Choose Enterprise';
+                button.textContent = originalText;
+            }
+        }
+
+        async function generateDescription() {
+            // Check usage limits
+            if (!userState.isSubscribed && userState.monthlyUsage >= userState.maxUsage) {
+                showNotification('You\'ve reached your free limit! Please upgrade to continue.', 'error');
+                document.querySelector('.pricing-section').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            
+            // Get form values
+            const productUrl = inputMode === 'url' ? document.getElementById('productUrl').value.trim() : null;
+            const productBarcode = inputMode === 'barcode' ? document.getElementById('productBarcode').value.trim() : null;
+            const brandTone = document.getElementById('brandTone').value;
+            const targetAudience = document.getElementById('targetAudience').value.trim();
+            const keyFeatures = document.getElementById('keyFeatures').value.trim();
+
+            // Clear previous errors
+            clearErrors();
+
+            // Validation
+            if (!validateInputs(productUrl, productBarcode, brandTone)) {
+                return;
+            }
+
+            // Show loading state
+            const generateBtn = document.getElementById('generateBtn');
+            const results = document.getElementById('results');
+            const resultsContent = document.getElementById('resultsContent');
+            
+            generateBtn.classList.add('loading');
+            generateBtn.textContent = 'Generating...';
+            generateBtn.disabled = true;
+            results.style.display = 'none';
+
+            try {
+                // Prepare request body based on input mode
+                const requestBody = {
+                    brandTone,
+                    targetAudience,
+                    keyFeatures,
+                    userId: userState.userId,
+                    inputMode
+                };
+
+                if (inputMode === 'url') {
+                    requestBody.productUrl = productUrl;
+                } else {
+                    requestBody.productInfo = currentProductInfo;
+                }
+
+                // Call the generate API
+                const response = await fetch('/.netlify/functions/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.description) {
+                    // Update usage count
+                    userState.monthlyUsage++;
+                    saveUserState();
+                    updateUsageDisplay();
+                    
+                    // Show results
+                    resultsContent.textContent = data.description;
+                    results.style.display = 'block';
+                    results.classList.add('success-animation');
+                    
+                    // Scroll to results
+                    results.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    showNotification('Description generated successfully!', 'success');
+                } else {
+                    throw new Error(data.error || 'Failed to generate description');
+                }
+                
+            } catch (error) {
+                console.error('Error generating description:', error);
+                showError('productUrl', 'Failed to generate description. Please try again.');
+                showNotification('Generation failed. Please try again.', 'error');
+            } finally {
+                // Reset button
+                generateBtn.classList.remove('loading');
+                generateBtn.textContent = 'Generate AI Description';
+                generateBtn.disabled = false;
+            }
+        }
+
+        function validateInputs(productUrl, productBarcode, brandTone) {
+            let isValid = true;
+            
+            // Validate based on input mode
+            if (inputMode === 'url') {
+                if (!productUrl) {
+                    showError('urlError', 'Please enter a product URL');
+                    isValid = false;
+                } else {
+                    try {
+                        new URL(productUrl);
+                    } catch (error) {
+                        showError('urlError', 'Please enter a valid URL');
+                        isValid = false;
+                    }
+                }
+            } else {
+                // Barcode mode
+                if (!currentProductInfo && !productBarcode) {
+                    showError('barcodeError', 'Please enter a barcode or lookup a product first');
+                    isValid = false;
+                } else if (!currentProductInfo && productBarcode) {
+                    showError('barcodeError', 'Please click "Lookup Product" to identify the barcode first');
+                    isValid = false;
+                }
+            }
+            
+            // Validate brand tone
+            if (!brandTone) {
+                showError('brandToneError', 'Please select a brand tone');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        function showError(errorId, message) {
+            let field = null;
+            let errorDiv = null;
+            
+            if (errorId === 'urlError') {
+                field = document.getElementById('productUrl');
+                errorDiv = document.getElementById('urlError');
+            } else if (errorId === 'barcodeError') {
+                field = document.getElementById('productBarcode');
+                errorDiv = document.getElementById('barcodeError');
+            } else if (errorId === 'brandToneError') {
+                field = document.getElementById('brandTone');
+                errorDiv = document.getElementById('brandToneError');
+            }
+            
+            if (field) {
+                field.classList.add('error');
+            }
+            
+            if (errorDiv) {
+                errorDiv.textContent = message;
+            } else {
+                // Fallback for missing error divs
+                console.error(`Error div not found for ${errorId}: ${message}`);
+            }
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('.error');
+            errorElements.forEach(element => {
+                if (element.tagName === 'DIV') {
+                    element.textContent = '';
+                } else {
+                    element.classList.remove('error');
+                }
+            });
+        }
+
+        function updateUsageDisplay() {
+            const usageText = document.getElementById('usageText');
+            const usageFill = document.getElementById('usageFill');
+            const upgradePrompt = document.getElementById('upgradePrompt');
+            
+            if (usageText) {
+                if (userState.isSubscribed) {
+                    const limitText = userState.maxUsage === 999999 ? 'unlimited' : userState.maxUsage;
+                    usageText.textContent = `${userState.monthlyUsage} of ${limitText} descriptions used`;
+                } else {
+                    usageText.textContent = `${userState.monthlyUsage} of ${userState.maxUsage} free descriptions used`;
+                }
+            }
+            
+            if (usageFill) {
+                const percentage = userState.maxUsage === 999999 ? 100 : (userState.monthlyUsage / userState.maxUsage) * 100;
+                usageFill.style.width = `${Math.min(percentage, 100)}%`;
+            }
+            
+            if (upgradePrompt) {
+                if (userState.isSubscribed) {
+                    upgradePrompt.textContent = `${userState.subscriptionType.charAt(0).toUpperCase() + userState.subscriptionType.slice(1)} Plan Active`;
+                } else {
+                    upgradePrompt.textContent = 'Upgrade for unlimited descriptions';
+                }
+            }
+        }
+
+        function addEntranceAnimations() {
+            // Add subtle entrance animations
+            const sections = document.querySelectorAll('.generator-section, .pricing-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'all 0.8s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        }
+
+        function showNotification(message, type = 'success') {
+            // Remove existing notification if any
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Show notification
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            // Hide notification after 4 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Check for successful payment on page load
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            showNotification('Payment successful! Your subscription is now active.', 'success');
+            
+            // Update user state based on successful payment
+            // In a real implementation, you'd verify the payment with your backend
+            userState.isSubscribed = true;
+            userState.subscriptionType = 'professional'; // This would come from your backend
+            userState.maxUsage = 200; // This would come from your backend
+            saveUserState();
+            updateUsageDisplay();
+            
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
+</body>
+</html>
