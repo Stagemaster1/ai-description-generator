@@ -114,7 +114,7 @@ async function createSubscription(planName, email, headers) {
       email_address: email,
     },
     application_context: {
-      brand_name: 'SolTecGen AI Description Generator',
+      brand_name: 'SolTecSol AI Description Generator',
       locale: 'en-US',
       shipping_preference: 'NO_SHIPPING',
       user_action: 'SUBSCRIBE_NOW',
