@@ -18,10 +18,9 @@
   ],
   "author": "SolTecSol",
   "license": "ISC",
- "dependencies": {
-  "openai": "^4.52.7",
-  "stripe": "^12.18.0"
-},
+  "dependencies": {
+    "openai": "^4.52.7",
+    "stripe": "^12.18.0"
   },
   "devDependencies": {
     "netlify-cli": "^17.32.0"
