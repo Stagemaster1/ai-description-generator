@@ -125,7 +125,7 @@ async function lookupUPCDatabase(barcode) {
   // UPCDatabase.org - free tier available
   const response = await fetch(`https://api.upcdatabase.org/product/${barcode}`, {
     headers: {
-      'User-Agent': 'SolTecGen-AI-Description-Generator/1.0'
+      'User-Agent': 'SolTecSol-AI-Description-Generator/1.0'
     }
   });
 
