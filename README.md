@@ -1,4 +1,4 @@
-# SolTecGen AI Description Generator
+# SolTecSol AI Description Generator
 
 **Transform Product URLs into Converting Copy**
 
