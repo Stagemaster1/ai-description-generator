@@ -202,6 +202,12 @@ async function getSubscriptionStatus(email, headers) {
 }
 
 async function getPlanIds(headers) {
+  console.log('Plan IDs request - Environment variables:', {
+    starter: process.env.PAYPAL_STARTER_PLAN_ID,
+    professional: process.env.PAYPAL_PROFESSIONAL_PLAN_ID,
+    enterprise: process.env.PAYPAL_ENTERPRISE_PLAN_ID
+  });
+  
   return {
     statusCode: 200,
     headers,
