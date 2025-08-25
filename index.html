@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.paypal.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.openai.com https://world.openfoodfacts.org https://api.upcdatabase.org https://api.barcodelookup.com;">
     <title>SolTecSol - AI Product Description Generator</title>
     <script src="https://www.paypal.com/sdk/js?client-id=AdER7Vru1-kaxzTqcIO14xd48otzyHPkdUePW0bEkivwQZWcbbfTnTFatVSPlC4vfgUq2fnaw2kJk4U4&vault=true&intent=subscription"></script>
     <style>
@@ -655,7 +656,8 @@
         }
 
         .paypal-button-container {
-            display: none;
+            display: block;
+            margin-top: 15px;
         }
 
         .plan-choose-btn {
@@ -669,10 +671,6 @@
             cursor: pointer;
             width: 100%;
             margin-bottom: 15px;
-        }
-    </style>
-        }
-    </style>
         }
     </style>
 </head>
@@ -883,6 +881,17 @@
         let currentProductInfo = null;
         let inputMode = 'url'; // 'url' or 'barcode'
 
+        // Global error handler
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+            showNotification('An unexpected error occurred. Please try again.', 'error');
+        });
+
+        window.addEventListener('error', function(event) {
+            console.error('Global error:', event.error);
+            showNotification('An unexpected error occurred. Please refresh the page.', 'error');
+        });
+
         // Initialize app when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             loadUserState();
@@ -892,8 +901,24 @@
             addEntranceAnimations();
         });
 
+        function isLocalStorageAvailable() {
+            try {
+                const test = '__localStorage_test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
         function loadUserState() {
             try {
+                if (!isLocalStorageAvailable()) {
+                    console.warn('localStorage not available, using memory only');
+                    return;
+                }
+
                 const savedState = localStorage.getItem('userState');
                 if (savedState) {
                     const parsed = JSON.parse(savedState);
@@ -911,6 +936,11 @@
         }
 
         function saveUserState() {
+            if (!isLocalStorageAvailable()) {
+                console.warn('localStorage not available, cannot save state');
+                return;
+            }
+
             try {
                 localStorage.setItem('userState', JSON.stringify(userState));
             } catch (error) {
@@ -1078,9 +1108,21 @@
             productPreview.style.display = 'block';
         }
 
-        function setupPayPalButtons() {
-            // PayPal Starter Plan
-            if (typeof paypal !== 'undefined') {
+        function waitForPayPal() {
+            return new Promise((resolve) => {
+                if (typeof paypal !== 'undefined' && paypal.Buttons) {
+                    resolve();
+                } else {
+                    setTimeout(() => waitForPayPal().then(resolve), 100);
+                }
+            });
+        }
+
+        async function setupPayPalButtons() {
+            try {
+                await waitForPayPal();
+                
+                // PayPal Starter Plan
                 paypal.Buttons({
                     style: {
                         color: 'blue',
@@ -1142,6 +1184,9 @@
                         showNotification('Payment failed. Please try again.', 'error');
                     }
                 }).render('#paypal-enterprise');
+            } catch (error) {
+                console.error('PayPal setup failed:', error);
+                showNotification('Payment system unavailable. Please try again later.', 'error');
             }
         }
 
@@ -1308,32 +1353,36 @@
         function validateInputs(productUrl, productBarcode, brandTone) {
             let isValid = true;
             
+            // Clear previous errors first
+            clearErrors();
+            
             // Validate based on input mode
             if (inputMode === 'url') {
-                if (!productUrl) {
+                if (!productUrl || productUrl.trim() === '') {
                     showError('urlError', 'Please enter a product URL');
                     isValid = false;
                 } else {
                     try {
-                        new URL(productUrl);
+                        const url = new URL(productUrl.trim());
+                        // Additional URL validation
+                        if (!['http:', 'https:'].includes(url.protocol)) {
+                            throw new Error('Invalid protocol');
+                        }
                     } catch (error) {
                         showError('urlError', 'Please enter a valid URL');
                         isValid = false;
                     }
                 }
             } else {
-                // Barcode mode
-                if (!currentProductInfo && !productBarcode) {
-                    showError('barcodeError', 'Please enter a barcode or lookup a product first');
-                    isValid = false;
-                } else if (!currentProductInfo && productBarcode) {
-                    showError('barcodeError', 'Please click "Lookup Product" to identify the barcode first');
+                // Barcode mode validation
+                if (!currentProductInfo) {
+                    showError('barcodeError', 'Please lookup a product first');
                     isValid = false;
                 }
             }
             
             // Validate brand tone
-            if (!brandTone) {
+            if (!brandTone || brandTone.trim() === '') {
                 showError('brandToneError', 'Please select a brand tone');
                 isValid = false;
             }
@@ -1362,9 +1411,11 @@
             
             if (errorDiv) {
                 errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
             } else {
                 // Fallback for missing error divs
                 console.error(`Error div not found for ${errorId}: ${message}`);
+                showNotification(message, 'error');
             }
         }
 
@@ -1373,8 +1424,19 @@
             errorElements.forEach(element => {
                 if (element.tagName === 'DIV') {
                     element.textContent = '';
+                    element.style.display = 'none';
                 } else {
                     element.classList.remove('error');
+                }
+            });
+            
+            // Clear specific error divs
+            const errorIds = ['urlError', 'barcodeError', 'brandToneError'];
+            errorIds.forEach(errorId => {
+                const errorDiv = document.getElementById(errorId);
+                if (errorDiv) {
+                    errorDiv.textContent = '';
+                    errorDiv.style.display = 'none';
                 }
             });
         }
