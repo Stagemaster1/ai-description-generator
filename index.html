@@ -628,6 +628,20 @@
 
         .paypal-button-container {
             margin-top: 15px;
+            display: none;
+        }
+
+        .paypal-button-container.show {
+            display: block;
+        }
+
+        .clickable-plan {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .clickable-plan:hover {
+            transform: translateY(-2px);
         }
 
         .notification {
@@ -799,7 +813,7 @@
                 <h2 class="section-title">💎 Choose Your Plan</h2>
                 
                 <div class="pricing-grid">
-                    <div class="pricing-card">
+                    <div class="pricing-card clickable-plan" data-plan="starter">
                         <div class="plan-name">Starter</div>
                         <div class="free-trial-badge">🎉 First Month FREE</div>
                         <div class="plan-price">$19.99</div>
@@ -813,7 +827,7 @@
                         <div id="paypal-starter" class="paypal-button-container"></div>
                     </div>
 
-                    <div class="pricing-card featured">
+                    <div class="pricing-card featured clickable-plan" data-plan="professional">
                         <div class="plan-name">Professional</div>
                         <div class="plan-price">$49.99</div>
                         <div class="plan-period">per month</div>
@@ -827,7 +841,7 @@
                         <div id="paypal-professional" class="paypal-button-container"></div>
                     </div>
 
-                    <div class="pricing-card">
+                    <div class="pricing-card clickable-plan" data-plan="enterprise">
                         <div class="plan-name">Enterprise</div>
                         <div class="plan-price">$99.99</div>
                         <div class="plan-period">per month</div>
@@ -986,6 +1000,15 @@
             if (lookupBarcodeBtn) {
                 lookupBarcodeBtn.addEventListener('click', handleBarcodeLookup);
             }
+
+            // Add click handlers for pricing cards
+            const pricingCards = document.querySelectorAll('.clickable-plan');
+            pricingCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const planType = card.getAttribute('data-plan');
+                    showPayPalButton(planType);
+                });
+            });
         }
 
         function handleFormSubmission(event) {
@@ -1140,7 +1163,13 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'get_plan_ids' })
                 });
+                
+                if (!planResponse.ok) {
+                    throw new Error('Failed to fetch PayPal plan IDs');
+                }
+                
                 const planIds = await planResponse.json();
+                console.log('Retrieved plan IDs:', planIds);
                 
                 // PayPal Starter Plan
                 paypal.Buttons({
