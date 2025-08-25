@@ -669,10 +669,6 @@
             background: linear-gradient(135deg, #ef4444, #dc2626);
         }
 
-        .paypal-button-container {
-            display: block;
-            margin-top: 15px;
-        }
 
         .plan-choose-btn {
             background: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -1003,9 +999,11 @@
 
             // Add click handlers for pricing cards
             const pricingCards = document.querySelectorAll('.clickable-plan');
+            console.log('Found pricing cards:', pricingCards.length);
             pricingCards.forEach(card => {
                 card.addEventListener('click', (e) => {
                     const planType = card.getAttribute('data-plan');
+                    console.log('Plan card clicked:', planType);
                     showPayPalButton(planType);
                 });
             });
