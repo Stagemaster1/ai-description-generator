@@ -121,17 +121,13 @@ async function createSubscription(planName, email, headers) {
   const subscriptionData = {
     plan_id: plan.plan_id,
     subscriber: {
-      email_address: email,
+      email_address: email || 'test@example.com',
     },
     application_context: {
       brand_name: 'SolTecSol AI Description Generator',
       locale: 'en-US',
       shipping_preference: 'NO_SHIPPING',
       user_action: 'SUBSCRIBE_NOW',
-      payment_method: {
-        payer_selected: 'PAYPAL',
-        payee_preferred: 'IMMEDIATE_PAYMENT_REQUIRED'
-      },
       return_url: `${process.env.SITE_URL}/success`,
       cancel_url: `${process.env.SITE_URL}/cancel`
     }
