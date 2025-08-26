@@ -1180,25 +1180,26 @@
                 const planIds = await planResponse.json();
                 console.log('Retrieved plan IDs:', planIds);
                 
-                // Simple PayPal test button
+                // Test if basic PayPal payment works
                 paypal.Buttons({
                     createOrder: function(data, actions) {
                         return actions.order.create({
                             purchase_units: [{
                                 amount: {
-                                    value: '19.99'
+                                    value: '1.00'
                                 }
                             }]
                         });
                     },
                     onApprove: function(data, actions) {
                         return actions.order.capture().then(function(details) {
-                            alert('Payment successful!');
+                            alert('Basic PayPal payment works!');
+                            console.log('Payment details:', details);
                         });
                     },
                     onError: function(err) {
                         console.error('PayPal Error:', err);
-                        alert('Payment failed');
+                        alert('Basic PayPal payment failed');
                     }
                 }).render('#paypal-starter');
 
