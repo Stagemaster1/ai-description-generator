@@ -159,6 +159,7 @@ async function createSubscription(planName, email, headers) {
       })
     };
   } else {
+    console.error('PayPal subscription creation failed:', subscription);
     return {
       statusCode: 400,
       headers,
