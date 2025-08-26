@@ -1161,6 +1161,11 @@
             try {
                 await waitForPayPal();
                 
+                // Check if PayPal SDK is actually loaded
+                if (typeof paypal === 'undefined') {
+                    throw new Error('PayPal SDK not loaded');
+                }
+                
                 // Fetch plan IDs from backend
                 const planResponse = await fetch('/.netlify/functions/paypal', {
                     method: 'POST',
