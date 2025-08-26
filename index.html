@@ -909,12 +909,10 @@
             setupEventListeners();
             
             // Setup PayPal buttons with error handling to not break other functionality
-            setTimeout(() => {
-                setupPayPalButtons().catch(error => {
-                    console.error('PayPal setup failed:', error);
-                    showNotification('Payment system temporarily unavailable', 'error');
-                });
-            }, 2000);
+            setupPayPalButtons().catch(error => {
+                console.error('PayPal setup failed:', error);
+                showNotification('Payment system temporarily unavailable', 'error');
+            });
             
             addEntranceAnimations();
         });
