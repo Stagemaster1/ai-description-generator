@@ -1179,8 +1179,9 @@
                         label: 'subscribe'
                     },
                     createSubscription: function(data, actions) {
+                        console.log('Creating subscription with plan ID:', planIds.starter);
                         return actions.subscription.create({
-                            'plan_id': planIds.starter
+                            'plan_id': 'P-5ML4271244454362WXNWU5NQ'
                         });
                     },
                     onApprove: function(data, actions) {
