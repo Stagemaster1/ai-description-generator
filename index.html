@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.sandbox.paypal.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.openai.com https://world.openfoodfacts.org https://api.upcdatabase.org https://api.barcodelookup.com https://www.paypal.com https://www.sandbox.paypal.com; frame-src https://www.paypal.com https://www.sandbox.paypal.com;">
     <title>SolTecSol - AI Product Description Generator</title>
-    <script src="https://www.paypal.com/sdk/js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=capture"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription"></script>
     <style>
         * {
             margin: 0;
@@ -1180,26 +1180,20 @@
                 const planIds = await planResponse.json();
                 console.log('Retrieved plan IDs:', planIds);
                 
-                // Test if basic PayPal payment works
+                // PayPal Starter Subscription  
                 paypal.Buttons({
-                    createOrder: function(data, actions) {
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: '1.00'
-                                }
-                            }]
+                    createSubscription: function(data, actions) {
+                        return actions.subscription.create({
+                            'plan_id': planIds.starter
                         });
                     },
                     onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(details) {
-                            alert('Basic PayPal payment works!');
-                            console.log('Payment details:', details);
-                        });
+                        alert('Subscription successful!');
+                        console.log('Subscription ID:', data.subscriptionID);
                     },
                     onError: function(err) {
-                        console.error('PayPal Error:', err);
-                        alert('Basic PayPal payment failed');
+                        console.error('PayPal Subscription Error:', err);
+                        alert('Subscription failed');
                     }
                 }).render('#paypal-starter');
 
