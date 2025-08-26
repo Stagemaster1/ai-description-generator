@@ -149,6 +149,11 @@ async function createSubscription(planName, email, headers) {
   });
 
   const subscription = await response.json();
+  console.log('PayPal API Response:', {
+    status: response.status,
+    statusText: response.statusText,
+    data: subscription
+  });
 
   if (response.ok) {
     // Find the approval URL
