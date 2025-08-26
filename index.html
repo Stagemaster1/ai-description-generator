@@ -1005,7 +1005,12 @@
                 card.addEventListener('click', (e) => {
                     const planType = card.getAttribute('data-plan');
                     console.log('Plan card clicked:', planType);
-                    showPayPalButton(planType);
+                    setupPayPalButtons().then(() => {
+                        showPayPalButton(planType);
+                    }).catch(error => {
+                        console.error('PayPal setup failed:', error);
+                        showNotification('Payment system temporarily unavailable', 'error');
+                    });
                 });
             });
         }
