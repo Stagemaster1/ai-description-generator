@@ -87,6 +87,8 @@ async function getPayPalAccessToken() {
 }
 
 async function createSubscription(planName, email, headers) {
+  console.log('Creating subscription for plan:', planName, 'email:', email);
+  
   const plans = {
     starter: {
       plan_id: process.env.PAYPAL_STARTER_PLAN_ID,
@@ -104,12 +106,15 @@ async function createSubscription(planName, email, headers) {
 
   const plan = plans[planName];
   if (!plan) {
+    console.error('Invalid plan name:', planName);
     return {
       statusCode: 400,
       headers,
       body: JSON.stringify({ error: 'Invalid plan name' })
     };
   }
+
+  console.log('Using plan ID:', plan.plan_id);
 
   const accessToken = await getPayPalAccessToken();
 
