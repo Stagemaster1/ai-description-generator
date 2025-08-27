@@ -800,6 +800,16 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="descriptionLength" class="form-label">Description Length</label>
+                        <select id="descriptionLength" class="form-select" required>
+                            <option value="medium">Medium (150-250 words) - Recommended</option>
+                            <option value="short">Short (50-100 words) - Quick & Punchy</option>
+                            <option value="extensive">Extensive (300-500 words) - Detailed</option>
+                        </select>
+                        <div class="error" id="descriptionLengthError"></div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="targetAudience" class="form-label">Target Audience (Optional)</label>
                         <input 
                             type="text" 
@@ -1372,6 +1382,7 @@
             const productBarcode = inputMode === 'barcode' ? document.getElementById('productBarcode').value.trim() : null;
             const productName = inputMode === 'manual' ? document.getElementById('productName').value.trim() : null;
             const brandTone = document.getElementById('brandTone').value;
+            const descriptionLength = document.getElementById('descriptionLength').value;
             const targetAudience = document.getElementById('targetAudience').value.trim();
             const keyFeatures = document.getElementById('keyFeatures').value.trim();
 
@@ -1397,6 +1408,7 @@
                 // Prepare request body based on input mode
                 const requestBody = {
                     brandTone,
+                    descriptionLength,
                     targetAudience,
                     keyFeatures,
                     userId: userState.userId,

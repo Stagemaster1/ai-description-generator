@@ -39,7 +39,7 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { productUrl, productInfo, brandTone, targetAudience, keyFeatures, userId, inputMode } = JSON.parse(event.body);
+    const { productUrl, productInfo, brandTone, descriptionLength, targetAudience, keyFeatures, userId, inputMode } = JSON.parse(event.body);
 
     // Validate required fields
     if (!brandTone) {
@@ -93,6 +93,7 @@ exports.handler = async (event, context) => {
       productUrl,
       productInfo: finalProductInfo,
       brandTone,
+      descriptionLength,
       targetAudience,
       keyFeatures,
       inputMode
@@ -195,8 +196,29 @@ function determineProductType(productName, category) {
   return 'product';
 }
 
-async function generateDescription({ productUrl, productInfo, brandTone, targetAudience, keyFeatures, inputMode }) {
+async function generateDescription({ productUrl, productInfo, brandTone, descriptionLength, targetAudience, keyFeatures, inputMode }) {
   const toneInstruction = brandTones[brandTone];
+  
+  // Length specifications
+  const lengthSpecs = {
+    short: {
+      words: '50-100 words',
+      style: 'concise and impactful',
+      structure: 'Focus on the most compelling benefits and key features only'
+    },
+    medium: {
+      words: '150-250 words', 
+      style: 'balanced and comprehensive',
+      structure: 'Include headline, key benefits, and important features with good flow'
+    },
+    extensive: {
+      words: '300-500 words',
+      style: 'detailed and thorough',
+      structure: 'Complete product story with headline, detailed benefits, features, and strong call-to-action'
+    }
+  };
+  
+  const lengthSpec = lengthSpecs[descriptionLength] || lengthSpecs.medium;
   
   // Build the prompt
   let prompt = `Generate a compelling, SEO-optimized product description for an e-commerce listing.
@@ -234,14 +256,20 @@ PRODUCT DETAILS:`;
 
   prompt += `
 
+LENGTH REQUIREMENT: ${lengthSpec.words} - ${lengthSpec.style}
+STRUCTURE: ${lengthSpec.structure}
+
 REQUIREMENTS:
 1. Create a compelling headline that grabs attention
-2. Write 2-3 paragraphs describing the product benefits and features
+2. Write in the specified length (${lengthSpec.words}) while maintaining high quality
 3. Include SEO-friendly keywords naturally
 4. Focus on benefits, not just features
 5. Create urgency or desire to purchase
-6. Keep it between 150-300 words
-7. Make it conversion-focused
+6. Make it conversion-focused
+7. Maintain the same professional quality regardless of length
+8. ${descriptionLength === 'short' ? 'Be punchy and direct - every word counts' : 
+     descriptionLength === 'extensive' ? 'Provide comprehensive details and compelling storytelling' :
+     'Balance detail with readability for optimal conversion'}
 
 Please generate a professional product description that matches the specified brand tone and appeals to the target audience.`;
 
