@@ -924,21 +924,23 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="targetAudience" class="form-label">Target Audience (Optional)</label>
+                        <label for="targetAudience" class="form-label" data-translate="targetAudience">Target Audience (Optional)</label>
                         <input 
                             type="text" 
                             id="targetAudience" 
                             class="form-input" 
                             placeholder="e.g., busy parents, fitness enthusiasts, tech professionals"
+                            data-translate-placeholder="targetAudiencePlaceholder"
                         >
                     </div>
 
                     <div class="form-group">
-                        <label for="keyFeatures" class="form-label">Key Features to Highlight (Optional)</label>
+                        <label for="keyFeatures" class="form-label" data-translate="keyFeatures">Key Features to Highlight (Optional)</label>
                         <textarea 
                             id="keyFeatures" 
                             class="form-textarea" 
                             placeholder="List the most important features you want to emphasize..."
+                            data-translate-placeholder="keyFeaturesPlaceholder"
                         ></textarea>
                     </div>
 
@@ -950,7 +952,7 @@
                 <div id="results" class="results" style="display: none;">
                     <h3 data-translate="optimizedDescription">✨ Your Optimized Product Description</h3>
                     <div id="resultsContent" class="results-content"></div>
-                    <button type="button" class="btn-primary" id="copyBtn" style="margin-top: 15px;">
+                    <button type="button" class="btn-primary" id="copyBtn" style="margin-top: 15px;" data-translate="copyToClipboard">
                         📋 Copy to Clipboard
                     </button>
                 </div>
@@ -962,14 +964,14 @@
                 <div class="pricing-grid">
                     <div class="pricing-card clickable-plan" data-plan="starter">
                         <div class="plan-name" data-translate="starter">Starter</div>
-                        <div class="free-trial-badge">🎉 First Month FREE</div>
+                        <div class="free-trial-badge" data-translate="firstMonthFree">🎉 First Month FREE</div>
                         <div class="plan-price">$19.99</div>
-                        <div class="plan-period">per month after trial</div>
+                        <div class="plan-period" data-translate="perMonthAfterTrial">per month after trial</div>
                         <ul class="plan-features">
-                            <li>50 descriptions/month</li>
-                            <li>5 brand tones</li>
-                            <li>SEO optimization</li>
-                            <li>Email support</li>
+                            <li data-translate="fiftyDescriptions">50 descriptions/month</li>
+                            <li data-translate="fiveBrandTones">5 brand tones</li>
+                            <li data-translate="seoOptimization">SEO optimization</li>
+                            <li data-translate="emailSupport">Email support</li>
                         </ul>
                         <div id="paypal-starter" class="paypal-button-container"></div>
                     </div>
@@ -977,13 +979,13 @@
                     <div class="pricing-card featured clickable-plan" data-plan="professional">
                         <div class="plan-name" data-translate="professional">Professional</div>
                         <div class="plan-price">$49.99</div>
-                        <div class="plan-period">per month</div>
+                        <div class="plan-period" data-translate="perMonth">per month</div>
                         <ul class="plan-features">
-                            <li>200 descriptions/month</li>
-                            <li>All brand tones</li>
-                            <li>Advanced SEO</li>
-                            <li>Bulk export</li>
-                            <li>Priority support</li>
+                            <li data-translate="twoHundredDescriptions">200 descriptions/month</li>
+                            <li data-translate="allBrandTones">All brand tones</li>
+                            <li data-translate="advancedSeo">Advanced SEO</li>
+                            <li data-translate="bulkExport">Bulk export</li>
+                            <li data-translate="prioritySupport">Priority support</li>
                         </ul>
                         <div id="paypal-professional" class="paypal-button-container"></div>
                     </div>
@@ -991,13 +993,13 @@
                     <div class="pricing-card clickable-plan" data-plan="enterprise">
                         <div class="plan-name" data-translate="enterprise">Enterprise</div>
                         <div class="plan-price">$99.99</div>
-                        <div class="plan-period">per month</div>
+                        <div class="plan-period" data-translate="perMonth">per month</div>
                         <ul class="plan-features">
-                            <li>Unlimited descriptions</li>
-                            <li>Custom brand tones</li>
-                            <li>API access</li>
-                            <li>Team collaboration</li>
-                            <li>Dedicated support</li>
+                            <li data-translate="unlimitedDescriptions">Unlimited descriptions</li>
+                            <li data-translate="customBrandTones">Custom brand tones</li>
+                            <li data-translate="apiAccess">API access</li>
+                            <li data-translate="teamCollaboration">Team collaboration</li>
+                            <li data-translate="dedicatedSupport">Dedicated support</li>
                         </ul>
                         <div id="paypal-enterprise" class="paypal-button-container"></div>
                     </div>
@@ -1073,9 +1075,9 @@
                 descriptionLength: 'Description Length',
                 language: 'Language',
                 targetAudience: 'Target Audience (Optional)',
-                targetAudiencePlaceholder: 'e.g., Tech enthusiasts, Parents, Professionals',
-                keyFeatures: 'Key Features (Optional)',
-                keyFeaturesPlaceholder: 'e.g., Waterproof, 5-year warranty, Fast charging',
+                targetAudiencePlaceholder: 'e.g., busy parents, fitness enthusiasts, tech professionals',
+                keyFeatures: 'Key Features to Highlight (Optional)',
+                keyFeaturesPlaceholder: 'List the most important features you want to emphasize...',
                 
                 // Brand Tone Options
                 selectBrandVoice: 'Select your brand voice...',
@@ -1092,7 +1094,7 @@
                 
                 // Buttons
                 generateDescription: 'Generate AI Description',
-                copyDescription: 'Copy Description',
+                copyToClipboard: '📋 Copy to Clipboard',
                 
                 // Results
                 optimizedDescription: '✨ Your Optimized Product Description',
@@ -1107,13 +1109,29 @@
                 enterprise: 'Enterprise',
                 
                 // Plan Features
-                monthlyGenerations: 'descriptions/month',
-                unlimitedGenerations: 'Unlimited generations',
+                firstMonthFree: '🎉 First Month FREE',
+                perMonth: 'per month',
+                perMonthAfterTrial: 'per month after trial',
+                
+                // Starter Plan Features  
+                fiftyDescriptions: '50 descriptions/month',
+                fiveBrandTones: '5 brand tones',
+                seoOptimization: 'SEO optimization',
                 emailSupport: 'Email support',
+                
+                // Professional Plan Features
+                twoHundredDescriptions: '200 descriptions/month',
+                allBrandTones: 'All brand tones',
+                advancedSeo: 'Advanced SEO',
+                bulkExport: 'Bulk export',
                 prioritySupport: 'Priority support',
-                advancedFeatures: 'Advanced features',
-                customBranding: 'Custom branding',
+                
+                // Enterprise Plan Features
+                unlimitedDescriptions: 'Unlimited descriptions',
+                customBrandTones: 'Custom brand tones',
                 apiAccess: 'API access',
+                teamCollaboration: 'Team collaboration',
+                dedicatedSupport: 'Dedicated support',
                 
                 // Plan Buttons
                 currentPlan: 'Current Plan',
@@ -1172,9 +1190,9 @@
                 descriptionLength: 'Longitud de Descripción',
                 language: 'Idioma',
                 targetAudience: 'Audiencia Objetivo (Opcional)',
-                targetAudiencePlaceholder: 'ej., Entusiastas de la tecnología, Padres, Profesionales',
-                keyFeatures: 'Características Clave (Opcional)',
-                keyFeaturesPlaceholder: 'ej., Resistente al agua, Garantía de 5 años, Carga rápida',
+                targetAudiencePlaceholder: 'ej., padres ocupados, entusiastas del fitness, profesionales de tecnología',
+                keyFeatures: 'Características Clave a Destacar (Opcional)',
+                keyFeaturesPlaceholder: 'Lista las características más importantes que quieres enfatizar...',
                 
                 // Brand Tone Options
                 selectBrandVoice: 'Selecciona la voz de tu marca...',
@@ -1191,7 +1209,7 @@
                 
                 // Buttons
                 generateDescription: 'Generar Descripción con IA',
-                copyDescription: 'Copiar Descripción',
+                copyToClipboard: '📋 Copiar al Portapapeles',
                 
                 // Results
                 optimizedDescription: '✨ Tu Descripción de Producto Optimizada',
@@ -1206,13 +1224,29 @@
                 enterprise: 'Empresa',
                 
                 // Plan Features
-                monthlyGenerations: 'descripciones/mes',
-                unlimitedGenerations: 'Generaciones ilimitadas',
+                firstMonthFree: '🎉 Primer Mes GRATIS',
+                perMonth: 'por mes',
+                perMonthAfterTrial: 'por mes después del periodo de prueba',
+                
+                // Starter Plan Features  
+                fiftyDescriptions: '50 descripciones/mes',
+                fiveBrandTones: '5 tonos de marca',
+                seoOptimization: 'Optimización SEO',
                 emailSupport: 'Soporte por email',
+                
+                // Professional Plan Features
+                twoHundredDescriptions: '200 descripciones/mes',
+                allBrandTones: 'Todos los tonos de marca',
+                advancedSeo: 'SEO Avanzado',
+                bulkExport: 'Exportación masiva',
                 prioritySupport: 'Soporte prioritario',
-                advancedFeatures: 'Características avanzadas',
-                customBranding: 'Marca personalizada',
+                
+                // Enterprise Plan Features
+                unlimitedDescriptions: 'Descripciones ilimitadas',
+                customBrandTones: 'Tonos de marca personalizados',
                 apiAccess: 'Acceso a API',
+                teamCollaboration: 'Colaboración en equipo',
+                dedicatedSupport: 'Soporte dedicado',
                 
                 // Plan Buttons
                 currentPlan: 'Plan Actual',
