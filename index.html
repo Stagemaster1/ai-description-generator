@@ -724,6 +724,7 @@
                         <div class="input-method-selector">
                             <button type="button" id="urlModeBtn" class="method-btn active">🔗 Product URL</button>
                             <button type="button" id="barcodeModeBtn" class="method-btn">📊 Barcode/UPC</button>
+                            <button type="button" id="manualModeBtn" class="method-btn">✏️ Manual Entry</button>
                         </div>
                         
                         <div id="urlInputGroup" class="input-group active">
@@ -747,6 +748,16 @@
                             >
                             <button type="button" id="lookupBarcodeBtn" class="barcode-lookup-btn">🔍 Lookup Product</button>
                             <div class="error" id="barcodeError"></div>
+                        </div>
+                        
+                        <div id="manualInputGroup" class="input-group">
+                            <input 
+                                type="text" 
+                                id="productName" 
+                                class="form-input" 
+                                placeholder="Enter product name (e.g., 'Wireless Bluetooth Headphones')"
+                            >
+                            <div class="error" id="manualError"></div>
                         </div>
                         
                         <div id="productPreview" class="product-preview" style="display: none;">
@@ -991,6 +1002,7 @@
             // Input method toggle buttons
             const urlModeBtn = document.getElementById('urlModeBtn');
             const barcodeModeBtn = document.getElementById('barcodeModeBtn');
+            const manualModeBtn = document.getElementById('manualModeBtn');
             
             if (urlModeBtn) {
                 urlModeBtn.addEventListener('click', () => switchInputMode('url'));
@@ -998,6 +1010,10 @@
             
             if (barcodeModeBtn) {
                 barcodeModeBtn.addEventListener('click', () => switchInputMode('barcode'));
+            }
+            
+            if (manualModeBtn) {
+                manualModeBtn.addEventListener('click', () => switchInputMode('manual'));
             }
 
             // Barcode lookup button
@@ -1066,20 +1082,30 @@
             // Update button states
             const urlModeBtn = document.getElementById('urlModeBtn');
             const barcodeModeBtn = document.getElementById('barcodeModeBtn');
+            const manualModeBtn = document.getElementById('manualModeBtn');
             const urlInputGroup = document.getElementById('urlInputGroup');
             const barcodeInputGroup = document.getElementById('barcodeInputGroup');
+            const manualInputGroup = document.getElementById('manualInputGroup');
             const productPreview = document.getElementById('productPreview');
             
+            // Remove all active states first
+            urlModeBtn.classList.remove('active');
+            barcodeModeBtn.classList.remove('active');
+            manualModeBtn.classList.remove('active');
+            urlInputGroup.classList.remove('active');
+            barcodeInputGroup.classList.remove('active');
+            manualInputGroup.classList.remove('active');
+            
+            // Set active state based on mode
             if (mode === 'url') {
                 urlModeBtn.classList.add('active');
-                barcodeModeBtn.classList.remove('active');
                 urlInputGroup.classList.add('active');
-                barcodeInputGroup.classList.remove('active');
-            } else {
+            } else if (mode === 'barcode') {
                 barcodeModeBtn.classList.add('active');
-                urlModeBtn.classList.remove('active');
                 barcodeInputGroup.classList.add('active');
-                urlInputGroup.classList.remove('active');
+            } else if (mode === 'manual') {
+                manualModeBtn.classList.add('active');
+                manualInputGroup.classList.add('active');
             }
             
             productPreview.style.display = 'none';
@@ -1332,6 +1358,7 @@
             // Get form values
             const productUrl = inputMode === 'url' ? document.getElementById('productUrl').value.trim() : null;
             const productBarcode = inputMode === 'barcode' ? document.getElementById('productBarcode').value.trim() : null;
+            const productName = inputMode === 'manual' ? document.getElementById('productName').value.trim() : null;
             const brandTone = document.getElementById('brandTone').value;
             const targetAudience = document.getElementById('targetAudience').value.trim();
             const keyFeatures = document.getElementById('keyFeatures').value.trim();
@@ -1366,8 +1393,15 @@
 
                 if (inputMode === 'url') {
                     requestBody.productUrl = productUrl;
-                } else {
+                } else if (inputMode === 'barcode') {
                     requestBody.productInfo = currentProductInfo;
+                } else if (inputMode === 'manual') {
+                    // Create a manual product info object
+                    requestBody.productInfo = {
+                        name: productName,
+                        platform: 'Manual Entry',
+                        productType: 'product'
+                    };
                 }
 
                 // Call the generate API
@@ -1435,10 +1469,17 @@
                         isValid = false;
                     }
                 }
-            } else {
+            } else if (inputMode === 'barcode') {
                 // Barcode mode validation
                 if (!currentProductInfo) {
                     showError('barcodeError', 'Please lookup a product first');
+                    isValid = false;
+                }
+            } else if (inputMode === 'manual') {
+                // Manual mode validation
+                const productName = document.getElementById('productName').value.trim();
+                if (!productName) {
+                    showError('manualError', 'Please enter a product name');
                     isValid = false;
                 }
             }
