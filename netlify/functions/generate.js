@@ -205,7 +205,7 @@ function determineProductType(productName, category) {
   return 'product';
 }
 
-async function generateDescription({ productUrl, productInfo, brandTone, descriptionLength, targetAudience, keyFeatures, inputMode }) {
+async function generateDescription({ productUrl, productInfo, brandTone, descriptionLength = 'medium', targetAudience, keyFeatures, inputMode }) {
   const toneInstruction = brandTones[brandTone];
   
   // Length specifications
