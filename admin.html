@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f1f5f9;
+            background: #6b7280;
             color: #334155;
             line-height: 1.6;
         }
@@ -30,6 +30,37 @@
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .header-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .header-buttons button {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .btn-live-site {
+            background: #10b981 !important;
+            color: white !important;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+        
+        .btn-live-site:hover {
+            background: #059669 !important;
+            text-decoration: none;
         }
 
         .login-form, .admin-panel {
@@ -209,7 +240,10 @@
             <div class="header">
                 <h1>🛠️ Admin Panel - AI Description Generator</h1>
                 <p>Manage users, reset limits, and monitor system usage</p>
-                <button onclick="logout()" style="width: auto; float: right; margin-top: -40px;">Logout</button>
+                <div class="header-buttons">
+                    <a href="https://zippy-granita-96fbe4.netlify.app" target="_blank" class="btn-live-site">🌍 View Live Site</a>
+                    <button onclick="logout()">Logout</button>
+                </div>
             </div>
 
             <div id="notification" class="notification"></div>
