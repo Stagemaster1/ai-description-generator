@@ -339,18 +339,23 @@
 
         .pricing-grid {
             display: grid;
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            align-items: stretch;
         }
 
         .pricing-card {
             background: rgba(255, 255, 255, 0.03);
             border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 25px;
+            border-radius: 12px;
+            padding: 18px;
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .pricing-card.featured {
@@ -379,57 +384,59 @@
         }
 
         .plan-name {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 10px;
-            margin-top: 20px;
+            margin-bottom: 8px;
+            margin-top: 8px;
         }
 
         .pricing-card .plan-name {
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .pricing-card.featured .plan-name {
-            margin-top: 25px;
+            margin-top: 18px;
         }
 
         .plan-price {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             font-weight: 800;
             background: linear-gradient(135deg, #60a5fa, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .plan-period {
             color: #94a3b8;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
         }
 
         .free-trial-badge {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.65rem;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
             display: inline-block;
         }
 
         .plan-features {
             list-style: none;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
+            flex-grow: 1;
         }
 
         .plan-features li {
             color: #cbd5e1;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+            line-height: 1.3;
         }
 
         .plan-features li::before {
@@ -479,6 +486,11 @@
             .main-content {
                 grid-template-columns: 1fr;
                 gap: 30px;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
 
             .header {
