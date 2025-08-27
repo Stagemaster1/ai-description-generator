@@ -725,7 +725,10 @@
                 <h2 class="section-title">🚀 Generate Your Description</h2>
                 
                 <div class="usage-tracker" id="usageTracker">
-                    <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 5px;">Monthly Usage</div>
+                    <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between;">
+                        Monthly Usage
+                        <button onclick="refreshUsage()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 2px; font-size: 0.8rem;" title="Refresh usage data">🔄</button>
+                    </div>
                     <div style="color: #ffffff; font-weight: 600;" id="usageText">0 of 5 free descriptions used</div>
                     <div class="usage-bar">
                         <div class="usage-fill" id="usageFill" style="width: 0%;"></div>
@@ -969,8 +972,9 @@
         });
 
         // Initialize app when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             loadUserState();
+            await syncUserData(); // Sync with backend after loading local state
             updateUsageDisplay();
             setupEventListeners();
             
@@ -1471,9 +1475,9 @@
                 const data = await response.json();
 
                 if (data.success && data.description) {
-                    // Update usage count
-                    userState.monthlyUsage++;
-                    saveUserState();
+                    // Update usage count on backend and sync locally
+                    await updateUsageCount();
+                    await syncUserData();
                     updateUsageDisplay();
                     
                     // Show results
@@ -1597,6 +1601,78 @@
                     errorDiv.style.display = 'none';
                 }
             });
+        }
+
+        async function updateUsageCount() {
+            // Increment usage on backend
+            try {
+                if (!userState.userId) {
+                    return; // No userId yet
+                }
+                
+                const response = await fetch('/.netlify/functions/user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'increment_usage',
+                        userId: userState.userId
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.user) {
+                        // Update local state with updated backend data
+                        userState.monthlyUsage = data.user.monthlyUsage || 0;
+                        saveUserState();
+                    }
+                }
+            } catch (error) {
+                console.log('Usage update skipped:', error.message);
+                // Fallback to local increment if backend fails
+                userState.monthlyUsage++;
+                saveUserState();
+            }
+        }
+
+        async function syncUserData() {
+            // Sync with backend user data
+            try {
+                if (!userState.userId) {
+                    return; // No userId yet
+                }
+                
+                const response = await fetch('/.netlify/functions/user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'get_usage',
+                        userId: userState.userId
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.user) {
+                        // Update local state with backend data
+                        userState.monthlyUsage = data.user.monthlyUsage || 0;
+                        userState.maxUsage = data.user.maxUsage || 5;
+                        userState.subscriptionType = data.user.subscriptionType || 'free';
+                        userState.isSubscribed = data.user.isSubscribed || false;
+                        saveUserState();
+                    }
+                }
+            } catch (error) {
+                console.log('Sync skipped:', error.message);
+                // Don't show error to user - sync is optional
+            }
+        }
+
+        async function refreshUsage() {
+            // Manual sync for users to refresh their usage data
+            await syncUserData();
+            updateUsageDisplay();
+            showNotification('Usage data refreshed', 'success');
         }
 
         function updateUsageDisplay() {

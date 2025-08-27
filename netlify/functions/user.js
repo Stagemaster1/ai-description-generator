@@ -1,5 +1,8 @@
-// Simple user management using Netlify Identity
+// Simple user management using shared memory store
 // In a production environment, consider using a database like Supabase or Firebase
+
+// Shared user storage (same as admin.js)
+let users = {};
 
 exports.handler = async (event, context) => {
   // Enable CORS
@@ -58,38 +61,53 @@ exports.handler = async (event, context) => {
 // In production, replace with proper database operations
 
 async function getUserUsage(userId, headers) {
-  // For demo purposes, we'll use a simple key-value approach
-  // In production, this would query a database
-  
-  // Since we can't access localStorage from serverless function,
-  // we'll return a default response and let the frontend handle usage tracking
-  // In a real implementation, this would query your database
-  
-  const currentDate = new Date();
-  const currentMonth = `${currentDate.getFullYear()}-${currentDate.getMonth()}`;
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({
-      userId,
-      monthlyUsage: 0, // Would come from database
-      maxUsage: 5, // Would come from subscription status
-      currentPeriod: currentMonth,
-      subscriptionStatus: 'free'
-    })
-  };
-}
-
-async function incrementUsage(userId, headers) {
-  // In production, this would update the database
-  // For now, return success and let frontend handle the increment
+  // Initialize user if they don't exist
+  if (!users[userId]) {
+    users[userId] = {
+      id: userId,
+      monthlyUsage: 0,
+      maxUsage: 5,
+      subscriptionType: 'free',
+      isSubscribed: false,
+      createdAt: new Date().toISOString(),
+      lastActive: new Date().toISOString()
+    };
+  }
   
   return {
     statusCode: 200,
     headers,
     body: JSON.stringify({
       success: true,
+      user: users[userId]
+    })
+  };
+}
+
+async function incrementUsage(userId, headers) {
+  // Initialize user if they don't exist
+  if (!users[userId]) {
+    users[userId] = {
+      id: userId,
+      monthlyUsage: 0,
+      maxUsage: 5,
+      subscriptionType: 'free',
+      isSubscribed: false,
+      createdAt: new Date().toISOString(),
+      lastActive: new Date().toISOString()
+    };
+  }
+  
+  // Increment usage
+  users[userId].monthlyUsage = (users[userId].monthlyUsage || 0) + 1;
+  users[userId].lastActive = new Date().toISOString();
+  
+  return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify({
+      success: true,
+      user: users[userId],
       message: 'Usage incremented successfully'
     })
   };
