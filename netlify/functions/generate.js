@@ -40,6 +40,14 @@ exports.handler = async (event, context) => {
 
   try {
     const { productUrl, productInfo, brandTone, descriptionLength, targetAudience, keyFeatures, userId, inputMode } = JSON.parse(event.body);
+    
+    console.log('Generation request:', {
+      brandTone,
+      descriptionLength,
+      inputMode,
+      hasProductInfo: !!productInfo,
+      hasProductUrl: !!productUrl
+    });
 
     // Validate required fields
     if (!brandTone) {
@@ -218,7 +226,7 @@ async function generateDescription({ productUrl, productInfo, brandTone, descrip
     }
   };
   
-  const lengthSpec = lengthSpecs[descriptionLength] || lengthSpecs.medium;
+  const lengthSpec = lengthSpecs[descriptionLength || 'medium'] || lengthSpecs.medium;
   
   // Build the prompt
   let prompt = `Generate a compelling, SEO-optimized product description for an e-commerce listing.
