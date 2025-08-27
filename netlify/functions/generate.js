@@ -250,7 +250,9 @@ PRODUCT DETAILS:`;
     // Manual entry - don't mention source or barcode stuff
     prompt += `
 - Product Name: ${productInfo.name}
-- Product Type: ${productInfo.productType}`;
+- Product Type: ${productInfo.productType}
+
+IMPORTANT: Write about the PRODUCT (${productInfo.name}), not about the target audience. The target audience is WHO you're selling to, the product name is WHAT you're selling.`;
     
   } else {
     prompt += `
