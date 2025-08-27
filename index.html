@@ -363,8 +363,7 @@
             background: rgba(59, 130, 246, 0.1);
         }
 
-        .pricing-card.featured::before {
-            content: 'MOST POPULAR';
+        .popular-badge {
             position: absolute;
             top: 0;
             left: 0;
@@ -375,6 +374,7 @@
             font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 1px;
+            text-align: center;
         }
 
         .pricing-card:hover {
@@ -977,6 +977,7 @@
                     </div>
 
                     <div class="pricing-card featured clickable-plan" data-plan="professional">
+                        <div class="popular-badge" data-translate="mostPopular">MOST POPULAR</div>
                         <div class="plan-name" data-translate="professional">Professional</div>
                         <div class="plan-price">$49.99</div>
                         <div class="plan-period" data-translate="perMonth">per month</div>
@@ -1111,6 +1112,7 @@
                 starter: 'Starter',
                 professional: 'Professional', 
                 enterprise: 'Enterprise',
+                mostPopular: 'MOST POPULAR',
                 
                 // Plan Features
                 firstMonthFree: '🎉 First Month FREE',
@@ -1230,6 +1232,7 @@
                 starter: 'Inicial',
                 professional: 'Profesional',
                 enterprise: 'Empresa',
+                mostPopular: 'MÁS POPULAR',
                 
                 // Plan Features
                 firstMonthFree: '🎉 Primer Mes GRATIS',
@@ -1347,6 +1350,7 @@
                 starter: 'Démarrage',
                 professional: 'Professionnel',
                 enterprise: 'Entreprise',
+                mostPopular: 'LE PLUS POPULAIRE',
                 
                 // Plan Features
                 monthlyGenerations: 'descriptions/mois',
@@ -1395,9 +1399,23 @@
                 averageTimeSaved: 'Durchschnittlich gesparte Zeit',
                 customerSatisfaction: 'Kundenzufriedenheit',
                 
+                // Input Mode Buttons
+                productURL: '🔗 Produkt-URL',
+                barcodeUPC: '📊 Barcode/UPC',
+                manualEntry: '✏️ Manuelle Eingabe',
+                
                 // Form Labels
+                productIdentification: 'Produktidentifikation',
                 productUrl: 'Produkt-URL',
                 productUrlPlaceholder: 'https://beispiel.com/produkt-seite',
+                brandTone: 'Markenton',
+                descriptionLength: 'Beschreibungslänge',
+                targetAudience: 'Zielgruppe (Optional)',
+                targetAudiencePlaceholder: 'z.B. beschäftigte Eltern, Fitness-Enthusiasten, Tech-Profis',
+                keyFeatures: 'Wichtigste Eigenschaften (Optional)', 
+                keyFeaturesPlaceholder: 'Listen Sie die wichtigsten Eigenschaften auf, die Sie betonen möchten...',
+                selectBrandVoice: 'Wählen Sie Ihren Markenton...',
+                shortLength: 'Kurz (50-100 Wörter) - Knapp & Prägnant',
                 generateDescription: 'KI-Produktbeschreibung generieren',
                 optimizedDescription: '✨ Ihre optimierte Produktbeschreibung',
                 
@@ -1409,6 +1427,7 @@
                 starter: 'Starter',
                 professional: 'Professionell',
                 enterprise: 'Unternehmen',
+                mostPopular: 'AM BELIEBTESTEN',
                 
                 // Plan Features
                 firstMonthFree: '🎉 Erster Monat KOSTENLOS',
@@ -1469,7 +1488,8 @@
                 // Plan Names
                 starter: 'Base',
                 professional: 'Professionale',
-                enterprise: 'Aziendale'
+                enterprise: 'Aziendale',
+                mostPopular: 'PIÙ POPOLARE'
             },
             
             pt: {
@@ -1505,7 +1525,8 @@
                 // Plan Names
                 starter: 'Inicial',
                 professional: 'Profissional',
-                enterprise: 'Empresarial'
+                enterprise: 'Empresarial',
+                mostPopular: 'MAIS POPULAR'
             },
             
             nl: {
@@ -1542,7 +1563,8 @@
                 // Plan Names
                 starter: 'Starter',
                 professional: 'Professioneel',
-                enterprise: 'Zakelijk'
+                enterprise: 'Zakelijk',
+                mostPopular: 'MEEST POPULAIR'
             },
             
             ja: {
@@ -1579,7 +1601,8 @@
                 // Plan Names
                 starter: 'スターター',
                 professional: 'プロフェッショナル',
-                enterprise: 'エンタープライズ'
+                enterprise: 'エンタープライズ',
+                mostPopular: '最人気'
             },
             
             zh: {
@@ -1616,7 +1639,8 @@
                 // Plan Names
                 starter: '入门版',
                 professional: '专业版',
-                enterprise: '企业版'
+                enterprise: '企业版',
+                mostPopular: '最受欢迎'
             },
             
             ru: {
@@ -1653,7 +1677,8 @@
                 // Plan Names
                 starter: 'Стартовый',
                 professional: 'Профессиональный',
-                enterprise: 'Корпоративный'
+                enterprise: 'Корпоративный',
+                mostPopular: 'САМЫЙ ПОПУЛЯРНЫЙ'
             },
             
             ar: {
@@ -1690,7 +1715,8 @@
                 // Plan Names
                 starter: 'المبتدئ',
                 professional: 'المحترف',
-                enterprise: 'المؤسسة'
+                enterprise: 'المؤسسة',
+                mostPopular: 'الأكثر شعبية'
             },
             
             hi: {
@@ -1727,7 +1753,8 @@
                 // Plan Names
                 starter: 'शुरुआती',
                 professional: 'पेशेवर',
-                enterprise: 'उद्यम'
+                enterprise: 'उद्यम',
+                mostPopular: 'सबसे लोकप्रिय'
             },
             
             ko: {
@@ -1764,7 +1791,8 @@
                 // Plan Names
                 starter: '스타터',
                 professional: '프로페셔널',
-                enterprise: '엔터프라이즈'
+                enterprise: '엔터프라이즈',
+                mostPopular: '가장 인기'
             }
         };
 
