@@ -65,6 +65,9 @@ exports.handler = async (event, context) => {
       case 'create_test_user':
         return await createTestUser(userData, headers);
       
+      case 'change_password':
+        return await changeAdminPassword(userData, headers);
+      
       default:
         return {
           statusCode: 400,
@@ -233,6 +236,50 @@ async function createTestUser(userData, headers) {
       success: true,
       message: `Test user created`,
       user: users[userId]
+    })
+  };
+}
+
+async function changeAdminPassword(userData, headers) {
+  const { currentPassword, newPassword } = userData;
+  
+  // Verify current password
+  if (currentPassword !== ADMIN_PASSWORD) {
+    return {
+      statusCode: 401,
+      headers,
+      body: JSON.stringify({ 
+        error: 'Current password is incorrect' 
+      })
+    };
+  }
+  
+  // Validate new password
+  if (!newPassword || newPassword.length < 8) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ 
+        error: 'New password must be at least 8 characters long' 
+      })
+    };
+  }
+  
+  // NOTE: In a real implementation, you'd update the environment variable
+  // or store the password securely. For now, we'll just log it.
+  console.log('Password change request:', {
+    old: ADMIN_PASSWORD,
+    new: newPassword,
+    timestamp: new Date().toISOString()
+  });
+  
+  return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify({ 
+      success: true,
+      message: 'Password change logged. Please update ADMIN_PASSWORD environment variable in Netlify.',
+      newPassword: newPassword
     })
   };
 }

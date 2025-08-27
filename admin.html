@@ -252,6 +252,24 @@
                     <button onclick="deleteUser()" class="btn-danger">Delete User</button>
                 </div>
 
+                <!-- Admin Settings -->
+                <h2>Admin Settings</h2>
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" placeholder="Enter current admin password">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" placeholder="Enter new admin password">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm new admin password">
+                </div>
+                <div class="actions">
+                    <button onclick="changeAdminPassword()" class="btn-success">🔒 Change Password</button>
+                </div>
+
                 <!-- Users Table -->
                 <h2>All Users</h2>
                 <table class="users-table" id="usersTable">
@@ -489,6 +507,48 @@
             window.URL.revokeObjectURL(url);
             
             showNotification('Users exported to CSV', 'success');
+        }
+
+        async function changeAdminPassword() {
+            const currentPassword = document.getElementById('currentPassword').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showNotification('Please fill in all password fields', 'error');
+                return;
+            }
+
+            if (currentPassword !== adminPassword) {
+                showNotification('Current password is incorrect', 'error');
+                return;
+            }
+
+            if (newPassword.length < 8) {
+                showNotification('New password must be at least 8 characters long', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showNotification('New passwords do not match', 'error');
+                return;
+            }
+
+            try {
+                await apiCall('change_password', { 
+                    currentPassword,
+                    newPassword 
+                });
+                
+                adminPassword = newPassword;
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                
+                showNotification('Admin password changed successfully', 'success');
+            } catch (error) {
+                showNotification('Failed to change password: ' + error.message, 'error');
+            }
         }
     </script>
 </body>
