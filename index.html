@@ -2664,7 +2664,7 @@
                 if (userState.isSubscribed) {
                     upgradePrompt.textContent = `${userState.subscriptionType.charAt(0).toUpperCase() + userState.subscriptionType.slice(1)} Plan Active`;
                 } else {
-                    upgradePrompt.textContent = getTranslation('upgradePrompt');
+                    upgradePrompt.textContent = t('upgradePrompt');
                 }
             }
         }
