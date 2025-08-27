@@ -14,7 +14,9 @@
       "Bash(netlify link:*)",
       "Bash(npm run dev:*)",
       "WebFetch(domain:zippy-granita-96fbe4.netlify.app)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(netlify sites:list:*)",
+      "Bash(npx netlify:*)"
     ],
     "deny": [],
     "ask": []
