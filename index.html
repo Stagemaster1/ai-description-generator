@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #0a0f1c 0%, #1a1f2e 25%, #2d1b69 50%, #1e3a8a 75%, #0f172a 100%);
+            background: #6b7280;
             min-height: 100vh;
             color: #ffffff;
             overflow-x: hidden;
@@ -738,7 +738,7 @@
                                 id="productBarcode" 
                                 class="form-input" 
                                 placeholder="Enter barcode/UPC (e.g., 123456789012)" 
-                                pattern="\d{8,13}"
+                                pattern="[0-9]{8,13}"
                                 title="Enter 8-13 digit barcode or UPC"
                             >
                             <button type="button" id="lookupBarcodeBtn" class="barcode-lookup-btn">🔍 Lookup Product</button>
@@ -894,12 +894,16 @@
         // Global error handler
         window.addEventListener('unhandledrejection', function(event) {
             console.error('Unhandled promise rejection:', event.reason);
-            showNotification('An unexpected error occurred. Please try again.', 'error');
+            if (typeof showNotification === 'function') {
+                showNotification('An unexpected error occurred. Please try again.', 'error');
+            }
         });
 
         window.addEventListener('error', function(event) {
             console.error('Global error:', event.error);
-            showNotification('An unexpected error occurred. Please refresh the page.', 'error');
+            if (typeof showNotification === 'function') {
+                showNotification('An unexpected error occurred. Please refresh the page.', 'error');
+            }
         });
 
         // Initialize app when DOM is ready
