@@ -241,7 +241,7 @@ PRODUCT DETAILS:`;
 - Category: ${productInfo.category || 'General Product'}
 - Product Type: ${productInfo.productType}
 - Barcode/UPC: ${productInfo.barcode}
-- Source: ${productInfo.platform}`;
+- Source: ${productInfo.platform === 'Manual Entry' ? 'User Input' : productInfo.platform}`;
     
     if (productInfo.description) {
       prompt += `\n- Existing Description: ${productInfo.description}`;

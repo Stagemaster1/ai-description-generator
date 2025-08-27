@@ -1428,8 +1428,11 @@
                     // Create a manual product info object
                     requestBody.productInfo = {
                         name: productName,
+                        brand: '',
+                        category: '',
                         platform: 'Manual Entry',
-                        productType: 'product'
+                        productType: 'product',
+                        source: 'Manual Entry'
                     };
                     requestBody.inputMode = 'barcode'; // Treat as barcode mode on backend
                 }
