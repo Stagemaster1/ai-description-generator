@@ -241,11 +241,17 @@ PRODUCT DETAILS:`;
 - Category: ${productInfo.category || 'General Product'}
 - Product Type: ${productInfo.productType}
 - Barcode/UPC: ${productInfo.barcode}
-- Source: ${productInfo.platform === 'Manual Entry' ? 'User Input' : productInfo.platform}`;
+- Source: ${productInfo.platform}`;
     
     if (productInfo.description) {
       prompt += `\n- Existing Description: ${productInfo.description}`;
     }
+  } else if (inputMode === 'barcode' && productInfo.platform === 'Manual Entry') {
+    // Manual entry - don't mention source or barcode stuff
+    prompt += `
+- Product Name: ${productInfo.name}
+- Product Type: ${productInfo.productType}`;
+    
   } else {
     prompt += `
 - Product URL: ${productUrl}
