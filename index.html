@@ -714,20 +714,26 @@
     <header class="header">
         <div style="position: absolute; top: 20px; right: 20px;">
             <select id="languageSwitcher" onchange="changeLanguage(this.value)" style="
-                background: rgba(255,255,255,0.1);
+                background: rgba(0,0,0,0.8);
                 border: 1px solid rgba(255,255,255,0.3);
                 border-radius: 8px;
                 color: #ffffff;
                 padding: 8px 12px;
                 font-size: 0.9rem;
                 cursor: pointer;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             ">
-                <option value="en">🇺🇸 English</option>
-                <option value="es">🇪🇸 Español</option>
-                <option value="fr">🇫🇷 Français</option>
-                <option value="de">🇩🇪 Deutsch</option>
-                <option value="it">🇮🇹 Italiano</option>
-                <option value="pt">🇵🇹 Português</option>
+                <option value="en" style="background: #2d3748; color: #ffffff; padding: 8px;">🇺🇸 English</option>
+                <option value="es" style="background: #2d3748; color: #ffffff; padding: 8px;">🇪🇸 Español</option>
+                <option value="fr" style="background: #2d3748; color: #ffffff; padding: 8px;">🇫🇷 Français</option>
+                <option value="de" style="background: #2d3748; color: #ffffff; padding: 8px;">🇩🇪 Deutsch</option>
+                <option value="it" style="background: #2d3748; color: #ffffff; padding: 8px;">🇮🇹 Italiano</option>
+                <option value="pt" style="background: #2d3748; color: #ffffff; padding: 8px;">🇵🇹 Português</option>
+                <option value="nl" style="background: #2d3748; color: #ffffff; padding: 8px;">🇳🇱 Nederlands</option>
+                <option value="ja" style="background: #2d3748; color: #ffffff; padding: 8px;">🇯🇵 日本語</option>
+                <option value="zh" style="background: #2d3748; color: #ffffff; padding: 8px;">🇨🇳 中文</option>
+                <option value="ru" style="background: #2d3748; color: #ffffff; padding: 8px;">🇷🇺 Русский</option>
             </select>
         </div>
         
@@ -1359,6 +1365,138 @@
                 starter: 'Inicial',
                 professional: 'Profissional',
                 enterprise: 'Empresarial'
+            },
+            
+            nl: {
+                // Header
+                pageTitle: 'SolTecSol - AI Productbeschrijving Generator',
+                companyName: 'SolTecSol (Solide Technische Oplossingen)',
+                appTitle: 'AI Beschrijving Generator',
+                tagline: 'Product URLs omzetten naar Converterende Tekst',
+                subtitle: 'Genereer SEO-geoptimaliseerde, merkspecifieke productbeschrijvingen die bezoekers omzetten naar kopers. Bespaar uren schrijftijd en verhoog je e-commerce verkopen.',
+                
+                // Generator Section
+                generateSection: '🚀 Genereer Uw Beschrijving',
+                monthlyUsage: 'Maandelijks Gebruik',
+                usedDescriptions: 'beschrijvingen gebruikt',
+                freeDescriptions: 'gratis beschrijvingen gebruikt',
+                of: 'van',
+                unlimitedDescriptions: 'onbeperkt',
+                upgradePrompt: 'Upgrade voor onbeperkte beschrijvingen',
+                
+                // Form Labels
+                productIdentification: 'Product Identificatie',
+                productUrl: 'Product URL',
+                generateDescription: 'AI Beschrijving Genereren',
+                optimizedDescription: '✨ Uw Geoptimaliseerde Productbeschrijving',
+                
+                // Pricing Section
+                pricingTitle: '💰 Kies Uw Plan',
+                pricingSubtitle: 'Ontgrendel onbeperkte AI-beschrijvingen',
+                
+                // Plan Names
+                starter: 'Starter',
+                professional: 'Professioneel',
+                enterprise: 'Zakelijk'
+            },
+            
+            ja: {
+                // Header
+                pageTitle: 'SolTecSol - AI商品説明ジェネレーター',
+                companyName: 'SolTecSol (ソリッドテック ソリューションズ)',
+                appTitle: 'AI説明ジェネレーター',
+                tagline: '商品URLを売れる文章に変換',
+                subtitle: 'SEO最適化されたブランド特有の商品説明を生成し、訪問者を購入者に変換します。執筆時間を節約し、Eコマースの売上を向上させましょう。',
+                
+                // Generator Section
+                generateSection: '🚀 説明を生成',
+                monthlyUsage: '月間使用量',
+                usedDescriptions: '説明使用済み',
+                freeDescriptions: '無料説明使用済み',
+                of: 'の',
+                unlimitedDescriptions: '無制限',
+                upgradePrompt: '無制限説明にアップグレード',
+                
+                // Form Labels
+                productIdentification: '商品識別',
+                productUrl: '商品URL',
+                generateDescription: 'AI説明を生成',
+                optimizedDescription: '✨ 最適化された商品説明',
+                
+                // Pricing Section
+                pricingTitle: '💰 プランを選択',
+                pricingSubtitle: '無制限のAI説明を解除',
+                
+                // Plan Names
+                starter: 'スターター',
+                professional: 'プロフェッショナル',
+                enterprise: 'エンタープライズ'
+            },
+            
+            zh: {
+                // Header
+                pageTitle: 'SolTecSol - AI产品描述生成器',
+                companyName: 'SolTecSol (固体科技解决方案)',
+                appTitle: 'AI描述生成器',
+                tagline: '将产品URL转换为转化文案',
+                subtitle: '生成SEO优化的品牌特定产品描述，将访客转化为买家。节省数小时写作时间，提升电商销售。',
+                
+                // Generator Section
+                generateSection: '🚀 生成您的描述',
+                monthlyUsage: '月度使用量',
+                usedDescriptions: '已使用描述',
+                freeDescriptions: '已使用免费描述',
+                of: '的',
+                unlimitedDescriptions: '无限制',
+                upgradePrompt: '升级获得无限描述',
+                
+                // Form Labels
+                productIdentification: '产品识别',
+                productUrl: '产品URL',
+                generateDescription: '生成AI描述',
+                optimizedDescription: '✨ 您的优化产品描述',
+                
+                // Pricing Section
+                pricingTitle: '💰 选择您的计划',
+                pricingSubtitle: '解锁无限AI描述',
+                
+                // Plan Names
+                starter: '入门版',
+                professional: '专业版',
+                enterprise: '企业版'
+            },
+            
+            ru: {
+                // Header
+                pageTitle: 'SolTecSol - AI Генератор Описаний Товаров',
+                companyName: 'SolTecSol (Надёжные Технические Решения)',
+                appTitle: 'AI Генератор Описаний',
+                tagline: 'Превратите URL товаров в продающие тексты',
+                subtitle: 'Создавайте SEO-оптимизированные, брендовые описания товаров, которые превращают посетителей в покупателей. Экономьте часы на написании и увеличивайте продажи интернет-магазина.',
+                
+                // Generator Section
+                generateSection: '🚀 Создать Описание',
+                monthlyUsage: 'Месячное Использование',
+                usedDescriptions: 'описаний использовано',
+                freeDescriptions: 'бесплатных описаний использовано',
+                of: 'из',
+                unlimitedDescriptions: 'неограничено',
+                upgradePrompt: 'Обновить до неограниченных описаний',
+                
+                // Form Labels
+                productIdentification: 'Идентификация Товара',
+                productUrl: 'URL Товара',
+                generateDescription: 'Создать AI Описание',
+                optimizedDescription: '✨ Ваше Оптимизированное Описание Товара',
+                
+                // Pricing Section
+                pricingTitle: '💰 Выберите Ваш План',
+                pricingSubtitle: 'Разблокировать неограниченные AI описания',
+                
+                // Plan Names
+                starter: 'Стартовый',
+                professional: 'Профессиональный',
+                enterprise: 'Корпоративный'
             }
         };
 
