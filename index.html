@@ -1416,6 +1416,7 @@
                 keyFeaturesPlaceholder: 'Listen Sie die wichtigsten Eigenschaften auf, die Sie betonen möchten...',
                 selectBrandVoice: 'Wählen Sie Ihren Markenton...',
                 shortLength: 'Kurz (50-100 Wörter) - Knapp & Prägnant',
+                language: 'Sprache',
                 generateDescription: 'KI-Produktbeschreibung generieren',
                 optimizedDescription: '✨ Ihre optimierte Produktbeschreibung',
                 
@@ -1452,7 +1453,10 @@
                 customBrandTones: 'Benutzerdefinierte Marken-Tonarten',
                 apiAccess: 'API-Zugang',
                 teamCollaboration: 'Team-Zusammenarbeit',
-                dedicatedSupport: 'Dedizierter Support'
+                dedicatedSupport: 'Dedizierter Support',
+                
+                // Language Switcher
+                selectLanguage: 'Sprache'
             },
             
             it: {
@@ -2644,7 +2648,7 @@
                 if (userState.isSubscribed) {
                     upgradePrompt.textContent = `${userState.subscriptionType.charAt(0).toUpperCase() + userState.subscriptionType.slice(1)} Plan Active`;
                 } else {
-                    upgradePrompt.textContent = 'Upgrade for unlimited descriptions';
+                    upgradePrompt.textContent = getTranslation('upgradePrompt');
                 }
             }
         }
