@@ -487,6 +487,11 @@
             margin-top: 8px;
         }
 
+        /* Language Selector Styles */
+        .language-option:hover {
+            background: rgba(255,255,255,0.1) !important;
+        }
+        
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -713,28 +718,81 @@
 
     <header class="header">
         <div style="position: absolute; top: 20px; right: 20px;">
-            <select id="languageSwitcher" onchange="changeLanguage(this.value)" style="
-                background: rgba(0,0,0,0.8);
-                border: 1px solid rgba(255,255,255,0.3);
-                border-radius: 8px;
-                color: #ffffff;
-                padding: 8px 12px;
-                font-size: 0.9rem;
-                cursor: pointer;
-                backdrop-filter: blur(10px);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            ">
-                <option value="en" style="background: #2d3748; color: #ffffff; padding: 8px;">🇺🇸 English</option>
-                <option value="es" style="background: #2d3748; color: #ffffff; padding: 8px;">🇪🇸 Español</option>
-                <option value="fr" style="background: #2d3748; color: #ffffff; padding: 8px;">🇫🇷 Français</option>
-                <option value="de" style="background: #2d3748; color: #ffffff; padding: 8px;">🇩🇪 Deutsch</option>
-                <option value="it" style="background: #2d3748; color: #ffffff; padding: 8px;">🇮🇹 Italiano</option>
-                <option value="pt" style="background: #2d3748; color: #ffffff; padding: 8px;">🇵🇹 Português</option>
-                <option value="nl" style="background: #2d3748; color: #ffffff; padding: 8px;">🇳🇱 Nederlands</option>
-                <option value="ja" style="background: #2d3748; color: #ffffff; padding: 8px;">🇯🇵 日本語</option>
-                <option value="zh" style="background: #2d3748; color: #ffffff; padding: 8px;">🇨🇳 中文</option>
-                <option value="ru" style="background: #2d3748; color: #ffffff; padding: 8px;">🇷🇺 Русский</option>
-            </select>
+            <div class="language-selector" style="position: relative;">
+                <button id="languageToggle" onclick="toggleLanguageDropdown()" style="
+                    background: rgba(0,0,0,0.8);
+                    border: 1px solid rgba(255,255,255,0.3);
+                    border-radius: 8px;
+                    color: #ffffff;
+                    padding: 8px 12px;
+                    font-size: 0.9rem;
+                    cursor: pointer;
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                ">
+                    <span id="currentLanguageFlag">🇺🇸</span>
+                    <span id="currentLanguageName">English</span>
+                    <span style="font-size: 0.7rem;">▼</span>
+                </button>
+                
+                <div id="languageDropdown" style="
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background: rgba(0,0,0,0.9);
+                    border: 1px solid rgba(255,255,255,0.3);
+                    border-radius: 8px;
+                    backdrop-filter: blur(15px);
+                    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+                    min-width: 180px;
+                    z-index: 1000;
+                    display: none;
+                    margin-top: 5px;
+                ">
+                    <div class="language-option" onclick="selectLanguage('en')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇺🇸</span> English
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('es')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇪🇸</span> Español
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('fr')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇫🇷</span> Français
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('de')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇩🇪</span> Deutsch
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('it')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇮🇹</span> Italiano
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('pt')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇵🇹</span> Português
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('nl')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇳🇱</span> Nederlands
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('ja')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇯🇵</span> 日本語
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('zh')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇨🇳</span> 中文
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('ru')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇷🇺</span> Русский
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('ar')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇸🇦</span> العربية
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('hi')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇮🇳</span> हिन्दी
+                    </div>
+                    <div class="language-option" onclick="selectLanguage('ko')" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9rem;">
+                        <span>🇰🇷</span> 한국어
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="company-name" data-translate="companyName">SolTecSol (Solid Tech Solutions)</div>
@@ -846,7 +904,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="language" class="form-label">Language</label>
+                        <label for="language" class="form-label" data-translate="language">Language</label>
                         <select id="language" class="form-select" required>
                             <option value="english">🇺🇸 English</option>
                             <option value="german">🇩🇪 German (Deutsch)</option>
@@ -1497,6 +1555,105 @@
                 starter: 'Стартовый',
                 professional: 'Профессиональный',
                 enterprise: 'Корпоративный'
+            },
+            
+            ar: {
+                // Header
+                pageTitle: 'SolTecSol - مولد وصف المنتجات بالذكاء الاصطناعي',
+                companyName: 'SolTecSol (حلول تقنية صلبة)',
+                appTitle: 'مولد الوصف بالذكاء الاصطناعي',
+                tagline: 'حول عناوين المنتجات إلى نصوص تسويقية',
+                subtitle: 'أنتج أوصاف منتجات محسنة لمحركات البحث وخاصة بالعلامة التجارية تحول الزوار إلى مشترين. وفر ساعات من الكتابة وزد مبيعات التجارة الإلكترونية.',
+                
+                // Generator Section
+                generateSection: '🚀 أنتج وصفك',
+                monthlyUsage: 'الاستخدام الشهري',
+                usedDescriptions: 'الأوصاف المستخدمة',
+                freeDescriptions: 'الأوصاف المجانية المستخدمة',
+                of: 'من',
+                unlimitedDescriptions: 'غير محدود',
+                upgradePrompt: 'ترقية للأوصاف غير المحدودة',
+                
+                // Form Labels
+                productIdentification: 'تحديد المنتج',
+                productUrl: 'رابط المنتج',
+                generateDescription: 'إنتاج وصف بالذكاء الاصطناعي',
+                optimizedDescription: '✨ وصف المنتج المحسن',
+                
+                // Pricing Section
+                pricingTitle: '💰 اختر خطتك',
+                pricingSubtitle: 'اكسب أوصاف ذكاء اصطناعي غير محدودة',
+                
+                // Plan Names
+                starter: 'المبتدئ',
+                professional: 'المحترف',
+                enterprise: 'المؤسسة'
+            },
+            
+            hi: {
+                // Header
+                pageTitle: 'SolTecSol - AI उत्पाद विवरण जेनरेटर',
+                companyName: 'SolTecSol (ठोस तकनीकी समाधान)',
+                appTitle: 'AI विवरण जेनरेटर',
+                tagline: 'उत्पाद URLs को बिकने वाली सामग्री में बदलें',
+                subtitle: 'SEO-अनुकूलित, ब्रांड-विशिष्ट उत्पाद विवरण बनाएं जो आगंतुकों को खरीदारों में बदल देते हैं। लेखन समय की घंटों की बचत करें और अपनी ई-कॉमर्स बिक्री बढ़ाएं।',
+                
+                // Generator Section
+                generateSection: '🚀 अपना विवरण बनाएं',
+                monthlyUsage: 'मासिक उपयोग',
+                usedDescriptions: 'विवरण उपयोग किए गए',
+                freeDescriptions: 'मुफ्त विवरण उपयोग किए गए',
+                of: 'का',
+                unlimitedDescriptions: 'असीमित',
+                upgradePrompt: 'असीमित विवरण के लिए अपग्रेड करें',
+                
+                // Form Labels
+                productIdentification: 'उत्पाद पहचान',
+                productUrl: 'उत्पाद URL',
+                generateDescription: 'AI विवरण जेनरेट करें',
+                optimizedDescription: '✨ आपका अनुकूलित उत्पाद विवरण',
+                
+                // Pricing Section
+                pricingTitle: '💰 अपनी योजना चुनें',
+                pricingSubtitle: 'असीमित AI विवरण अनलॉक करें',
+                
+                // Plan Names
+                starter: 'शुरुआती',
+                professional: 'पेशेवर',
+                enterprise: 'उद्यम'
+            },
+            
+            ko: {
+                // Header
+                pageTitle: 'SolTecSol - AI 제품 설명 생성기',
+                companyName: 'SolTecSol (견고한 기술 솔루션)',
+                appTitle: 'AI 설명 생성기',
+                tagline: '제품 URL을 전환하는 카피로 변환',
+                subtitle: 'SEO 최적화된 브랜드별 제품 설명을 생성하여 방문자를 구매자로 전환하세요. 작성 시간을 절약하고 전자상거래 판매를 증대하세요.',
+                
+                // Generator Section
+                generateSection: '🚀 설명 생성하기',
+                monthlyUsage: '월간 사용량',
+                usedDescriptions: '사용된 설명',
+                freeDescriptions: '사용된 무료 설명',
+                of: '의',
+                unlimitedDescriptions: '무제한',
+                upgradePrompt: '무제한 설명으로 업그레이드',
+                
+                // Form Labels
+                productIdentification: '제품 식별',
+                productUrl: '제품 URL',
+                generateDescription: 'AI 설명 생성',
+                optimizedDescription: '✨ 최적화된 제품 설명',
+                
+                // Pricing Section
+                pricingTitle: '💰 플랜 선택',
+                pricingSubtitle: '무제한 AI 설명 잠금해제',
+                
+                // Plan Names
+                starter: '스타터',
+                professional: '프로페셔널',
+                enterprise: '엔터프라이즈'
             }
         };
 
@@ -1533,6 +1690,40 @@
             return translations[currentLanguage]?.[key] || translations.en[key] || key;
         }
         
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
+        }
+        
+        function selectLanguage(langCode) {
+            changeLanguage(langCode);
+            document.getElementById('languageDropdown').style.display = 'none';
+            updateLanguageDisplay(langCode);
+        }
+        
+        function updateLanguageDisplay(langCode) {
+            const languages = {
+                en: { flag: '🇺🇸', name: 'English' },
+                es: { flag: '🇪🇸', name: 'Español' },
+                fr: { flag: '🇫🇷', name: 'Français' },
+                de: { flag: '🇩🇪', name: 'Deutsch' },
+                it: { flag: '🇮🇹', name: 'Italiano' },
+                pt: { flag: '🇵🇹', name: 'Português' },
+                nl: { flag: '🇳🇱', name: 'Nederlands' },
+                ja: { flag: '🇯🇵', name: '日本語' },
+                zh: { flag: '🇨🇳', name: '中文' },
+                ru: { flag: '🇷🇺', name: 'Русский' },
+                ar: { flag: '🇸🇦', name: 'العربية' },
+                hi: { flag: '🇮🇳', name: 'हिन्दी' },
+                ko: { flag: '🇰🇷', name: '한국어' }
+            };
+            
+            if (languages[langCode]) {
+                document.getElementById('currentLanguageFlag').textContent = languages[langCode].flag;
+                document.getElementById('currentLanguageName').textContent = languages[langCode].name;
+            }
+        }
+        
         function changeLanguage(langCode) {
             currentLanguage = langCode;
             localStorage.setItem('preferredLanguage', langCode);
@@ -1543,10 +1734,7 @@
         function loadLanguagePreference() {
             const savedLang = localStorage.getItem('preferredLanguage') || 'en';
             currentLanguage = savedLang;
-            const switcher = document.getElementById('languageSwitcher');
-            if (switcher) {
-                switcher.value = savedLang;
-            }
+            updateLanguageDisplay(savedLang);
         }
         
         function updatePageTitle() {
@@ -1578,6 +1766,15 @@
             // Update usage display text
             updateUsageDisplay();
         }
+
+        // Close language dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('languageDropdown');
+            const toggle = document.getElementById('languageToggle');
+            if (dropdown && toggle && !toggle.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
 
         // Initialize app when DOM is ready
         document.addEventListener('DOMContentLoaded', async function() {
