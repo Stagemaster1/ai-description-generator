@@ -1,0 +1,517 @@
+Setting up event listeners...
+(index):972 Form found, adding submit listener
+(index):1003 Found pricing cards: 3
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116 paypal_js_sdk_v5_init Object
+(index):1007 Plan card clicked: starter
+(index):1181 Retrieved plan IDs: {starter: 'P-9S756182B8926735DNCXCWQA', professional: 'P-6MP967663B593753VNCXCXKA', enterprise: 'P-4MX76618N2548800MNCXCXVQ'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116 sfvcScreenInformation {computedHeight: 1349, height: 924, outerHeight: 1032, scale: 1.46, timestamp: '1756246438967', …}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116  global_session_not_found {timestamp: '1756246438977', uid: 'uid_d5e3bc50aa_mji6mdq6ndu', env: 'production', clientId: 'AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7', csnwCorrelationId: 'f726975cc8df0', …}
+print @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116
+log @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3184
+warn @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3221
+handler @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3513
+getState @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:2163
+getGlobalSessionID @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3516
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5886
+get @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5922
+eachProp @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5290
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5926
+setProps @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5927
+init @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7164
+init @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7304
+setupPayPalButtons @ (index):1184
+await in setupPayPalButtons
+(anonymous) @ (index):1008
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116  global_session_not_found {timestamp: '1756246439014', uid: 'uid_d5e3bc50aa_mji6mdq6ndu', env: 'production', clientId: 'AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7', csnwCorrelationId: 'f726975cc8df0', …}
+print @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116
+log @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3184
+warn @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3221
+handler @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3513
+getState @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:2163
+getGlobalSessionID @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3516
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5886
+get @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5922
+eachProp @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5290
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5926
+setProps @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5927
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:6137
+_proto.dispatch @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:525
+_proto.then @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:562
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:6136
+ZalgoPromise.try @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:678
+render @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:6014
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7201
+_proto.dispatch @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:525
+_proto.then @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:562
+_render @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7191
+render @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7243
+setupPayPalButtons @ (index):1198
+await in setupPayPalButtons
+(anonymous) @ (index):1008
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116  global_session_not_found {timestamp: '1756246439180', uid: 'uid_d5e3bc50aa_mji6mdq6ndu', env: 'production', clientId: 'AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7', csnwCorrelationId: 'f726975cc8df0', …}
+print @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116
+log @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3184
+warn @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3221
+handler @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3513
+getState @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:2163
+getGlobalSessionID @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3516
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5886
+get @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5922
+eachProp @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5290
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5926
+setProps @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5927
+init @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7164
+init @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7304
+setupPayPalButtons @ (index):1201
+await in setupPayPalButtons
+(anonymous) @ (index):1008
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116  global_session_not_found {timestamp: '1756246439203', uid: 'uid_d5e3bc50aa_mji6mdq6ndu', env: 'production', clientId: 'AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7', csnwCorrelationId: 'f726975cc8df0', …}
+print @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116
+log @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3184
+warn @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3221
+handler @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3513
+getState @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:2163
+getGlobalSessionID @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3516
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5886
+get @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5922
+eachProp @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5290
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5926
+setProps @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5927
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:6137
+_proto.dispatch @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:525
+_proto.then @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:562
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:6136
+ZalgoPromise.try @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:678
+render @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:6014
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7201
+_proto.dispatch @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:525
+_proto.then @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:562
+_render @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7191
+render @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7243
+setupPayPalButtons @ (index):1219
+await in setupPayPalButtons
+(anonymous) @ (index):1008
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116  global_session_not_found {timestamp: '1756246439339', uid: 'uid_d5e3bc50aa_mji6mdq6ndu', env: 'production', clientId: 'AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7', csnwCorrelationId: 'f726975cc8df0', …}
+print @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116
+log @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3184
+warn @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3221
+handler @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3513
+getState @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:2163
+getGlobalSessionID @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3516
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5886
+get @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5922
+eachProp @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5290
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5926
+setProps @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5927
+init @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7164
+init @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7304
+setupPayPalButtons @ (index):1222
+await in setupPayPalButtons
+(anonymous) @ (index):1008
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116  global_session_not_found {timestamp: '1756246439357', uid: 'uid_d5e3bc50aa_mji6mdq6ndu', env: 'production', clientId: 'AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7', csnwCorrelationId: 'f726975cc8df0', …}
+print @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116
+log @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3184
+warn @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3221
+handler @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3513
+getState @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:2163
+getGlobalSessionID @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3516
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5886
+get @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5922
+eachProp @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5290
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5926
+setProps @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:5927
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:6137
+_proto.dispatch @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:525
+_proto.then @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:562
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:6136
+ZalgoPromise.try @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:678
+render @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:6014
+(anonymous) @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7201
+_proto.dispatch @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:525
+_proto.then @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:562
+_render @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7191
+render @ js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:7243
+setupPayPalButtons @ (index):1240
+await in setupPayPalButtons
+(anonymous) @ (index):1008
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req postrobot_hello * 
+
+ {instanceID: 'uid_b1ceda8d78_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req init() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_9645987fa3_mji6mtm6ntk', name: 'init', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req postrobot_hello https://www.paypal.com 
+
+ {instanceID: 'uid_b1ceda8d78_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res postrobot_hello https://www.paypal.com 
+
+ {instanceID: 'uid_c5e117baea_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req init() https://www.paypal.com 
+
+ {id: 'uid_9645987fa3_mji6mtm6ntk', name: 'init', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res init() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_9645987fa3_mji6mtm6ntk', name: 'init'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res postrobot_hello https://zippy-granita-96fbe4.netlify.app 
+
+ {instanceID: 'uid_c5e117baea_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res init() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_9645987fa3_mji6mtm6ntk', name: 'init'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req resize() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_3a64cca1d7_mji6mtm6ntk', name: 'resize', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req resize() https://www.paypal.com 
+
+ {id: 'uid_3a64cca1d7_mji6mtm6ntk', name: 'resize', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req postrobot_hello * 
+
+ {instanceID: 'uid_8bac767279_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req init() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_c4d9095c00_mji6mtm6ntk', name: 'init', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req postrobot_hello https://www.paypal.com 
+
+ {instanceID: 'uid_8bac767279_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res postrobot_hello https://www.paypal.com 
+
+ {instanceID: 'uid_c5e117baea_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req init() https://www.paypal.com 
+
+ {id: 'uid_c4d9095c00_mji6mtm6ntk', name: 'init', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res init() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_c4d9095c00_mji6mtm6ntk', name: 'init'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req postrobot_hello * 
+
+ {instanceID: 'uid_06f4fe3834_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req init() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_7a7c38762d_mji6mtm6ntk', name: 'init', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req postrobot_hello https://www.paypal.com 
+
+ {instanceID: 'uid_06f4fe3834_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res postrobot_hello https://www.paypal.com 
+
+ {instanceID: 'uid_c5e117baea_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req init() https://www.paypal.com 
+
+ {id: 'uid_7a7c38762d_mji6mtm6ntk', name: 'init', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res init() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_7a7c38762d_mji6mtm6ntk', name: 'init'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req xport() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_9d3a9784ee_mji6mtm6ntk', name: 'xport', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req onInit() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_c97ef8e3f5_mji6mtm6ntk', name: 'onInit', args: Array(2)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getQueriedEligibleFunding() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_6d70a226c8_mji6mtm6ntk', name: 'getQueriedEligibleFunding', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ef7a9e7f46_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ef7a9e7f46_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_1139b1ac69_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req xport() https://www.paypal.com 
+
+ {id: 'uid_9d3a9784ee_mji6mtm6ntk', name: 'xport', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res xport() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_9d3a9784ee_mji6mtm6ntk', name: 'xport'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req onInit() https://www.paypal.com 
+
+ {id: 'uid_c97ef8e3f5_mji6mtm6ntk', name: 'onInit', args: Array(2)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res onInit() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_c97ef8e3f5_mji6mtm6ntk', name: 'onInit'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getQueriedEligibleFunding() https://www.paypal.com 
+
+ {id: 'uid_6d70a226c8_mji6mtm6ntk', name: 'getQueriedEligibleFunding', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getQueriedEligibleFunding() https://www.paypal.com 
+
+ {result: Array(0), id: 'uid_6d70a226c8_mji6mtm6ntk', name: 'getQueriedEligibleFunding'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPopupBridge() https://www.paypal.com 
+
+ {id: 'uid_ef7a9e7f46_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPopupBridge() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_ef7a9e7f46_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPopupBridge() https://www.paypal.com 
+
+ {id: 'uid_ef7a9e7f46_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPopupBridge() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_ef7a9e7f46_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPageUrl() https://www.paypal.com 
+
+ {id: 'uid_1139b1ac69_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPageUrl() https://www.paypal.com 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_1139b1ac69_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res postrobot_hello https://zippy-granita-96fbe4.netlify.app 
+
+ {instanceID: 'uid_c5e117baea_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res init() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_c4d9095c00_mji6mtm6ntk', name: 'init'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req resize() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_c26d1307bc_mji6mtm6ntk', name: 'resize', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req resize() https://www.paypal.com 
+
+ {id: 'uid_c26d1307bc_mji6mtm6ntk', name: 'resize', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res postrobot_hello https://zippy-granita-96fbe4.netlify.app 
+
+ {instanceID: 'uid_c5e117baea_mji6mtq6mda'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res init() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_7a7c38762d_mji6mtm6ntk', name: 'init'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req resize() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_1ff9a6bdfa_mji6mtm6ntk', name: 'resize', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req resize() https://www.paypal.com 
+
+ {id: 'uid_1ff9a6bdfa_mji6mtm6ntk', name: 'resize', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res xport() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_9d3a9784ee_mji6mtm6ntk', name: 'xport'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res onInit() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_c97ef8e3f5_mji6mtm6ntk', name: 'onInit'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPrerenderDetails() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_bf5d910d99_mji6mtm6ntk', name: 'getPrerenderDetails', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getQueriedEligibleFunding() https://zippy-granita-96fbe4.netlify.app 
+
+ {result: Array(0), id: 'uid_6d70a226c8_mji6mtm6ntk', name: 'getQueriedEligibleFunding'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPrerenderDetails() https://www.paypal.com 
+
+ {id: 'uid_bf5d910d99_mji6mtm6ntk', name: 'getPrerenderDetails', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPrerenderDetails() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_bf5d910d99_mji6mtm6ntk', name: 'getPrerenderDetails'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ef7a9e7f46_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ef7a9e7f46_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_1139b1ac69_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req xport() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_bb7107a306_mji6mtm6ntk', name: 'xport', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req onInit() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_0d1d10398a_mji6mtm6ntk', name: 'onInit', args: Array(2)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getQueriedEligibleFunding() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_841b8c97ca_mji6mtm6ntk', name: 'getQueriedEligibleFunding', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_8a420db881_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_8a420db881_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_9d2c6e9e56_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req xport() https://www.paypal.com 
+
+ {id: 'uid_bb7107a306_mji6mtm6ntk', name: 'xport', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res xport() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_bb7107a306_mji6mtm6ntk', name: 'xport'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req onInit() https://www.paypal.com 
+
+ {id: 'uid_0d1d10398a_mji6mtm6ntk', name: 'onInit', args: Array(2)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res onInit() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_0d1d10398a_mji6mtm6ntk', name: 'onInit'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getQueriedEligibleFunding() https://www.paypal.com 
+
+ {id: 'uid_841b8c97ca_mji6mtm6ntk', name: 'getQueriedEligibleFunding', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getQueriedEligibleFunding() https://www.paypal.com 
+
+ {result: Array(0), id: 'uid_841b8c97ca_mji6mtm6ntk', name: 'getQueriedEligibleFunding'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPopupBridge() https://www.paypal.com 
+
+ {id: 'uid_8a420db881_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPopupBridge() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_8a420db881_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPopupBridge() https://www.paypal.com 
+
+ {id: 'uid_8a420db881_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPopupBridge() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_8a420db881_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPageUrl() https://www.paypal.com 
+
+ {id: 'uid_9d2c6e9e56_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPageUrl() https://www.paypal.com 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_9d2c6e9e56_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116 paypal_js_sdk_v5_init {uidAttribute: 'present', loadTime: 99, cacheType: 'sdk_client_cache_miss', jsSdkLibrary: 'none', locale: 'en_US', …}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_1139b1ac69_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPageUrl() https://www.paypal.com 
+
+ {id: 'uid_1139b1ac69_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPageUrl() https://www.paypal.com 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_1139b1ac69_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPrerenderDetails() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_bf5d910d99_mji6mtm6ntk', name: 'getPrerenderDetails'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req xport() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_1984438f38_mji6mtm6ntk', name: 'xport', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req onInit() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_7e06ff0d58_mji6mtm6ntk', name: 'onInit', args: Array(2)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getQueriedEligibleFunding() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_257af99f61_mji6mtm6ntk', name: 'getQueriedEligibleFunding', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ed478a28c0_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ed478a28c0_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ae52db3347_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req xport() https://www.paypal.com 
+
+ {id: 'uid_1984438f38_mji6mtm6ntk', name: 'xport', args: Array(1)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res xport() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_1984438f38_mji6mtm6ntk', name: 'xport'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req onInit() https://www.paypal.com 
+
+ {id: 'uid_7e06ff0d58_mji6mtm6ntk', name: 'onInit', args: Array(2)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res onInit() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_7e06ff0d58_mji6mtm6ntk', name: 'onInit'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getQueriedEligibleFunding() https://www.paypal.com 
+
+ {id: 'uid_257af99f61_mji6mtm6ntk', name: 'getQueriedEligibleFunding', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getQueriedEligibleFunding() https://www.paypal.com 
+
+ {result: Array(0), id: 'uid_257af99f61_mji6mtm6ntk', name: 'getQueriedEligibleFunding'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPopupBridge() https://www.paypal.com 
+
+ {id: 'uid_ed478a28c0_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPopupBridge() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_ed478a28c0_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPopupBridge() https://www.paypal.com 
+
+ {id: 'uid_ed478a28c0_mji6mtm6ntk', name: 'getPopupBridge', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPopupBridge() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_ed478a28c0_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPageUrl() https://www.paypal.com 
+
+ {id: 'uid_ae52db3347_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPageUrl() https://www.paypal.com 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_ae52db3347_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res xport() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_bb7107a306_mji6mtm6ntk', name: 'xport'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res onInit() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_0d1d10398a_mji6mtm6ntk', name: 'onInit'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPrerenderDetails() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_51de5c2e66_mji6mtm6ntk', name: 'getPrerenderDetails', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getQueriedEligibleFunding() https://zippy-granita-96fbe4.netlify.app 
+
+ {result: Array(0), id: 'uid_841b8c97ca_mji6mtm6ntk', name: 'getQueriedEligibleFunding'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPrerenderDetails() https://www.paypal.com 
+
+ {id: 'uid_51de5c2e66_mji6mtm6ntk', name: 'getPrerenderDetails', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPrerenderDetails() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_51de5c2e66_mji6mtm6ntk', name: 'getPrerenderDetails'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_8a420db881_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_8a420db881_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_9d2c6e9e56_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_1139b1ac69_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116 paypal_js_sdk_v5_init {uidAttribute: 'present', loadTime: 94, cacheType: 'sdk_client_cache_miss', jsSdkLibrary: 'none', locale: 'en_US', …}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:3116 paypal_js_sdk_v5_init {uidAttribute: 'present', loadTime: 61, cacheType: 'sdk_client_cache_miss', jsSdkLibrary: 'none', locale: 'en_US', …}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res xport() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_1984438f38_mji6mtm6ntk', name: 'xport'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res onInit() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_7e06ff0d58_mji6mtm6ntk', name: 'onInit'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPrerenderDetails() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_d39ef6c063_mji6mtm6ntk', name: 'getPrerenderDetails', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPrerenderDetails() https://www.paypal.com 
+
+ {id: 'uid_d39ef6c063_mji6mtm6ntk', name: 'getPrerenderDetails', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPrerenderDetails() https://www.paypal.com 
+
+ {result: undefined, id: 'uid_d39ef6c063_mji6mtm6ntk', name: 'getPrerenderDetails'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getQueriedEligibleFunding() https://zippy-granita-96fbe4.netlify.app 
+
+ {result: Array(0), id: 'uid_257af99f61_mji6mtm6ntk', name: 'getQueriedEligibleFunding'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ed478a28c0_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPopupBridge() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ed478a28c0_mji6mtm6ntk', name: 'getPopupBridge'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_ae52db3347_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPrerenderDetails() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_51de5c2e66_mji6mtm6ntk', name: 'getPrerenderDetails'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPrerenderDetails() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_d39ef6c063_mji6mtm6ntk', name: 'getPrerenderDetails'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_ae52db3347_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPageUrl() https://www.paypal.com 
+
+ {id: 'uid_ae52db3347_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPageUrl() https://www.paypal.com 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_ae52db3347_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4871 send::req getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {id: 'uid_9d2c6e9e56_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4555 receive::req getPageUrl() https://www.paypal.com 
+
+ {id: 'uid_9d2c6e9e56_mji6mtm6ntk', name: 'getPageUrl', args: Array(0)}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4559 respond::res getPageUrl() https://www.paypal.com 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_9d2c6e9e56_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_ae52db3347_mji6mtm6ntk', name: 'getPageUrl'}
+js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true:4638 receive::res getPageUrl() https://zippy-granita-96fbe4.netlify.app 
+
+ {result: 'https://zippy-granita-96fbe4.netlify.app/', id: 'uid_9d2c6e9e56_mji6mtm6ntk', name: 'getPageUrl'}

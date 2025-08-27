@@ -39,7 +39,7 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { productUrl, productInfo, brandTone, descriptionLength, targetAudience, keyFeatures, userId, inputMode } = JSON.parse(event.body);
+    const { productUrl, productInfo, brandTone, descriptionLength, language, targetAudience, keyFeatures, userId, inputMode } = JSON.parse(event.body);
     
     console.log('Generation request:', {
       brandTone,
@@ -205,7 +205,7 @@ function determineProductType(productName, category) {
   return 'product';
 }
 
-async function generateDescription({ productUrl, productInfo, brandTone, descriptionLength = 'medium', targetAudience, keyFeatures, inputMode }) {
+async function generateDescription({ productUrl, productInfo, brandTone, descriptionLength = 'medium', language = 'english', targetAudience, keyFeatures, inputMode }) {
   const toneInstruction = brandTones[brandTone];
   
   // Length specifications
@@ -273,22 +273,37 @@ IMPORTANT: Write about the PRODUCT (${productInfo.name}), not about the target a
 
   prompt += `
 
+LANGUAGE: Write the description in ${language === 'english' ? 'English' : 
+  language === 'german' ? 'German (Deutsch)' :
+  language === 'french' ? 'French (Français)' :
+  language === 'spanish' ? 'Spanish (Español)' :
+  language === 'portuguese' ? 'Portuguese (Português)' :
+  language === 'italian' ? 'Italian (Italiano)' :
+  language === 'dutch' ? 'Dutch (Nederlands)' :
+  language === 'russian' ? 'Russian (Русский)' :
+  language === 'japanese' ? 'Japanese (日本語)' :
+  language === 'korean' ? 'Korean (한국어)' :
+  language === 'chinese' ? 'Chinese (中文)' :
+  language === 'arabic' ? 'Arabic (العربية)' :
+  language === 'hindi' ? 'Hindi (हिन्दी)' : 'English'}. Use natural, fluent, native-level language that sounds authentic to native speakers.
+
 LENGTH REQUIREMENT: ${lengthSpec.words} - ${lengthSpec.style}
 STRUCTURE: ${lengthSpec.structure}
 
 REQUIREMENTS:
 1. Create a compelling headline that grabs attention
 2. Write in the specified length (${lengthSpec.words}) while maintaining high quality
-3. Include SEO-friendly keywords naturally
+3. Include SEO-friendly keywords naturally in the target language
 4. Focus on benefits, not just features
 5. Create urgency or desire to purchase
 6. Make it conversion-focused
 7. Maintain the same professional quality regardless of length
-8. ${descriptionLength === 'short' ? 'Be punchy and direct - every word counts' : 
+8. Use culturally appropriate marketing language for the target market
+9. ${descriptionLength === 'short' ? 'Be punchy and direct - every word counts' : 
      descriptionLength === 'extensive' ? 'Provide comprehensive details and compelling storytelling' :
      'Balance detail with readability for optimal conversion'}
 
-Please generate a professional product description that matches the specified brand tone and appeals to the target audience.`;
+Please generate a professional product description that matches the specified brand tone and appeals to the target audience in the specified language.`;
 
   try {
     const response = await openai.chat.completions.create({

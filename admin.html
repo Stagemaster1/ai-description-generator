@@ -225,8 +225,40 @@
                     <div class="stat-label">Active Subscriptions</div>
                 </div>
                 <div class="stat-card">
+                    <div class="stat-value" id="monthlyRevenue">$0</div>
+                    <div class="stat-label">Monthly Revenue</div>
+                </div>
+                <div class="stat-card">
                     <div class="stat-value" id="totalGeneration">-</div>
                     <div class="stat-label">Total Generations</div>
+                </div>
+            </div>
+
+            <!-- Revenue Analysis -->
+            <div class="admin-panel" style="margin-top: 20px;">
+                <h2>📊 Revenue vs OpenAI Cost Analysis</h2>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="starterSubs">0</div>
+                        <div class="stat-label">Starter ($19.99)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="professionalSubs">0</div>
+                        <div class="stat-label">Professional ($49.99)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="enterpriseSubs">0</div>
+                        <div class="stat-label">Enterprise ($99.99)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="estimatedOpenAICost">$0</div>
+                        <div class="stat-label">Est. OpenAI Cost/Month</div>
+                    </div>
+                </div>
+                
+                <div class="notification" id="revenueAlert" style="margin-top: 15px;">
+                    <strong>💡 OpenAI Scaling Recommendation:</strong>
+                    <div id="scalingAdvice">Loading analysis...</div>
                 </div>
             </div>
 
@@ -369,11 +401,80 @@
         }
 
         function updateStats() {
+            // Basic stats
             document.getElementById('totalUsers').textContent = users.length;
-            document.getElementById('activeSubscriptions').textContent = 
-                users.filter(u => u.isSubscribed).length;
+            const activeSubscriptions = users.filter(u => u.isSubscribed).length;
+            document.getElementById('activeSubscriptions').textContent = activeSubscriptions;
             document.getElementById('totalGeneration').textContent = 
                 users.reduce((sum, u) => sum + (u.monthlyUsage || 0), 0);
+
+            // Revenue analysis
+            const starterSubs = users.filter(u => u.subscriptionType === 'starter').length;
+            const professionalSubs = users.filter(u => u.subscriptionType === 'professional').length;
+            const enterpriseSubs = users.filter(u => u.subscriptionType === 'enterprise').length;
+            
+            const monthlyRevenue = (starterSubs * 19.99) + (professionalSubs * 49.99) + (enterpriseSubs * 99.99);
+            
+            // Estimate OpenAI costs (rough calculation)
+            const totalDescriptionsPerMonth = (starterSubs * 50) + (professionalSubs * 200) + (enterpriseSubs * 500);
+            const estimatedOpenAICost = (totalDescriptionsPerMonth * 0.03); // ~$0.03 per description
+            
+            // Update revenue stats
+            document.getElementById('starterSubs').textContent = starterSubs;
+            document.getElementById('professionalSubs').textContent = professionalSubs;
+            document.getElementById('enterpriseSubs').textContent = enterpriseSubs;
+            document.getElementById('monthlyRevenue').textContent = '$' + monthlyRevenue.toFixed(2);
+            document.getElementById('estimatedOpenAICost').textContent = '$' + estimatedOpenAICost.toFixed(2);
+            
+            // Scaling recommendations
+            updateScalingAdvice(monthlyRevenue, estimatedOpenAICost, activeSubscriptions);
+        }
+
+        function updateScalingAdvice(revenue, estimatedCost, subscribers) {
+            const revenueAlert = document.getElementById('revenueAlert');
+            const scalingAdvice = document.getElementById('scalingAdvice');
+            
+            let advice = '';
+            let alertClass = 'success';
+            
+            if (subscribers === 0) {
+                advice = 'No active subscriptions yet. Current OpenAI free tier should be sufficient for testing.';
+                alertClass = 'success';
+            } else if (revenue < 100) {
+                advice = `Revenue: $${revenue.toFixed(2)}/month. Suggested OpenAI limit: $50/month (safe for early growth).`;
+                alertClass = 'success';
+            } else if (revenue < 500) {
+                advice = `Revenue: $${revenue.toFixed(2)}/month. Consider increasing OpenAI limit to $${Math.round(estimatedCost * 3)}/month (3x safety margin).`;
+                alertClass = 'success';
+            } else if (revenue < 1000) {
+                advice = `Revenue: $${revenue.toFixed(2)}/month. Recommended OpenAI limit: $${Math.round(estimatedCost * 2.5)}/month. You're scaling well! 🚀`;
+                alertClass = 'success';
+            } else {
+                advice = `Revenue: $${revenue.toFixed(2)}/month. You're crushing it! 💰 Consider OpenAI limit: $${Math.round(estimatedCost * 2)}/month and potentially upgrading to OpenAI's enterprise pricing.`;
+                alertClass = 'success';
+            }
+            
+            // Profit margin check
+            const profit = revenue - estimatedCost;
+            const profitMargin = revenue > 0 ? (profit / revenue) * 100 : 0;
+            
+            if (profitMargin > 80) {
+                advice += ` | Profit margin: ${profitMargin.toFixed(1)}% - Excellent! 💪`;
+            } else if (profitMargin > 60) {
+                advice += ` | Profit margin: ${profitMargin.toFixed(1)}% - Healthy business! 👍`;
+            } else if (profitMargin > 40) {
+                advice += ` | Profit margin: ${profitMargin.toFixed(1)}% - Good, monitor costs.`;
+            } else if (profitMargin > 0) {
+                advice += ` | Profit margin: ${profitMargin.toFixed(1)}% - Watch OpenAI usage carefully.`;
+                alertClass = 'error';
+            } else if (revenue > 0) {
+                advice += ` | ⚠️ Negative margin! Costs exceed revenue - check for unusual usage.`;
+                alertClass = 'error';
+            }
+            
+            scalingAdvice.textContent = advice;
+            revenueAlert.className = `notification ${alertClass}`;
+            revenueAlert.style.display = 'block';
         }
 
         function renderUsersTable() {

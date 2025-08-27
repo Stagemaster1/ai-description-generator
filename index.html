@@ -815,6 +815,26 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="language" class="form-label">Language</label>
+                        <select id="language" class="form-select" required>
+                            <option value="english">🇺🇸 English</option>
+                            <option value="german">🇩🇪 German (Deutsch)</option>
+                            <option value="spanish">🇪🇸 Spanish (Español)</option>
+                            <option value="french">🇫🇷 French (Français)</option>
+                            <option value="japanese">🇯🇵 Japanese (日本語)</option>
+                            <option value="italian">🇮🇹 Italian (Italiano)</option>
+                            <option value="dutch">🇳🇱 Dutch (Nederlands)</option>
+                            <option value="portuguese">🇵🇹 Portuguese (Português)</option>
+                            <option value="korean">🇰🇷 Korean (한국어)</option>
+                            <option value="russian">🇷🇺 Russian (Русский)</option>
+                            <option value="arabic">🇸🇦 Arabic (العربية)</option>
+                            <option value="chinese">🇨🇳 Chinese Simplified (中文)</option>
+                            <option value="hindi">🇮🇳 Hindi (हिंदी)</option>
+                        </select>
+                        <div class="error" id="languageError"></div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="targetAudience" class="form-label">Target Audience (Optional)</label>
                         <input 
                             type="text" 
@@ -1388,6 +1408,7 @@
             const productName = inputMode === 'manual' ? document.getElementById('productName').value.trim() : null;
             const brandTone = document.getElementById('brandTone').value;
             const descriptionLength = document.getElementById('descriptionLength').value;
+            const language = document.getElementById('language').value;
             const targetAudience = document.getElementById('targetAudience').value.trim();
             const keyFeatures = document.getElementById('keyFeatures').value.trim();
 
@@ -1414,6 +1435,7 @@
                 const requestBody = {
                     brandTone,
                     descriptionLength,
+                    language,
                     targetAudience,
                     keyFeatures,
                     userId: userState.userId,
