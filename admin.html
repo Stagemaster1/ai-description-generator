@@ -585,10 +585,8 @@
             }
             
             try {
-                for (let user of users) {
-                    await apiCall('reset_usage', { userId: user.id });
-                }
-                showNotification('All user usage reset', 'success');
+                const result = await apiCall('reset_all_usage');
+                showNotification(`All user usage reset (${result.resetCount} users)`, 'success');
                 refreshUsers();
             } catch (error) {
                 showNotification('Failed to reset all usage: ' + error.message, 'error');

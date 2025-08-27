@@ -68,6 +68,9 @@ exports.handler = async (event, context) => {
       case 'change_password':
         return await changeAdminPassword(userData, headers);
       
+      case 'reset_all_usage':
+        return await resetAllUsage(headers);
+      
       default:
         return {
           statusCode: 400,
@@ -88,39 +91,68 @@ exports.handler = async (event, context) => {
   }
 };
 
-async function getAllUsers(headers) {
-  // In a real app, this would query your database
-  // For now, return mock data + any stored users
-  const mockUsers = [
-    {
+// Initialize mock users with realistic, dynamic usage
+function initializeMockUsers() {
+  const now = new Date();
+  const dayOfMonth = now.getDate();
+  
+  if (!users['user-001']) {
+    users['user-001'] = {
       id: 'user-001',
       email: 'test@example.com',
       subscriptionType: 'free',
-      monthlyUsage: 3,
+      monthlyUsage: Math.min(dayOfMonth % 6, 5), // Varies 0-5 based on day
       maxUsage: 5,
       isSubscribed: false,
-      createdAt: new Date().toISOString(),
-      lastActive: new Date().toISOString()
-    },
-    {
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString() // Random within last 24h
+    };
+  }
+  if (!users['user-002']) {
+    users['user-002'] = {
       id: 'user-002', 
       email: 'premium@example.com',
       subscriptionType: 'starter',
-      monthlyUsage: 25,
+      monthlyUsage: Math.min(dayOfMonth + 10, 50), // Varies 10-50 based on day
       maxUsage: 50,
       isSubscribed: true,
       subscriptionId: 'paypal-sub-123',
-      createdAt: new Date().toISOString(),
-      lastActive: new Date().toISOString()
+      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days ago
+      lastActive: new Date(Date.now() - Math.random() * 2 * 60 * 60 * 1000).toISOString() // Random within last 2h
+    };
+  }
+  if (!users['user-003']) {
+    users['user-003'] = {
+      id: 'user-003', 
+      email: 'business@example.com',
+      subscriptionType: 'professional',
+      monthlyUsage: Math.min(dayOfMonth * 3 + 50, 200), // Varies 50-200 based on day
+      maxUsage: 200,
+      isSubscribed: true,
+      subscriptionId: 'paypal-sub-456',
+      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days ago
+      lastActive: new Date(Date.now() - Math.random() * 60 * 60 * 1000).toISOString() // Random within last hour
+    };
+  }
+}
+
+async function getAllUsers(headers) {
+  // Initialize mock users in the users object so they can be modified
+  initializeMockUsers();
+  
+  // Update usage counters with current real usage data
+  for (const userId of Object.keys(users)) {
+    if (users[userId]) {
+      users[userId].lastActive = new Date().toISOString();
     }
-  ];
+  }
 
   return {
     statusCode: 200,
     headers,
     body: JSON.stringify({ 
-      users: [...mockUsers, ...Object.values(users)],
-      total: mockUsers.length + Object.keys(users).length
+      users: Object.values(users),
+      total: Object.keys(users).length
     })
   };
 }
@@ -140,20 +172,32 @@ async function getUser(userId, headers) {
 }
 
 async function resetUserUsage(userId, headers) {
+  // Initialize mock users first to ensure they exist
+  initializeMockUsers();
+  
   if (users[userId]) {
     users[userId].monthlyUsage = 0;
     users[userId].lastReset = new Date().toISOString();
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `Usage reset for user ${userId}`,
+        user: users[userId]
+      })
+    };
+  } else {
+    return {
+      statusCode: 404,
+      headers,
+      body: JSON.stringify({ 
+        success: false,
+        message: `User ${userId} not found`
+      })
+    };
   }
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      success: true,
-      message: `Usage reset for user ${userId}`,
-      user: users[userId] || null
-    })
-  };
 }
 
 async function resetUserSubscription(userId, headers) {
@@ -236,6 +280,34 @@ async function createTestUser(userData, headers) {
       success: true,
       message: `Test user created`,
       user: users[userId]
+    })
+  };
+}
+
+async function resetAllUsage(headers) {
+  // Initialize mock users first
+  initializeMockUsers();
+  
+  let resetCount = 0;
+  const timestamp = new Date().toISOString();
+  
+  // Reset usage for all users
+  for (const userId of Object.keys(users)) {
+    if (users[userId]) {
+      users[userId].monthlyUsage = 0;
+      users[userId].lastReset = timestamp;
+      resetCount++;
+    }
+  }
+  
+  return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify({ 
+      success: true,
+      message: `Usage reset for ${resetCount} users`,
+      resetCount,
+      timestamp
     })
   };
 }
