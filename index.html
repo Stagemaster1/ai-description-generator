@@ -712,21 +712,40 @@
     </div>
 
     <header class="header">
-        <div class="company-name">SolTecSol (Solid Tech Solutions)</div>
-        <h1 class="logo">AI Description Generator</h1>
-        <p class="tagline">Transform Product URLs into Converting Copy</p>
-        <p class="subtitle">Generate SEO-optimized, brand-specific product descriptions that convert browsers into buyers. Save hours of writing time and boost your e-commerce sales.</p>
+        <div style="position: absolute; top: 20px; right: 20px;">
+            <select id="languageSwitcher" onchange="changeLanguage(this.value)" style="
+                background: rgba(255,255,255,0.1);
+                border: 1px solid rgba(255,255,255,0.3);
+                border-radius: 8px;
+                color: #ffffff;
+                padding: 8px 12px;
+                font-size: 0.9rem;
+                cursor: pointer;
+            ">
+                <option value="en">🇺🇸 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="pt">🇵🇹 Português</option>
+            </select>
+        </div>
+        
+        <div class="company-name" data-translate="companyName">SolTecSol (Solid Tech Solutions)</div>
+        <h1 class="logo" data-translate="appTitle">AI Description Generator</h1>
+        <p class="tagline" data-translate="tagline">Transform Product URLs into Converting Copy</p>
+        <p class="subtitle" data-translate="subtitle">Generate SEO-optimized, brand-specific product descriptions that convert browsers into buyers. Save hours of writing time and boost your e-commerce sales.</p>
     </header>
 
     <div class="container">
 
         <div class="main-content">
             <div class="generator-section">
-                <h2 class="section-title">🚀 Generate Your Description</h2>
+                <h2 class="section-title" data-translate="generateSection">🚀 Generate Your Description</h2>
                 
                 <div class="usage-tracker" id="usageTracker">
                     <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between;">
-                        Monthly Usage
+                        <span data-translate="monthlyUsage">Monthly Usage</span>
                         <button onclick="refreshUsage()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 2px; font-size: 0.8rem;" title="Refresh usage data">🔄</button>
                     </div>
                     <div style="color: #ffffff; font-weight: 600;" id="usageText">0 of 5 free descriptions used</div>
@@ -742,9 +761,9 @@
                     <div class="form-group">
                         <label class="form-label">Product Identification</label>
                         <div class="input-method-selector">
-                            <button type="button" id="urlModeBtn" class="method-btn active">🔗 Product URL</button>
-                            <button type="button" id="barcodeModeBtn" class="method-btn">📊 Barcode/UPC</button>
-                            <button type="button" id="manualModeBtn" class="method-btn">✏️ Manual Entry</button>
+                            <button type="button" id="urlModeBtn" class="method-btn active" data-translate="productURL">🔗 Product URL</button>
+                            <button type="button" id="barcodeModeBtn" class="method-btn" data-translate="barcodeUPC">📊 Barcode/UPC</button>
+                            <button type="button" id="manualModeBtn" class="method-btn" data-translate="manualEntry">✏️ Manual Entry</button>
                         </div>
                         
                         <div id="urlInputGroup" class="input-group active">
@@ -856,13 +875,13 @@
                         ></textarea>
                     </div>
 
-                    <button type="submit" class="btn-primary" id="generateBtn">
+                    <button type="submit" class="btn-primary" id="generateBtn" data-translate="generateDescription">
                         Generate AI Description
                     </button>
                 </form>
 
                 <div id="results" class="results" style="display: none;">
-                    <h3>✨ Your Optimized Product Description</h3>
+                    <h3 data-translate="optimizedDescription">✨ Your Optimized Product Description</h3>
                     <div id="resultsContent" class="results-content"></div>
                     <button type="button" class="btn-primary" id="copyBtn" style="margin-top: 15px;">
                         📋 Copy to Clipboard
@@ -871,11 +890,11 @@
             </div>
 
             <div class="pricing-section">
-                <h2 class="section-title">💎 Choose Your Plan</h2>
+                <h2 class="section-title" data-translate="pricingTitle">💰 Choose Your Plan</h2>
                 
                 <div class="pricing-grid">
                     <div class="pricing-card clickable-plan" data-plan="starter">
-                        <div class="plan-name">Starter</div>
+                        <div class="plan-name" data-translate="starter">Starter</div>
                         <div class="free-trial-badge">🎉 First Month FREE</div>
                         <div class="plan-price">$19.99</div>
                         <div class="plan-period">per month after trial</div>
@@ -889,7 +908,7 @@
                     </div>
 
                     <div class="pricing-card featured clickable-plan" data-plan="professional">
-                        <div class="plan-name">Professional</div>
+                        <div class="plan-name" data-translate="professional">Professional</div>
                         <div class="plan-price">$49.99</div>
                         <div class="plan-period">per month</div>
                         <ul class="plan-features">
@@ -903,7 +922,7 @@
                     </div>
 
                     <div class="pricing-card clickable-plan" data-plan="enterprise">
-                        <div class="plan-name">Enterprise</div>
+                        <div class="plan-name" data-translate="enterprise">Enterprise</div>
                         <div class="plan-price">$99.99</div>
                         <div class="plan-period">per month</div>
                         <ul class="plan-features">
@@ -943,6 +962,399 @@
     </div>
 
     <script>
+        // Global app state
+        let currentLanguage = 'en';
+        
+        // Translation dictionaries
+        const translations = {
+            en: {
+                // Header
+                pageTitle: 'SolTecSol - AI Product Description Generator',
+                companyName: 'SolTecSol (Solid Tech Solutions)',
+                appTitle: 'AI Description Generator',
+                tagline: 'Transform Product URLs into Converting Copy',
+                subtitle: 'Generate SEO-optimized, brand-specific product descriptions that convert browsers into buyers. Save hours of writing time and boost your e-commerce sales.',
+                
+                // Generator Section
+                generateSection: '🚀 Generate Your Description',
+                monthlyUsage: 'Monthly Usage',
+                usedDescriptions: 'descriptions used',
+                freeDescriptions: 'free descriptions used',
+                of: 'of',
+                unlimitedDescriptions: 'unlimited',
+                upgradePrompt: 'Upgrade for unlimited descriptions',
+                
+                // Input Mode Buttons
+                productURL: '🔗 Product URL',
+                barcodeUPC: '📊 Barcode/UPC',
+                manualEntry: '✏️ Manual Entry',
+                
+                // Form Labels
+                productUrl: 'Product URL',
+                productUrlPlaceholder: 'https://example.com/product-page',
+                barcodeNumber: 'Barcode/UPC Number',
+                barcodePlaceholder: 'Enter barcode or UPC number',
+                lookupProduct: '🔍 Lookup Product',
+                productName: 'Product Name',
+                productNamePlaceholder: 'Enter product name',
+                brand: 'Brand',
+                brandPlaceholder: 'Enter brand name',
+                category: 'Category',
+                categoryPlaceholder: 'e.g., Electronics, Clothing',
+                brandTone: 'Brand Tone',
+                descriptionLength: 'Description Length',
+                language: 'Language',
+                targetAudience: 'Target Audience (Optional)',
+                targetAudiencePlaceholder: 'e.g., Tech enthusiasts, Parents, Professionals',
+                keyFeatures: 'Key Features (Optional)',
+                keyFeaturesPlaceholder: 'e.g., Waterproof, 5-year warranty, Fast charging',
+                
+                // Brand Tone Options
+                luxuryPremium: 'Luxury & Premium',
+                casualFriendly: 'Casual & Friendly',
+                professionalAuthoritative: 'Professional & Authoritative',
+                playfulFun: 'Playful & Fun',
+                minimalistClean: 'Minimalist & Clean',
+                
+                // Length Options
+                shortLength: 'Short (50-100 words)',
+                mediumLength: 'Medium (150-250 words)',
+                extensiveLength: 'Extensive (300-500 words)',
+                
+                // Buttons
+                generateDescription: 'Generate AI Description',
+                copyDescription: 'Copy Description',
+                
+                // Results
+                optimizedDescription: '✨ Your Optimized Product Description',
+                
+                // Pricing Section
+                pricingTitle: '💰 Choose Your Plan',
+                pricingSubtitle: 'Unlock unlimited AI-powered descriptions',
+                
+                // Plan Names
+                starter: 'Starter',
+                professional: 'Professional', 
+                enterprise: 'Enterprise',
+                
+                // Plan Features
+                monthlyGenerations: 'descriptions/month',
+                unlimitedGenerations: 'Unlimited generations',
+                emailSupport: 'Email support',
+                prioritySupport: 'Priority support',
+                advancedFeatures: 'Advanced features',
+                customBranding: 'Custom branding',
+                apiAccess: 'API access',
+                
+                // Plan Buttons
+                currentPlan: 'Current Plan',
+                choosePlan: 'Choose Plan',
+                
+                // Stats
+                descriptionsGenerated: 'Descriptions Generated',
+                happyCustomers: 'Happy Customers',
+                timesSaved: 'Hours Saved',
+                
+                // Notifications
+                descriptionCopied: 'Description copied to clipboard!',
+                subscriptionSuccess: 'Successfully subscribed to',
+                usageDataRefreshed: 'Usage data refreshed',
+                
+                // Language Switcher
+                selectLanguage: 'Language'
+            },
+            
+            es: {
+                // Header
+                pageTitle: 'SolTecSol - Generador de Descripciones de Productos con IA',
+                companyName: 'SolTecSol (Soluciones Tecnológicas Sólidas)',
+                appTitle: 'Generador de Descripciones con IA',
+                tagline: 'Transforma URLs de Productos en Textos que Convierten',
+                subtitle: 'Genera descripciones de productos optimizadas para SEO y específicas de marca que convierten navegadores en compradores. Ahorra horas de tiempo de escritura y aumenta tus ventas de comercio electrónico.',
+                
+                // Generator Section
+                generateSection: '🚀 Genera Tu Descripción',
+                monthlyUsage: 'Uso Mensual',
+                usedDescriptions: 'descripciones utilizadas',
+                freeDescriptions: 'descripciones gratuitas utilizadas',
+                of: 'de',
+                unlimitedDescriptions: 'ilimitadas',
+                upgradePrompt: 'Actualizar para descripciones ilimitadas',
+                
+                // Input Mode Buttons
+                productURL: '🔗 URL del Producto',
+                barcodeUPC: '📊 Código de Barras/UPC',
+                manualEntry: '✏️ Entrada Manual',
+                
+                // Form Labels
+                productUrl: 'URL del Producto',
+                productUrlPlaceholder: 'https://ejemplo.com/pagina-producto',
+                barcodeNumber: 'Número de Código de Barras/UPC',
+                barcodePlaceholder: 'Introduce código de barras o número UPC',
+                lookupProduct: '🔍 Buscar Producto',
+                productName: 'Nombre del Producto',
+                productNamePlaceholder: 'Introduce nombre del producto',
+                brand: 'Marca',
+                brandPlaceholder: 'Introduce nombre de la marca',
+                category: 'Categoría',
+                categoryPlaceholder: 'ej., Electrónicos, Ropa',
+                brandTone: 'Tono de Marca',
+                descriptionLength: 'Longitud de Descripción',
+                language: 'Idioma',
+                targetAudience: 'Audiencia Objetivo (Opcional)',
+                targetAudiencePlaceholder: 'ej., Entusiastas de la tecnología, Padres, Profesionales',
+                keyFeatures: 'Características Clave (Opcional)',
+                keyFeaturesPlaceholder: 'ej., Resistente al agua, Garantía de 5 años, Carga rápida',
+                
+                // Brand Tone Options
+                luxuryPremium: 'Lujo y Premium',
+                casualFriendly: 'Casual y Amigable',
+                professionalAuthoritative: 'Profesional y Autoritario',
+                playfulFun: 'Divertido y Juguetón',
+                minimalistClean: 'Minimalista y Limpio',
+                
+                // Length Options
+                shortLength: 'Corta (50-100 palabras)',
+                mediumLength: 'Mediana (150-250 palabras)',
+                extensiveLength: 'Extensa (300-500 palabras)',
+                
+                // Buttons
+                generateDescription: 'Generar Descripción con IA',
+                copyDescription: 'Copiar Descripción',
+                
+                // Results
+                optimizedDescription: '✨ Tu Descripción de Producto Optimizada',
+                
+                // Pricing Section
+                pricingTitle: '💰 Elige Tu Plan',
+                pricingSubtitle: 'Desbloquea descripciones ilimitadas con IA',
+                
+                // Plan Names
+                starter: 'Inicial',
+                professional: 'Profesional',
+                enterprise: 'Empresa',
+                
+                // Plan Features
+                monthlyGenerations: 'descripciones/mes',
+                unlimitedGenerations: 'Generaciones ilimitadas',
+                emailSupport: 'Soporte por email',
+                prioritySupport: 'Soporte prioritario',
+                advancedFeatures: 'Características avanzadas',
+                customBranding: 'Marca personalizada',
+                apiAccess: 'Acceso a API',
+                
+                // Plan Buttons
+                currentPlan: 'Plan Actual',
+                choosePlan: 'Elegir Plan',
+                
+                // Stats
+                descriptionsGenerated: 'Descripciones Generadas',
+                happyCustomers: 'Clientes Satisfechos',
+                timesSaved: 'Horas Ahorradas',
+                
+                // Notifications
+                descriptionCopied: '¡Descripción copiada al portapapeles!',
+                subscriptionSuccess: 'Suscripción exitosa a',
+                usageDataRefreshed: 'Datos de uso actualizados',
+                
+                // Language Switcher
+                selectLanguage: 'Idioma'
+            },
+            
+            fr: {
+                // Header
+                pageTitle: 'SolTecSol - Générateur de Descriptions de Produits IA',
+                companyName: 'SolTecSol (Solutions Technologiques Solides)',
+                appTitle: 'Générateur de Descriptions IA',
+                tagline: 'Transformez les URLs de Produits en Textes qui Convertissent',
+                subtitle: 'Générez des descriptions de produits optimisées SEO et spécifiques à la marque qui convertissent les visiteurs en acheteurs. Économisez des heures de rédaction et augmentez vos ventes e-commerce.',
+                
+                // Generator Section
+                generateSection: '🚀 Générez Votre Description',
+                monthlyUsage: 'Usage Mensuel',
+                usedDescriptions: 'descriptions utilisées',
+                freeDescriptions: 'descriptions gratuites utilisées',
+                of: 'de',
+                unlimitedDescriptions: 'illimitées',
+                upgradePrompt: 'Mettre à niveau pour des descriptions illimitées',
+                
+                // Input Mode Buttons
+                productURL: '🔗 URL du Produit',
+                barcodeUPC: '📊 Code-barres/UPC',
+                manualEntry: '✏️ Saisie Manuelle',
+                
+                // Form Labels
+                productUrl: 'URL du Produit',
+                productUrlPlaceholder: 'https://exemple.com/page-produit',
+                barcodeNumber: 'Numéro de Code-barres/UPC',
+                barcodePlaceholder: 'Entrez le code-barres ou numéro UPC',
+                lookupProduct: '🔍 Rechercher Produit',
+                productName: 'Nom du Produit',
+                productNamePlaceholder: 'Entrez le nom du produit',
+                brand: 'Marque',
+                brandPlaceholder: 'Entrez le nom de la marque',
+                category: 'Catégorie',
+                categoryPlaceholder: 'ex., Électronique, Vêtements',
+                brandTone: 'Ton de Marque',
+                descriptionLength: 'Longueur de Description',
+                language: 'Langue',
+                targetAudience: 'Public Cible (Optionnel)',
+                targetAudiencePlaceholder: 'ex., Passionnés de tech, Parents, Professionnels',
+                keyFeatures: 'Caractéristiques Clés (Optionnel)',
+                keyFeaturesPlaceholder: 'ex., Étanche, Garantie 5 ans, Charge rapide',
+                
+                // Brand Tone Options
+                luxuryPremium: 'Luxe et Premium',
+                casualFriendly: 'Décontracté et Amical',
+                professionalAuthoritative: 'Professionnel et Autoritaire',
+                playfulFun: 'Ludique et Amusant',
+                minimalistClean: 'Minimaliste et Épuré',
+                
+                // Length Options
+                shortLength: 'Courte (50-100 mots)',
+                mediumLength: 'Moyenne (150-250 mots)',
+                extensiveLength: 'Longue (300-500 mots)',
+                
+                // Buttons
+                generateDescription: 'Générer Description IA',
+                copyDescription: 'Copier Description',
+                
+                // Results
+                optimizedDescription: '✨ Votre Description de Produit Optimisée',
+                
+                // Pricing Section
+                pricingTitle: '💰 Choisissez Votre Plan',
+                pricingSubtitle: 'Débloquez des descriptions IA illimitées',
+                
+                // Plan Names
+                starter: 'Démarrage',
+                professional: 'Professionnel',
+                enterprise: 'Entreprise',
+                
+                // Plan Features
+                monthlyGenerations: 'descriptions/mois',
+                unlimitedGenerations: 'Générations illimitées',
+                emailSupport: 'Support par email',
+                prioritySupport: 'Support prioritaire',
+                advancedFeatures: 'Fonctionnalités avancées',
+                customBranding: 'Image de marque personnalisée',
+                apiAccess: 'Accès API',
+                
+                // Plan Buttons
+                currentPlan: 'Plan Actuel',
+                choosePlan: 'Choisir le Plan',
+                
+                // Stats
+                descriptionsGenerated: 'Descriptions Générées',
+                happyCustomers: 'Clients Satisfaits',
+                timesSaved: 'Heures Économisées',
+                
+                // Notifications
+                descriptionCopied: 'Description copiée dans le presse-papiers !',
+                subscriptionSuccess: 'Abonnement réussi à',
+                usageDataRefreshed: 'Données d\'usage actualisées',
+                
+                // Language Switcher
+                selectLanguage: 'Langue'
+            },
+            
+            de: {
+                // Header
+                pageTitle: 'SolTecSol - KI Produktbeschreibungs-Generator',
+                companyName: 'SolTecSol (Solide Technische Lösungen)',
+                appTitle: 'KI Beschreibungs-Generator',
+                tagline: 'Produkt-URLs in Converting Copy verwandeln',
+                subtitle: 'Erstellen Sie SEO-optimierte, markenspezifische Produktbeschreibungen, die Besucher in Käufer verwandeln. Sparen Sie Stunden beim Schreiben und steigern Sie Ihre E-Commerce-Verkäufe.',
+                
+                // Generator Section
+                generateSection: '🚀 Erstellen Sie Ihre Beschreibung',
+                monthlyUsage: 'Monatliche Nutzung',
+                usedDescriptions: 'verwendete Beschreibungen',
+                freeDescriptions: 'kostenlose Beschreibungen verwendet',
+                unlimitedDescriptions: 'unbegrenzt',
+                upgradePrompt: 'Upgrade für unbegrenzte Beschreibungen',
+                
+                // Form Labels
+                productUrl: 'Produkt-URL',
+                productUrlPlaceholder: 'https://beispiel.com/produkt-seite',
+                generateDescription: 'KI-Beschreibung generieren',
+                optimizedDescription: '✨ Ihre optimierte Produktbeschreibung',
+                
+                // Pricing Section
+                pricingTitle: '💰 Wählen Sie Ihren Plan',
+                pricingSubtitle: 'Schalten Sie unbegrenzte KI-gestützte Beschreibungen frei',
+                
+                // Plan Names
+                starter: 'Starter',
+                professional: 'Professionell',
+                enterprise: 'Unternehmen'
+            },
+            
+            it: {
+                // Header
+                pageTitle: 'SolTecSol - Generatore di Descrizioni Prodotto AI',
+                companyName: 'SolTecSol (Soluzioni Tecnologiche Solide)',
+                appTitle: 'Generatore di Descrizioni AI',
+                tagline: 'Trasforma gli URL dei Prodotti in Testi che Convertono',
+                subtitle: 'Genera descrizioni di prodotti ottimizzate SEO e specifiche del marchio che convertono i visitatori in acquirenti. Risparmia ore di scrittura e aumenta le vendite e-commerce.',
+                
+                // Generator Section
+                generateSection: '🚀 Genera la Tua Descrizione',
+                monthlyUsage: 'Uso Mensile',
+                usedDescriptions: 'descrizioni utilizzate',
+                freeDescriptions: 'descrizioni gratuite utilizzate',
+                unlimitedDescriptions: 'illimitate',
+                upgradePrompt: 'Aggiorna per descrizioni illimitate',
+                
+                // Form Labels
+                productUrl: 'URL del Prodotto',
+                productUrlPlaceholder: 'https://esempio.com/pagina-prodotto',
+                generateDescription: 'Genera Descrizione AI',
+                optimizedDescription: '✨ La Tua Descrizione Prodotto Ottimizzata',
+                
+                // Pricing Section
+                pricingTitle: '💰 Scegli il Tuo Piano',
+                pricingSubtitle: 'Sblocca descrizioni AI illimitate',
+                
+                // Plan Names
+                starter: 'Base',
+                professional: 'Professionale',
+                enterprise: 'Aziendale'
+            },
+            
+            pt: {
+                // Header
+                pageTitle: 'SolTecSol - Gerador de Descrições de Produtos IA',
+                companyName: 'SolTecSol (Soluções Tecnológicas Sólidas)',
+                appTitle: 'Gerador de Descrições IA',
+                tagline: 'Transforme URLs de Produtos em Textos que Convertem',
+                subtitle: 'Gere descrições de produtos otimizadas para SEO e específicas da marca que convertem visitantes em compradores. Economize horas de escrita e aumente suas vendas de e-commerce.',
+                
+                // Generator Section
+                generateSection: '🚀 Gere Sua Descrição',
+                monthlyUsage: 'Uso Mensal',
+                usedDescriptions: 'descrições utilizadas',
+                freeDescriptions: 'descrições gratuitas utilizadas',
+                unlimitedDescriptions: 'ilimitadas',
+                upgradePrompt: 'Atualizar para descrições ilimitadas',
+                
+                // Form Labels
+                productUrl: 'URL do Produto',
+                productUrlPlaceholder: 'https://exemplo.com/pagina-produto',
+                generateDescription: 'Gerar Descrição IA',
+                optimizedDescription: '✨ Sua Descrição de Produto Otimizada',
+                
+                // Pricing Section
+                pricingTitle: '💰 Escolha Seu Plano',
+                pricingSubtitle: 'Desbloqueie descrições IA ilimitadas',
+                
+                // Plan Names
+                starter: 'Inicial',
+                professional: 'Profissional',
+                enterprise: 'Empresarial'
+            }
+        };
+
         // User state object
         let userState = {
             subscriptionType: 'free',
@@ -971,12 +1383,65 @@
             }
         });
 
+        // Translation system
+        function t(key) {
+            return translations[currentLanguage]?.[key] || translations.en[key] || key;
+        }
+        
+        function changeLanguage(langCode) {
+            currentLanguage = langCode;
+            localStorage.setItem('preferredLanguage', langCode);
+            updateAllTranslations();
+            updatePageTitle();
+        }
+        
+        function loadLanguagePreference() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+            currentLanguage = savedLang;
+            const switcher = document.getElementById('languageSwitcher');
+            if (switcher) {
+                switcher.value = savedLang;
+            }
+        }
+        
+        function updatePageTitle() {
+            document.title = t('pageTitle');
+        }
+        
+        function updateAllTranslations() {
+            // Update all elements with data-translate attributes
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+            
+            // Update placeholders
+            const placeholders = document.querySelectorAll('[data-translate-placeholder]');
+            placeholders.forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.placeholder = translations[currentLanguage][key];
+                }
+            });
+            
+            // Update page title
+            updatePageTitle();
+            
+            // Update usage display text
+            updateUsageDisplay();
+        }
+
         // Initialize app when DOM is ready
         document.addEventListener('DOMContentLoaded', async function() {
+            loadLanguagePreference();
             loadUserState();
             await syncUserData(); // Sync with backend after loading local state
             updateUsageDisplay();
             setupEventListeners();
+            updateAllTranslations(); // Apply translations after everything is loaded
             
             // Setup PayPal buttons with error handling to not break other functionality
             // Temporarily disabled to prevent page load errors
@@ -1682,10 +2147,10 @@
             
             if (usageText) {
                 if (userState.isSubscribed) {
-                    const limitText = userState.maxUsage === 999999 ? 'unlimited' : userState.maxUsage;
-                    usageText.textContent = `${userState.monthlyUsage} of ${limitText} descriptions used`;
+                    const limitText = userState.maxUsage === 999999 ? t('unlimitedDescriptions') : userState.maxUsage;
+                    usageText.textContent = `${userState.monthlyUsage} ${t('of')} ${limitText} ${t('usedDescriptions')}`;
                 } else {
-                    usageText.textContent = `${userState.monthlyUsage} of ${userState.maxUsage} free descriptions used`;
+                    usageText.textContent = `${userState.monthlyUsage} ${t('of')} ${userState.maxUsage} ${t('freeDescriptions')}`;
                 }
             }
             
