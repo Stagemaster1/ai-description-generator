@@ -759,7 +759,7 @@
                 
                 <form id="descriptionForm">
                     <div class="form-group">
-                        <label class="form-label">Product Identification</label>
+                        <label class="form-label" data-translate="productIdentification">Product Identification</label>
                         <div class="input-method-selector">
                             <button type="button" id="urlModeBtn" class="method-btn active" data-translate="productURL">🔗 Product URL</button>
                             <button type="button" id="barcodeModeBtn" class="method-btn" data-translate="barcodeUPC">📊 Barcode/UPC</button>
@@ -772,6 +772,7 @@
                                 id="productUrl" 
                                 class="form-input" 
                                 placeholder="https://www.aliexpress.com/item/..." 
+                                data-translate-placeholder="productUrlPlaceholder"
                             >
                             <div class="error" id="urlError"></div>
                         </div>
@@ -782,10 +783,11 @@
                                 id="productBarcode" 
                                 class="form-input" 
                                 placeholder="Enter barcode/UPC (e.g., 123456789012)" 
+                                data-translate-placeholder="barcodePlaceholder"
                                 pattern="[0-9]{8,13}"
                                 title="Enter 8-13 digit barcode or UPC"
                             >
-                            <button type="button" id="lookupBarcodeBtn" class="barcode-lookup-btn">🔍 Lookup Product</button>
+                            <button type="button" id="lookupBarcodeBtn" class="barcode-lookup-btn" data-translate="lookupProduct">🔍 Lookup Product</button>
                             <div class="error" id="barcodeError"></div>
                         </div>
                         
@@ -795,6 +797,7 @@
                                 id="productName" 
                                 class="form-input" 
                                 placeholder="Enter product name (e.g., 'Wireless Bluetooth Headphones')"
+                                data-translate-placeholder="productNamePlaceholder"
                             >
                             <div class="error" id="manualError"></div>
                         </div>
@@ -814,24 +817,24 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="brandTone" class="form-label">Brand Tone</label>
+                        <label for="brandTone" class="form-label" data-translate="brandTone">Brand Tone</label>
                         <select id="brandTone" class="form-select" required>
-                            <option value="">Select your brand voice...</option>
-                            <option value="luxury">Luxury & Premium</option>
-                            <option value="casual">Casual & Friendly</option>
-                            <option value="professional">Professional & Authoritative</option>
-                            <option value="fun">Fun & Quirky</option>
-                            <option value="minimalist">Minimalist & Clean</option>
+                            <option value="" data-translate="selectBrandVoice">Select your brand voice...</option>
+                            <option value="luxury" data-translate="luxuryPremium">Luxury & Premium</option>
+                            <option value="casual" data-translate="casualFriendly">Casual & Friendly</option>
+                            <option value="professional" data-translate="professionalAuthoritative">Professional & Authoritative</option>
+                            <option value="fun" data-translate="funQuirky">Fun & Quirky</option>
+                            <option value="minimalist" data-translate="minimalistClean">Minimalist & Clean</option>
                         </select>
                         <div class="error" id="brandToneError"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="descriptionLength" class="form-label">Description Length</label>
+                        <label for="descriptionLength" class="form-label" data-translate="descriptionLength">Description Length</label>
                         <select id="descriptionLength" class="form-select" required>
-                            <option value="short">Short (50-100 words) - Quick & Punchy</option>
-                            <option value="medium">Medium (150-250 words) - Recommended</option>
-                            <option value="extensive">Extensive (300-500 words) - Detailed</option>
+                            <option value="short" data-translate="shortLength">Short (50-100 words) - Quick & Punchy</option>
+                            <option value="medium" data-translate="mediumLength">Medium (150-250 words) - Recommended</option>
+                            <option value="extensive" data-translate="extensiveLength">Extensive (300-500 words) - Detailed</option>
                         </select>
                         <div class="error" id="descriptionLengthError"></div>
                     </div>
@@ -990,6 +993,7 @@
                 manualEntry: '✏️ Manual Entry',
                 
                 // Form Labels
+                productIdentification: 'Product Identification',
                 productUrl: 'Product URL',
                 productUrlPlaceholder: 'https://example.com/product-page',
                 barcodeNumber: 'Barcode/UPC Number',
@@ -1010,16 +1014,17 @@
                 keyFeaturesPlaceholder: 'e.g., Waterproof, 5-year warranty, Fast charging',
                 
                 // Brand Tone Options
+                selectBrandVoice: 'Select your brand voice...',
                 luxuryPremium: 'Luxury & Premium',
                 casualFriendly: 'Casual & Friendly',
                 professionalAuthoritative: 'Professional & Authoritative',
-                playfulFun: 'Playful & Fun',
+                funQuirky: 'Fun & Quirky',
                 minimalistClean: 'Minimalist & Clean',
                 
                 // Length Options
-                shortLength: 'Short (50-100 words)',
-                mediumLength: 'Medium (150-250 words)',
-                extensiveLength: 'Extensive (300-500 words)',
+                shortLength: 'Short (50-100 words) - Quick & Punchy',
+                mediumLength: 'Medium (150-250 words) - Recommended',
+                extensiveLength: 'Extensive (300-500 words) - Detailed',
                 
                 // Buttons
                 generateDescription: 'Generate AI Description',
@@ -1087,6 +1092,7 @@
                 manualEntry: '✏️ Entrada Manual',
                 
                 // Form Labels
+                productIdentification: 'Identificación del Producto',
                 productUrl: 'URL del Producto',
                 productUrlPlaceholder: 'https://ejemplo.com/pagina-producto',
                 barcodeNumber: 'Número de Código de Barras/UPC',
@@ -1107,16 +1113,17 @@
                 keyFeaturesPlaceholder: 'ej., Resistente al agua, Garantía de 5 años, Carga rápida',
                 
                 // Brand Tone Options
+                selectBrandVoice: 'Selecciona la voz de tu marca...',
                 luxuryPremium: 'Lujo y Premium',
                 casualFriendly: 'Casual y Amigable',
                 professionalAuthoritative: 'Profesional y Autoritario',
-                playfulFun: 'Divertido y Juguetón',
+                funQuirky: 'Divertido y Peculiar',
                 minimalistClean: 'Minimalista y Limpio',
                 
                 // Length Options
-                shortLength: 'Corta (50-100 palabras)',
-                mediumLength: 'Mediana (150-250 palabras)',
-                extensiveLength: 'Extensa (300-500 palabras)',
+                shortLength: 'Corta (50-100 palabras) - Rápida y Directa',
+                mediumLength: 'Mediana (150-250 palabras) - Recomendada',
+                extensiveLength: 'Extensa (300-500 palabras) - Detallada',
                 
                 // Buttons
                 generateDescription: 'Generar Descripción con IA',
