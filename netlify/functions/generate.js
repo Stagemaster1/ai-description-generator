@@ -60,10 +60,11 @@ exports.handler = async (event, context) => {
 
     // Validate that we have either URL or product info
     if (!productUrl && !productInfo) {
+      console.log('Validation failed: Missing product data', { inputMode, hasUrl: !!productUrl, hasInfo: !!productInfo });
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ error: 'Product URL or barcode product information is required' })
+        body: JSON.stringify({ error: 'Product URL or product information is required' })
       };
     }
 
