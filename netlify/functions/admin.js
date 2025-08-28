@@ -418,31 +418,70 @@ async function syncUser(userId, userData, headers) {
 async function manualAddUser(userData, headers) {
   // Manually add a user to the system (for existing subscribers who weren't synced)
   
-  const userId = userData.userId || `manual_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+  const email = userData.email || 'manual@unknown.com';
+  const emailLower = email.toLowerCase().trim();
   
-  users[userId] = {
-    id: userId,
-    email: userData.email || 'manual@unknown.com',
-    subscriptionType: userData.subscriptionType || 'starter',
-    monthlyUsage: userData.monthlyUsage || 0,
-    maxUsage: userData.maxUsage || 50,
-    isSubscribed: userData.isSubscribed !== false, // default to true
-    subscriptionId: userData.subscriptionId || `manual-${Date.now()}`,
-    lastActive: new Date().toISOString(),
-    manuallyAdded: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
+  // Check for existing user by email to prevent duplicates
+  let existingUserId = null;
+  for (const userId of Object.keys(users)) {
+    if (users[userId].email === emailLower) {
+      existingUserId = userId;
+      break;
+    }
+  }
   
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      success: true,
-      message: `User ${userId} manually added successfully`,
-      user: users[userId]
-    })
-  };
+  if (existingUserId) {
+    // Update existing user instead of creating duplicate
+    users[existingUserId] = {
+      ...users[existingUserId],
+      email: emailLower,
+      subscriptionType: userData.subscriptionType || 'starter',
+      monthlyUsage: userData.monthlyUsage || 0,
+      maxUsage: userData.maxUsage || 50,
+      isSubscribed: userData.isSubscribed !== false,
+      subscriptionId: userData.subscriptionId || users[existingUserId].subscriptionId || `manual-${Date.now()}`,
+      lastActive: new Date().toISOString(),
+      manuallyAdded: true,
+      updatedAt: new Date().toISOString()
+    };
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `User ${emailLower} updated successfully (existing user)`,
+        user: users[existingUserId]
+      })
+    };
+  } else {
+    // Create new user if doesn't exist
+    const userId = `manual_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+    
+    users[userId] = {
+      id: userId,
+      email: emailLower,
+      subscriptionType: userData.subscriptionType || 'starter',
+      monthlyUsage: userData.monthlyUsage || 0,
+      maxUsage: userData.maxUsage || 50,
+      isSubscribed: userData.isSubscribed !== false,
+      subscriptionId: userData.subscriptionId || `manual-${Date.now()}`,
+      lastActive: new Date().toISOString(),
+      manuallyAdded: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `User ${emailLower} added successfully (new user)`,
+        user: users[userId]
+      })
+    };
+  }
 }
 
 async function manualUnlockUser(userData, headers) {
