@@ -130,8 +130,7 @@ async function getUser(userId, headers) {
 }
 
 async function resetUserUsage(userId, headers) {
-  // Initialize mock users first to ensure they exist
-  initializeMockUsers();
+  // Mock users removed - only work with real users
   
   if (users[userId]) {
     users[userId].monthlyUsage = 0;
@@ -243,8 +242,7 @@ async function createTestUser(userData, headers) {
 }
 
 async function resetAllUsage(headers) {
-  // Initialize mock users first
-  initializeMockUsers();
+  // Mock users removed - only work with real users
   
   let resetCount = 0;
   const timestamp = new Date().toISOString();
