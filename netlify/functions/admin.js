@@ -74,6 +74,9 @@ exports.handler = async (event, context) => {
       case 'sync_user':
         return await syncUser(userId, userData, headers);
       
+      case 'manual_add_user':
+        return await manualAddUser(userData, headers);
+      
       default:
         return {
           statusCode: 400,
@@ -111,9 +114,10 @@ function initializeMockUsers() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString() // Random within last 24h
     };
   } else if (users['user-001'] && !users['user-001'].lastReset) {
-    // Only update usage if not recently reset
+    // Only update usage if never reset
     users['user-001'].monthlyUsage = Math.min(dayOfMonth % 6, 5);
   }
+  // If user was reset, keep their usage at 0 and don't regenerate
   
   if (!users['user-002']) {
     users['user-002'] = {
@@ -128,9 +132,10 @@ function initializeMockUsers() {
       lastActive: new Date(Date.now() - Math.random() * 2 * 60 * 60 * 1000).toISOString() // Random within last 2h
     };
   } else if (users['user-002'] && !users['user-002'].lastReset) {
-    // Only update usage if not recently reset
+    // Only update usage if never reset
     users['user-002'].monthlyUsage = Math.min(dayOfMonth + 10, 50);
   }
+  // If user was reset, keep their usage at 0 and don't regenerate
   
   if (!users['user-003']) {
     users['user-003'] = {
@@ -145,9 +150,10 @@ function initializeMockUsers() {
       lastActive: new Date(Date.now() - Math.random() * 60 * 60 * 1000).toISOString() // Random within last hour
     };
   } else if (users['user-003'] && !users['user-003'].lastReset) {
-    // Only update usage if not recently reset
+    // Only update usage if never reset
     users['user-003'].monthlyUsage = Math.min(dayOfMonth * 3 + 50, 200);
   }
+  // If user was reset, keep their usage at 0 and don't regenerate
 }
 
 async function getAllUsers(headers) {
@@ -401,6 +407,36 @@ async function syncUser(userId, userData, headers) {
     body: JSON.stringify({ 
       success: true,
       message: `User ${userId} synced successfully`,
+      user: users[userId]
+    })
+  };
+}
+
+async function manualAddUser(userData, headers) {
+  // Manually add a user to the system (for existing subscribers who weren't synced)
+  
+  const userId = userData.userId || `manual_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+  
+  users[userId] = {
+    id: userId,
+    email: userData.email || 'manual@unknown.com',
+    subscriptionType: userData.subscriptionType || 'starter',
+    monthlyUsage: userData.monthlyUsage || 0,
+    maxUsage: userData.maxUsage || 50,
+    isSubscribed: userData.isSubscribed !== false, // default to true
+    subscriptionId: userData.subscriptionId || `manual-${Date.now()}`,
+    lastActive: new Date().toISOString(),
+    manuallyAdded: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  
+  return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify({ 
+      success: true,
+      message: `User ${userId} manually added successfully`,
       user: users[userId]
     })
   };

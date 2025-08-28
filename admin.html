@@ -303,6 +303,7 @@
                     <button onclick="refreshUsers()" class="btn-success">🔄 Refresh Users</button>
                     <button onclick="resetAllUsage()">📊 Reset All Usage</button>
                     <button onclick="createTestUser()" class="btn-success">👤 Create Test User</button>
+                    <button onclick="addMissingSubscriber()" class="btn-success">➕ Add Missing Subscriber</button>
                     <button onclick="exportUsers()">📄 Export Data</button>
                 </div>
 
@@ -640,6 +641,37 @@
             window.URL.revokeObjectURL(url);
             
             showNotification('Users exported to CSV', 'success');
+        }
+
+        async function addMissingSubscriber() {
+            const email = prompt('Enter subscriber email:');
+            if (!email) return;
+            
+            const plan = prompt('Enter plan type (starter/professional/enterprise):', 'starter');
+            if (!plan) return;
+            
+            const planLimits = { starter: 50, professional: 200, enterprise: 999999 };
+            const maxUsage = planLimits[plan] || 50;
+            
+            try {
+                const result = await apiCall('manual_add_user', null, {
+                    email: email.trim(),
+                    subscriptionType: plan.toLowerCase(),
+                    maxUsage: maxUsage,
+                    monthlyUsage: 0,
+                    isSubscribed: true,
+                    subscriptionId: `manual-${Date.now()}`
+                });
+                
+                if (result.success) {
+                    showNotification(`Subscriber ${email} added successfully!`, 'success');
+                    refreshUsers(); // Refresh the user list
+                } else {
+                    showNotification('Failed to add subscriber: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to add subscriber: ' + error.message, 'error');
+            }
         }
 
         async function changeAdminPassword() {
