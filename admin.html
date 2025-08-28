@@ -733,7 +733,8 @@
                     userData: {
                         manuallyUnlocked: true,
                         maxUsage: 999999,
-                        subscriptionType: 'unlocked'
+                        subscriptionType: 'unlocked',
+                        originalSubscriptionType: user.subscriptionType || 'free' // Store original plan
                     }
                 });
                 
@@ -755,18 +756,23 @@
             const confirm = window.confirm(`Lock ${user.email || user.id} back to their original plan?`);
             if (!confirm) return;
             
+            // Use original subscription type or current if no original stored
+            const originalPlan = user.originalSubscriptionType || user.subscriptionType;
+            const planLimits = { starter: 50, professional: 200, enterprise: 999999, free: 5 };
+            const maxUsage = planLimits[originalPlan] || 5;
+            
             try {
                 const result = await apiCall('update_user', {
                     userId: userId,
                     userData: {
                         manuallyUnlocked: false,
-                        maxUsage: user.subscriptionType === 'starter' ? 50 : (user.subscriptionType === 'professional' ? 200 : 5),
-                        subscriptionType: user.subscriptionType === 'unlocked' ? 'free' : user.subscriptionType
+                        maxUsage: maxUsage,
+                        subscriptionType: originalPlan === 'unlocked' ? 'free' : originalPlan
                     }
                 });
                 
                 if (result.success) {
-                    showNotification(`User locked successfully!`, 'success');
+                    showNotification(`User locked back to ${originalPlan} plan (${maxUsage} limit)!`, 'success');
                     refreshUsers();
                 } else {
                     showNotification('Failed to lock user: ' + result.message, 'error');
