@@ -655,13 +655,15 @@
             const maxUsage = planLimits[plan] || 50;
             
             try {
-                const result = await apiCall('manual_add_user', null, {
-                    email: email.trim(),
-                    subscriptionType: plan.toLowerCase(),
-                    maxUsage: maxUsage,
-                    monthlyUsage: 0,
-                    isSubscribed: true,
-                    subscriptionId: `manual-${Date.now()}`
+                const result = await apiCall('manual_add_user', {
+                    userData: {
+                        email: email.trim(),
+                        subscriptionType: plan.toLowerCase(),
+                        maxUsage: maxUsage,
+                        monthlyUsage: 0,
+                        isSubscribed: true,
+                        subscriptionId: `manual-${Date.now()}`
+                    }
                 });
                 
                 if (result.success) {
@@ -686,8 +688,10 @@
             if (!confirm) return;
             
             try {
-                const result = await apiCall('manual_unlock', null, {
-                    email: email.trim()
+                const result = await apiCall('manual_unlock', {
+                    userData: {
+                        email: email.trim()
+                    }
                 });
                 
                 if (result.success) {
