@@ -448,6 +448,8 @@ async function manualAddUser(userData, headers) {
 async function manualUnlockUser(userData, headers) {
   // Manually unlock a user with unlimited access (for beta testers, special cases)
   
+  console.log('Manual unlock request:', userData);
+  
   const email = userData.email;
   if (!email) {
     return {
@@ -463,7 +465,7 @@ async function manualUnlockUser(userData, headers) {
   // Create user ID from email for consistency
   const userId = `unlock_${email.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`;
   
-  users[userId] = {
+  const newUser = {
     id: userId,
     email: email.toLowerCase().trim(),
     subscriptionType: 'unlocked',
@@ -478,13 +480,19 @@ async function manualUnlockUser(userData, headers) {
     updatedAt: new Date().toISOString()
   };
   
+  users[userId] = newUser;
+  
+  console.log('User unlocked successfully:', newUser);
+  console.log('Total users now:', Object.keys(users).length);
+  
   return {
     statusCode: 200,
     headers,
     body: JSON.stringify({ 
       success: true,
       message: `${email} unlocked with unlimited access`,
-      user: users[userId]
+      user: users[userId],
+      totalUsers: Object.keys(users).length
     })
   };
 }
