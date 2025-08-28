@@ -311,6 +311,10 @@
                     <button onclick="createTestUser()" class="btn-success">👤 Create Test User</button>
                     <button onclick="addMissingSubscriber()" class="btn-success">➕ Add Missing Subscriber</button>
                     <button onclick="manualUnlock()" class="btn-success">🔓 Manual Unlock</button>
+                    <button onclick="testWebhook()" class="btn-success">🧪 Test Webhook (Safe)</button>
+                    <button onclick="testNotionToken()" class="btn-success">🧪 Test Notion Token</button>
+                    <button onclick="testDirectNotion()" class="btn-success">🎯 Test Direct Notion</button>
+                    <button onclick="setupNotionDatabase()" class="btn-success">📋 Create Notion Database</button>
                     <button onclick="exportUsers()">📄 Export Data</button>
                 </div>
 
@@ -814,6 +818,104 @@
             }
         }
 
+
+        async function testDirectNotion() {
+            try {
+                const response = await fetch('/.netlify/functions/notion-direct-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification('Direct Notion test SUCCESS! Page ID: ' + result.pageId, 'success');
+                } else {
+                    showNotification('Direct test failed: ' + (result.error || 'Unknown error'), 'error');
+                    console.log('Full error details:', JSON.stringify(result, null, 2));
+                }
+            } catch (error) {
+                showNotification('Direct test error: ' + error.message, 'error');
+            }
+        }
+
+        async function testNotionToken() {
+            try {
+                const response = await fetch('/.netlify/functions/notion-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification('Notion token test: ' + result.message + ' User: ' + result.user, 'success');
+                } else {
+                    showNotification('Token test failed: ' + (result.error || 'Unknown error'), 'error');
+                    console.log('Full error:', result);
+                }
+            } catch (error) {
+                showNotification('Token test error: ' + error.message, 'error');
+            }
+        }
+
+        async function setupNotionDatabase() {
+            if (!confirm('Create the Notion subscriber database in your SolTecSol HQ page?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/.netlify/functions/notion-setup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification(`Notion database created! Database ID: ${result.databaseId.slice(0, 8)}...`, 'success');
+                    console.log('Add this to Netlify environment variables:');
+                    console.log('NOTION_DATABASE_ID =', result.databaseId);
+                } else {
+                    showNotification('Database creation failed: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                showNotification('Setup error: ' + error.message, 'error');
+            }
+        }
+
+        async function testWebhook() {
+            if (!confirm('Test the subscription webhook? This will create a test subscriber safely without affecting PayPal.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/.netlify/functions/subscription-webhook', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'test_subscription',
+                        email: 'test-subscriber@example.com',
+                        planName: 'starter',
+                        subscriptionId: 'test-webhook-' + Date.now()
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification(`Webhook test successful! User created: ${result.userCreated}, Notion notified: ${result.notionNotified}`, 'success');
+                    refreshUsers(); // Refresh to show the new test user
+                } else {
+                    showNotification('Webhook test failed: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                showNotification('Webhook test error: ' + error.message, 'error');
+            }
+        }
 
         async function changeAdminPassword() {
             const currentPassword = document.getElementById('currentPassword').value.trim();
