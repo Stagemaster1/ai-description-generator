@@ -317,7 +317,7 @@
                 <div class="actions">
                     <button onclick="resetUserUsage()">Reset Usage</button>
                     <button onclick="resetUserSubscription()">Reset Subscription</button>
-                    <button onclick="deleteUser()" class="btn-danger">Delete User</button>
+                    <button onclick="deleteUser()" class="btn-danger" disabled style="opacity: 0.5; cursor: not-allowed;" title="Use delete buttons in user table instead">Delete User (Disabled)</button>
                 </div>
 
                 <!-- Admin Settings -->
@@ -513,14 +513,28 @@
             revenueAlert.style.display = 'block';
         }
 
+        function updateUserDropdown(userList) {
+            const dropdown = document.getElementById('userEmail');
+            dropdown.innerHTML = '<option value="">Select a user...</option>';
+            
+            userList.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id;
+                option.textContent = `${user.email || user.id} (${user.subscriptionType || 'free'})`;
+                dropdown.appendChild(option);
+            });
+        }
+
         function renderUsersTable() {
             const tbody = document.getElementById('usersTableBody');
             
             if (users.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No users found</td></tr>';
+                updateUserDropdown([]);
                 return;
             }
 
+            updateUserDropdown(users);
             tbody.innerHTML = users.map(user => {
                 const isUnlocked = user.manuallyUnlocked || user.subscriptionType === 'unlocked';
                 const statusText = isUnlocked ? '🔓 Unlocked' : (user.isSubscribed ? '✅ Active' : '❌ Inactive');
