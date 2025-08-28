@@ -534,10 +534,12 @@
                         </span>
                     </td>
                     <td>
-                        <input type="number" value="${user.monthlyUsage || 0}" 
-                               onchange="updateUserUsage('${user.id}', this.value)"
+                        Used: ${user.monthlyUsage || 0} / ${user.maxUsage || 5}<br>
+                        <small>Remaining: 
+                        <input type="number" value="${Math.max(0, (user.maxUsage || 5) - (user.monthlyUsage || 0))}" 
+                               onchange="updateUserRemaining('${user.id}', this.value, ${user.maxUsage || 5})"
                                style="width: 50px; margin-right: 5px;">
-                        / ${user.maxUsage || 5}
+                        </small>
                     </td>
                     <td>${statusText}</td>
                     <td>${user.lastActive ? new Date(user.lastActive).toLocaleDateString() : '-'}</td>
@@ -785,6 +787,30 @@
                 
                 if (result.success) {
                     showNotification(`Usage updated to ${newUsage}`, 'success');
+                } else {
+                    showNotification('Failed to update usage: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to update usage: ' + error.message, 'error');
+            }
+        }
+
+        async function updateUserRemaining(userId, remaining, maxUsage) {
+            // Validate remaining is not negative and not more than max
+            const remainingNum = Math.max(0, Math.min(parseInt(remaining) || 0, maxUsage));
+            const usedAmount = Math.max(0, maxUsage - remainingNum);
+            
+            try {
+                const result = await apiCall('update_user', {
+                    userId: userId,
+                    userData: {
+                        monthlyUsage: usedAmount
+                    }
+                });
+                
+                if (result.success) {
+                    showNotification(`Set remaining to ${remainingNum} (used: ${usedAmount})`, 'success');
+                    refreshUsers(); // Refresh to show updated numbers
                 } else {
                     showNotification('Failed to update usage: ' + result.message, 'error');
                 }
