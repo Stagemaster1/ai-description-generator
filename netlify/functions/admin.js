@@ -462,37 +462,66 @@ async function manualUnlockUser(userData, headers) {
     };
   }
 
-  // Create user ID from email for consistency
-  const userId = `unlock_${email.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`;
+  const emailLower = email.toLowerCase().trim();
   
-  const newUser = {
-    id: userId,
-    email: email.toLowerCase().trim(),
-    subscriptionType: 'unlocked',
-    monthlyUsage: 0,
-    maxUsage: 999999, // Unlimited
-    isSubscribed: true,
-    subscriptionId: `manual-unlock-${Date.now()}`,
-    lastActive: new Date().toISOString(),
-    manuallyUnlocked: true,
-    unlockedBy: 'admin',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
+  // Find existing user by email instead of creating duplicate
+  let existingUserId = null;
+  for (const userId of Object.keys(users)) {
+    if (users[userId].email === emailLower) {
+      existingUserId = userId;
+      break;
+    }
+  }
   
-  users[userId] = newUser;
-  
-  console.log('User unlocked successfully:', newUser);
-  console.log('Total users now:', Object.keys(users).length);
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      success: true,
-      message: `${email} unlocked with unlimited access`,
-      user: users[userId],
-      totalUsers: Object.keys(users).length
-    })
-  };
+  if (existingUserId) {
+    // Update existing user
+    users[existingUserId].manuallyUnlocked = true;
+    users[existingUserId].maxUsage = 999999;
+    users[existingUserId].subscriptionType = 'unlocked';
+    users[existingUserId].updatedAt = new Date().toISOString();
+    
+    console.log('Existing user unlocked:', users[existingUserId]);
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `${email} unlocked with unlimited access (updated existing user)`,
+        user: users[existingUserId]
+      })
+    };
+  } else {
+    // Create new user if doesn't exist
+    const userId = `unlock_${email.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`;
+    
+    const newUser = {
+      id: userId,
+      email: emailLower,
+      subscriptionType: 'unlocked',
+      monthlyUsage: 0,
+      maxUsage: 999999, // Unlimited
+      isSubscribed: true,
+      subscriptionId: `manual-unlock-${Date.now()}`,
+      lastActive: new Date().toISOString(),
+      manuallyUnlocked: true,
+      unlockedBy: 'admin',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    users[userId] = newUser;
+    
+    console.log('New user created and unlocked:', newUser);
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `${email} unlocked with unlimited access (new user created)`,
+        user: users[userId]
+      })
+    };
+  }
 }

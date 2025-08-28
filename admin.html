@@ -521,7 +521,11 @@
                 return;
             }
 
-            tbody.innerHTML = users.map(user => `
+            tbody.innerHTML = users.map(user => {
+                const isUnlocked = user.manuallyUnlocked || user.subscriptionType === 'unlocked';
+                const statusText = isUnlocked ? '🔓 Unlocked' : (user.isSubscribed ? '✅ Active' : '❌ Inactive');
+                
+                return `
                 <tr>
                     <td>${user.email || user.id}</td>
                     <td>
@@ -529,16 +533,25 @@
                             ${(user.subscriptionType || 'free').toUpperCase()}
                         </span>
                     </td>
-                    <td>${user.monthlyUsage || 0}/${user.maxUsage || 5}</td>
-                    <td>${user.isSubscribed ? '✅ Active' : '❌ Inactive'}</td>
+                    <td>
+                        <input type="number" value="${user.monthlyUsage || 0}" 
+                               onchange="updateUserUsage('${user.id}', this.value)"
+                               style="width: 50px; margin-right: 5px;">
+                        / ${user.maxUsage || 5}
+                    </td>
+                    <td>${statusText}</td>
                     <td>${user.lastActive ? new Date(user.lastActive).toLocaleDateString() : '-'}</td>
                     <td class="user-actions">
                         <button onclick="resetUserUsageById('${user.id}')" title="Reset Usage">🔄</button>
+                        ${isUnlocked 
+                            ? `<button onclick="lockUser('${user.id}')" title="Lock User" style="background: #ef4444;">🔒</button>`
+                            : `<button onclick="unlockUser('${user.id}')" title="Unlock User" style="background: #10b981;">🔓</button>`
+                        }
                         <button onclick="resetUserSubscriptionById('${user.id}')" title="Reset Sub">📊</button>
                         <button onclick="deleteUserById('${user.id}')" class="btn-danger" title="Delete">🗑️</button>
                     </td>
-                </tr>
-            `).join('');
+                </tr>`;
+            }).join('');
         }
 
         async function resetUserUsage() {
@@ -702,6 +715,81 @@
                 }
             } catch (error) {
                 showNotification('Failed to unlock user: ' + error.message, 'error');
+            }
+        }
+
+        async function unlockUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            const confirm = window.confirm(`Unlock ${user.email || user.id} for unlimited access?`);
+            if (!confirm) return;
+            
+            try {
+                const result = await apiCall('update_user', {
+                    userId: userId,
+                    userData: {
+                        manuallyUnlocked: true,
+                        maxUsage: 999999,
+                        subscriptionType: 'unlocked'
+                    }
+                });
+                
+                if (result.success) {
+                    showNotification(`User unlocked successfully!`, 'success');
+                    refreshUsers();
+                } else {
+                    showNotification('Failed to unlock user: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to unlock user: ' + error.message, 'error');
+            }
+        }
+
+        async function lockUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            const confirm = window.confirm(`Lock ${user.email || user.id} back to their original plan?`);
+            if (!confirm) return;
+            
+            try {
+                const result = await apiCall('update_user', {
+                    userId: userId,
+                    userData: {
+                        manuallyUnlocked: false,
+                        maxUsage: user.subscriptionType === 'starter' ? 50 : (user.subscriptionType === 'professional' ? 200 : 5),
+                        subscriptionType: user.subscriptionType === 'unlocked' ? 'free' : user.subscriptionType
+                    }
+                });
+                
+                if (result.success) {
+                    showNotification(`User locked successfully!`, 'success');
+                    refreshUsers();
+                } else {
+                    showNotification('Failed to lock user: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to lock user: ' + error.message, 'error');
+            }
+        }
+
+        async function updateUserUsage(userId, newUsage) {
+            try {
+                const result = await apiCall('update_user', {
+                    userId: userId,
+                    userData: {
+                        monthlyUsage: parseInt(newUsage) || 0
+                    }
+                });
+                
+                if (result.success) {
+                    showNotification(`Usage updated to ${newUsage}`, 'success');
+                } else {
+                    showNotification('Failed to update usage: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to update usage: ' + error.message, 'error');
             }
         }
 
