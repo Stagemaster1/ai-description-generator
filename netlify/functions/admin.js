@@ -77,6 +77,9 @@ exports.handler = async (event, context) => {
       case 'manual_add_user':
         return await manualAddUser(userData, headers);
       
+      case 'manual_unlock':
+        return await manualUnlockUser(userData, headers);
+      
       default:
         return {
           statusCode: 400,
@@ -437,6 +440,50 @@ async function manualAddUser(userData, headers) {
     body: JSON.stringify({ 
       success: true,
       message: `User ${userId} manually added successfully`,
+      user: users[userId]
+    })
+  };
+}
+
+async function manualUnlockUser(userData, headers) {
+  // Manually unlock a user with unlimited access (for beta testers, special cases)
+  
+  const email = userData.email;
+  if (!email) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ 
+        success: false,
+        error: 'Email is required'
+      })
+    };
+  }
+
+  // Create user ID from email for consistency
+  const userId = `unlock_${email.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`;
+  
+  users[userId] = {
+    id: userId,
+    email: email.toLowerCase().trim(),
+    subscriptionType: 'unlocked',
+    monthlyUsage: 0,
+    maxUsage: 999999, // Unlimited
+    isSubscribed: true,
+    subscriptionId: `manual-unlock-${Date.now()}`,
+    lastActive: new Date().toISOString(),
+    manuallyUnlocked: true,
+    unlockedBy: 'admin',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  
+  return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify({ 
+      success: true,
+      message: `${email} unlocked with unlimited access`,
       user: users[userId]
     })
   };

@@ -304,6 +304,7 @@
                     <button onclick="resetAllUsage()">📊 Reset All Usage</button>
                     <button onclick="createTestUser()" class="btn-success">👤 Create Test User</button>
                     <button onclick="addMissingSubscriber()" class="btn-success">➕ Add Missing Subscriber</button>
+                    <button onclick="manualUnlock()" class="btn-success">🔓 Manual Unlock</button>
                     <button onclick="exportUsers()">📄 Export Data</button>
                 </div>
 
@@ -671,6 +672,32 @@
                 }
             } catch (error) {
                 showNotification('Failed to add subscriber: ' + error.message, 'error');
+            }
+        }
+
+        async function manualUnlock() {
+            const email = prompt('Enter email to unlock with unlimited access:');
+            if (!email || !email.includes('@')) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            const confirm = window.confirm(`Give ${email} unlimited access for free?\n\nThis is for beta testers and special cases.`);
+            if (!confirm) return;
+            
+            try {
+                const result = await apiCall('manual_unlock', null, {
+                    email: email.trim()
+                });
+                
+                if (result.success) {
+                    showNotification(`${email} unlocked with unlimited access!`, 'success');
+                    refreshUsers(); // Refresh the user list
+                } else {
+                    showNotification('Failed to unlock user: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to unlock user: ' + error.message, 'error');
             }
         }
 
