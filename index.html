@@ -2528,7 +2528,7 @@
             }
         }
 
-        function handlePayPalSuccess(planName, subscriptionId) {
+        async function handlePayPalSuccess(planName, subscriptionId) {
             // Update user state
             const planLimits = {
                 starter: 50,
@@ -2544,7 +2544,50 @@
             saveUserState();
             updateUsageDisplay();
             
+            // Sync subscription to server for admin panel
+            try {
+                await syncUserToServer(userState);
+                console.log('User subscription synced to server');
+            } catch (error) {
+                console.warn('Failed to sync subscription to server:', error);
+            }
+            
             showNotification(`🎉 Successfully subscribed to ${planName.charAt(0).toUpperCase() + planName.slice(1)} plan!`, 'success');
+        }
+
+        async function syncUserToServer(userData) {
+            const response = await fetch('/.netlify/functions/admin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'sync_user',
+                    password: 'demo123', // This would be better handled differently in production
+                    userId: userData.userId || generateUserIdFromData(userData),
+                    userData: {
+                        email: userData.email || 'subscriber@unknown.com',
+                        subscriptionType: userData.subscriptionType,
+                        monthlyUsage: userData.monthlyUsage || 0,
+                        maxUsage: userData.maxUsage,
+                        isSubscribed: userData.isSubscribed,
+                        subscriptionId: userData.subscriptionId,
+                        lastActive: new Date().toISOString(),
+                        syncedFromClient: true
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Server sync failed: ${response.status}`);
+            }
+            
+            return await response.json();
+        }
+
+        function generateUserIdFromData(userData) {
+            // Generate a consistent user ID from subscription data
+            return `paypal_${userData.subscriptionId || Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
         }
 
         async function handlePaymentButtonClick(button) {
@@ -2968,5 +3011,19 @@
             document.getElementById('paypal-' + planType).classList.add('show');
         }
     </script>
+    
+    <!-- Support Footer -->
+    <footer style="background: #1e293b; padding: 20px 0; text-align: center; margin-top: 40px; border-top: 1px solid #334155;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <p style="color: #94a3b8; margin-bottom: 10px; font-size: 14px;">Need help or have questions?</p>
+            <p style="margin: 0;">
+                <strong style="color: #f1f5f9; font-size: 16px; font-weight: 600;">Support: </strong>
+                <a href="mailto:support@soltecsol.com" 
+                   style="color: #60a5fa; text-decoration: none; font-weight: 600; font-size: 16px;">
+                   support@soltecsol.com
+                </a>
+            </p>
+        </div>
+    </footer>
 </body>
 </html>

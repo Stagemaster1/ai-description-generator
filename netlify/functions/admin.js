@@ -71,6 +71,9 @@ exports.handler = async (event, context) => {
       case 'reset_all_usage':
         return await resetAllUsage(headers);
       
+      case 'sync_user':
+        return await syncUser(userId, userData, headers);
+      
       default:
         return {
           statusCode: 400,
@@ -107,7 +110,11 @@ function initializeMockUsers() {
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString() // Random within last 24h
     };
+  } else if (users['user-001'] && !users['user-001'].lastReset) {
+    // Only update usage if not recently reset
+    users['user-001'].monthlyUsage = Math.min(dayOfMonth % 6, 5);
   }
+  
   if (!users['user-002']) {
     users['user-002'] = {
       id: 'user-002', 
@@ -120,7 +127,11 @@ function initializeMockUsers() {
       createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days ago
       lastActive: new Date(Date.now() - Math.random() * 2 * 60 * 60 * 1000).toISOString() // Random within last 2h
     };
+  } else if (users['user-002'] && !users['user-002'].lastReset) {
+    // Only update usage if not recently reset
+    users['user-002'].monthlyUsage = Math.min(dayOfMonth + 10, 50);
   }
+  
   if (!users['user-003']) {
     users['user-003'] = {
       id: 'user-003', 
@@ -133,6 +144,9 @@ function initializeMockUsers() {
       createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days ago
       lastActive: new Date(Date.now() - Math.random() * 60 * 60 * 1000).toISOString() // Random within last hour
     };
+  } else if (users['user-003'] && !users['user-003'].lastReset) {
+    // Only update usage if not recently reset
+    users['user-003'].monthlyUsage = Math.min(dayOfMonth * 3 + 50, 200);
   }
 }
 
@@ -352,6 +366,42 @@ async function changeAdminPassword(userData, headers) {
       success: true,
       message: 'Password change logged. Please update ADMIN_PASSWORD environment variable in Netlify.',
       newPassword: newPassword
+    })
+  };
+}
+
+async function syncUser(userId, userData, headers) {
+  // Sync user data from client-side subscription to server storage
+  // This allows admin panel to see real subscription users
+  
+  console.log('Syncing user to server:', { userId, userData });
+  
+  // Merge with existing user data if any
+  const existingUser = users[userId] || {};
+  
+  users[userId] = {
+    ...existingUser,
+    id: userId,
+    email: userData.email || existingUser.email || 'subscriber@unknown.com',
+    subscriptionType: userData.subscriptionType || 'free',
+    monthlyUsage: userData.monthlyUsage || existingUser.monthlyUsage || 0,
+    maxUsage: userData.maxUsage || 5,
+    isSubscribed: userData.isSubscribed || false,
+    subscriptionId: userData.subscriptionId || existingUser.subscriptionId,
+    lastActive: userData.lastActive || new Date().toISOString(),
+    syncedFromClient: true,
+    syncedAt: new Date().toISOString(),
+    createdAt: existingUser.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  
+  return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify({ 
+      success: true,
+      message: `User ${userId} synced successfully`,
+      user: users[userId]
     })
   };
 }
