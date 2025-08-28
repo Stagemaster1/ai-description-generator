@@ -100,76 +100,11 @@ exports.handler = async (event, context) => {
   }
 };
 
-// Initialize mock users with realistic, dynamic usage
-function initializeMockUsers() {
-  const now = new Date();
-  const dayOfMonth = now.getDate();
-  
-  if (!users['user-001']) {
-    users['user-001'] = {
-      id: 'user-001',
-      email: 'test@example.com',
-      subscriptionType: 'free',
-      monthlyUsage: Math.min(dayOfMonth % 6, 5), // Varies 0-5 based on day
-      maxUsage: 5,
-      isSubscribed: false,
-      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString() // Random within last 24h
-    };
-  } else if (users['user-001'] && !users['user-001'].lastReset) {
-    // Only update usage if never reset
-    users['user-001'].monthlyUsage = Math.min(dayOfMonth % 6, 5);
-  }
-  // If user was reset, keep their usage at 0 and don't regenerate
-  
-  if (!users['user-002']) {
-    users['user-002'] = {
-      id: 'user-002', 
-      email: 'premium@example.com',
-      subscriptionType: 'starter',
-      monthlyUsage: Math.min(dayOfMonth + 10, 50), // Varies 10-50 based on day
-      maxUsage: 50,
-      isSubscribed: true,
-      subscriptionId: 'paypal-sub-123',
-      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days ago
-      lastActive: new Date(Date.now() - Math.random() * 2 * 60 * 60 * 1000).toISOString() // Random within last 2h
-    };
-  } else if (users['user-002'] && !users['user-002'].lastReset) {
-    // Only update usage if never reset
-    users['user-002'].monthlyUsage = Math.min(dayOfMonth + 10, 50);
-  }
-  // If user was reset, keep their usage at 0 and don't regenerate
-  
-  if (!users['user-003']) {
-    users['user-003'] = {
-      id: 'user-003', 
-      email: 'business@example.com',
-      subscriptionType: 'professional',
-      monthlyUsage: Math.min(dayOfMonth * 3 + 50, 200), // Varies 50-200 based on day
-      maxUsage: 200,
-      isSubscribed: true,
-      subscriptionId: 'paypal-sub-456',
-      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days ago
-      lastActive: new Date(Date.now() - Math.random() * 60 * 60 * 1000).toISOString() // Random within last hour
-    };
-  } else if (users['user-003'] && !users['user-003'].lastReset) {
-    // Only update usage if never reset
-    users['user-003'].monthlyUsage = Math.min(dayOfMonth * 3 + 50, 200);
-  }
-  // If user was reset, keep their usage at 0 and don't regenerate
-}
+// Mock users removed - only real users now
 
 async function getAllUsers(headers) {
-  // Initialize mock users in the users object so they can be modified
-  initializeMockUsers();
+  // No more mock users - only show real users that were manually added or synced
   
-  // Update usage counters with current real usage data
-  for (const userId of Object.keys(users)) {
-    if (users[userId]) {
-      users[userId].lastActive = new Date().toISOString();
-    }
-  }
-
   return {
     statusCode: 200,
     headers,
