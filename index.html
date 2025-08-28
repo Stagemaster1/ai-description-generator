@@ -2171,8 +2171,7 @@
         // Initialize app when DOM is ready
         document.addEventListener('DOMContentLoaded', async function() {
             loadLanguagePreference();
-            loadUserState();
-            await syncUserData(); // Sync with backend after loading local state
+            await loadUserState(); // Now async, includes server sync
             updateUsageDisplay();
             setupEventListeners();
             updateAllTranslations(); // Apply translations after everything is loaded
@@ -2198,7 +2197,7 @@
             }
         }
 
-        function loadUserState() {
+        async function loadUserState() {
             try {
                 if (!isLocalStorageAvailable()) {
                     console.warn('localStorage not available, using memory only');
@@ -2216,8 +2215,43 @@
                     userState.userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     saveUserState();
                 }
+
+                // Sync with server to get correct usage and limits
+                await syncFromServer();
             } catch (error) {
                 console.error('Error loading user state:', error);
+            }
+        }
+
+        async function syncFromServer() {
+            try {
+                // Try to get user data from server
+                const response = await fetch('/.netlify/functions/user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'get_usage',
+                        userId: userState.userId
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.user) {
+                        // Update userState with server data
+                        userState.monthlyUsage = result.user.monthlyUsage || 0;
+                        userState.maxUsage = result.user.maxUsage || 5;
+                        userState.subscriptionType = result.user.subscriptionType || 'free';
+                        userState.isSubscribed = result.user.isSubscribed || false;
+                        userState.subscriptionId = result.user.subscriptionId;
+                        
+                        console.log('Synced user data from server:', result.user);
+                        saveUserState(); // Save the updated state
+                        updateUsageDisplay(); // Update the display
+                    }
+                }
+            } catch (error) {
+                console.warn('Could not sync with server, using local data:', error);
             }
         }
 
