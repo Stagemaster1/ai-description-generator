@@ -1,0 +1,21 @@
+{
+	"siteId": "ba04abc1-cc40-41b8-bc48-73b917b4f726",
+	"geolocation": {
+		"data": {
+			"city": "Leverkusen",
+			"country": {
+				"code": "DE",
+				"name": "Germany"
+			},
+			"subdivision": {
+				"code": "NW",
+				"name": "North Rhine-Westphalia"
+			},
+			"timezone": "Europe/Berlin",
+			"latitude": 51.0312,
+			"longitude": 6.9935,
+			"postalCode": "51373"
+		},
+		"timestamp": 1756641454374
+	}
+}
