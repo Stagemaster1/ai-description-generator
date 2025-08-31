@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.sandbox.paypal.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.openai.com https://world.openfoodfacts.org https://api.upcdatabase.org https://api.barcodelookup.com https://www.paypal.com https://www.sandbox.paypal.com; frame-src https://www.paypal.com https://www.sandbox.paypal.com;">
     <title>SolTecSol - AI Product Description Generator</title>
-    <script src="https://www.paypal.com/sdk/js?client-id=PAYPAL_CLIENT_ID_PLACEHOLDER&vault=true&intent=subscription"></script>
+    <!-- PayPal SDK will be loaded dynamically via JavaScript -->
     <style>
         * {
             margin: 0;
@@ -2061,6 +2061,67 @@
         // Global variables for product identification
         let currentProductInfo = null;
         let inputMode = 'url'; // 'url' or 'barcode'
+        
+        // PayPal SDK loader - dynamically loads PayPal SDK with secure Client ID
+        const PayPalLoader = {
+            clientId: null,
+            sdkLoaded: false,
+            loadPromise: null,
+            
+            // Fetch PayPal Client ID from secure endpoint
+            async fetchClientId() {
+                try {
+                    const response = await fetch('/.netlify/functions/paypal-config');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch PayPal configuration');
+                    }
+                    const data = await response.json();
+                    return data.clientId;
+                } catch (error) {
+                    console.error('PayPal Client ID fetch error:', error);
+                    throw error;
+                }
+            },
+            
+            // Dynamically inject PayPal SDK script
+            async loadSDK() {
+                if (this.loadPromise) {
+                    return this.loadPromise;
+                }
+                
+                this.loadPromise = new Promise(async (resolve, reject) => {
+                    try {
+                        // Get Client ID if not already fetched
+                        if (!this.clientId) {
+                            this.clientId = await this.fetchClientId();
+                        }
+                        
+                        // Create and inject PayPal SDK script
+                        const script = document.createElement('script');
+                        script.src = `https://www.paypal.com/sdk/js?client-id=${this.clientId}&vault=true&intent=subscription`;
+                        script.onload = () => {
+                            this.sdkLoaded = true;
+                            console.log('PayPal SDK loaded successfully');
+                            resolve();
+                        };
+                        script.onerror = () => {
+                            reject(new Error('Failed to load PayPal SDK'));
+                        };
+                        
+                        document.head.appendChild(script);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+                
+                return this.loadPromise;
+            },
+            
+            // Check if PayPal SDK is ready for use
+            isReady() {
+                return this.sdkLoaded && window.paypal;
+            }
+        };
 
         // Global error handler
         window.addEventListener('unhandledrejection', function(event) {
@@ -2465,23 +2526,14 @@
             productPreview.style.display = 'block';
         }
 
-        function waitForPayPal() {
-            return new Promise((resolve) => {
-                if (typeof paypal !== 'undefined' && paypal.Buttons) {
-                    resolve();
-                } else {
-                    setTimeout(() => waitForPayPal().then(resolve), 100);
-                }
-            });
-        }
-
         async function setupPayPalButtons() {
             try {
-                await waitForPayPal();
+                // Load PayPal SDK dynamically with secure Client ID
+                await PayPalLoader.loadSDK();
                 
-                // Check if PayPal SDK is actually loaded
-                if (typeof paypal === 'undefined') {
-                    throw new Error('PayPal SDK not loaded');
+                // Check if PayPal SDK is ready
+                if (!PayPalLoader.isReady()) {
+                    throw new Error('PayPal SDK not ready');
                 }
                 
                 // Fetch plan IDs from backend

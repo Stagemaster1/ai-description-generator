@@ -24,12 +24,6 @@
   to = "/index.html?cancelled=true"
   status = 200
 
-# Secure home page serving with PayPal Client ID injection
-[[redirects]]
-  from = "/"
-  to = "/.netlify/functions/serve-page"
-  status = 200
-
 # SPA fallback
 [[redirects]]
   from = "/*"
