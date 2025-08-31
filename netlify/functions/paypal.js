@@ -7,7 +7,7 @@ const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
 const PAYPAL_BASE_URL = process.env.PAYPAL_MODE === process.env.PAYPAL_LIVE_VALUE 
   ? 'https://api.paypal.com' 
-  : 'https://api.sandbox.paypal.com';
+  : 'https://api.test.paypal.com';
 
 exports.handler = async (event, context) => {
   // Enable CORS
