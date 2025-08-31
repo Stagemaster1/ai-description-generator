@@ -114,7 +114,7 @@ async function createUserInAdminSystem(email, planName, subscriptionId) {
   
   try {
     // Call our own admin endpoint to create the user
-    const response = await fetch(`${process.env.URL || 'https://zippy-granita-96fbe4.netlify.app'}/.netlify/functions/admin`, {
+    const response = await fetch(`${process.env.URL}/.netlify/functions/admin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(adminData)

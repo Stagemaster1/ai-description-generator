@@ -1,2 +1,0 @@
-🟢 = manually saved textfiles after last automatic backup
-🔴 = last official prompt before we started working last session
