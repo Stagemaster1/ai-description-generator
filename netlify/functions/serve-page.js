@@ -4,7 +4,7 @@ const path = require('path');
 exports.handler = async (event, context) => {
     try {
         // Read the index.html file
-        const htmlPath = path.join(__dirname, '..', '..', 'index.html');
+        const htmlPath = path.resolve('./index.html');
         let html = fs.readFileSync(htmlPath, 'utf8');
         
         // Get PayPal Client ID from environment variables
