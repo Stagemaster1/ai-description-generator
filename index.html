@@ -2053,7 +2053,7 @@
         let userState = {
             subscriptionType: 'free',
             monthlyUsage: 0,
-            maxUsage: 5,
+            maxUsage: 3,
             isSubscribed: false,
             userId: null
         };
@@ -2240,7 +2240,7 @@
                     if (result.success && result.user) {
                         // Update userState with server data
                         userState.monthlyUsage = result.user.monthlyUsage || 0;
-                        userState.maxUsage = result.user.maxUsage || 5;
+                        userState.maxUsage = result.user.maxUsage || 3;
                         userState.subscriptionType = result.user.subscriptionType || 'free';
                         userState.isSubscribed = result.user.isSubscribed || false;
                         userState.subscriptionId = result.user.subscriptionId;
@@ -2932,7 +2932,7 @@
                     if (data.user) {
                         // Update local state with backend data
                         userState.monthlyUsage = data.user.monthlyUsage || 0;
-                        userState.maxUsage = data.user.maxUsage || 5;
+                        userState.maxUsage = data.user.maxUsage || 3;
                         userState.subscriptionType = data.user.subscriptionType || 'free';
                         userState.isSubscribed = data.user.isSubscribed || false;
                         saveUserState();
