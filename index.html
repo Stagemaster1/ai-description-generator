@@ -2286,6 +2286,11 @@
 
         async function syncFromServer() {
             try {
+                // Create userId if it doesn't exist
+                if (!userState.userId) {
+                    userState.userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                }
+                
                 // Try to get user data from server
                 const response = await fetch('/.netlify/functions/firebase-user', {
                     method: 'POST',
