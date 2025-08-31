@@ -2237,12 +2237,11 @@
             setupEventListeners();
             updateAllTranslations(); // Apply translations after everything is loaded
             
-            // Setup PayPal buttons with error handling to not break other functionality
-            // Temporarily disabled to prevent page load errors
-            // setupPayPalButtons().catch(error => {
-            //     console.error('PayPal setup failed:', error);
-            //     showNotification('Payment system temporarily unavailable', 'error');
-            // });
+            // Setup PayPal buttons once on page load
+            setupPayPalButtons().catch(error => {
+                console.error('PayPal setup failed:', error);
+                showNotification('Payment system temporarily unavailable', 'error');
+            });
             
             addEntranceAnimations();
         });
@@ -2379,12 +2378,7 @@
                 card.addEventListener('click', (e) => {
                     const planType = card.getAttribute('data-plan');
                     console.log('Plan card clicked:', planType);
-                    setupPayPalButtons().then(() => {
-                        showPayPalButton(planType);
-                    }).catch(error => {
-                        console.error('PayPal setup failed:', error);
-                        showNotification('Payment system temporarily unavailable', 'error');
-                    });
+                    showPayPalButton(planType);
                 });
             });
         }
