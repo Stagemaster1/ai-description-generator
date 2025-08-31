@@ -142,13 +142,13 @@ Follow these steps to deploy your AI Description Generator to the web:
 ### Step 6: Test Your Application
 
 1. **Test AI Generation:**
-   - Visit your live site
+   - Visit your deployed site
    - Try generating a description with any product URL
    - Verify it creates real descriptions using AI
 
 2. **Test Payments (Sandbox Mode):**
    - Click any PayPal subscription button
-   - Use PayPal's sandbox test accounts or test credit cards
+   - Use PayPal's test accounts or test credit cards
    - Complete the test payment flow
    - Verify subscription is created in PayPal dashboard
 
@@ -156,12 +156,12 @@ Follow these steps to deploy your AI Description Generator to the web:
 
 1. **Switch PayPal to Live Mode:**
    - In PayPal Developer dashboard, create a new "Live" app
-   - Generate new live Client ID and Secret
-   - Create live subscription plans 
+   - Generate new production Client ID and Secret
+   - Create production subscription plans 
    - Update your Netlify environment variables:
      - Set `PAYPAL_MODE` to your environment mode
-     - Update Client ID and Secret with live credentials
-     - Update Plan IDs with live plan IDs
+     - Update Client ID and Secret with production credentials
+     - Update Plan IDs with production plan IDs
 
 2. **Final Testing:**
    - Test the entire flow with real (small) payments
@@ -246,7 +246,7 @@ Follow these steps to deploy your AI Description Generator to the web:
 **"PayPal payments not working"**
 - Check that all PayPal environment variables are set (Client ID, Secret, Plan IDs)
 - Verify subscription plan IDs match your PayPal developer dashboard
-- Ensure PayPal mode is set correctly (sandbox vs live)
+- Ensure PayPal mode is set correctly in environment variables
 - Check that PayPal Client ID is updated in the HTML script tag
 - Ensure URL environment variable is set for redirects
 
@@ -268,7 +268,7 @@ For technical support, check the Netlify deploy logs and browser console for err
 
 ### Pre-Launch Checklist
 - [ ] All environment variables set correctly
-- [ ] PayPal live mode activated with live credentials
+- [ ] PayPal production mode activated with production credentials
 - [ ] Custom domain configured with SSL
 - [ ] Test all payment flows (PayPal + Credit Card)
 - [ ] Test barcode lookup functionality
