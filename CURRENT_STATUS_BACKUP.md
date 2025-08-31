@@ -12,10 +12,10 @@ No PayPal login window appears (which should happen normally).
 - PayPal buttons appear after clicking plan cards (this works)
 - Error happens during subscription creation before user can login
 
-## PayPal Configuration
-- App: "AI Description Generator" 
-- Client ID: AdER7Vru1-kaxzTqcIO14xd48otzyHPkdUePW0bEkivwQZWcbbfTnTFatVSPlC4vfgUq2fnaw2kJk4U4
-- Mode: sandbox
+## PayPal Configuration (NOW SECURE)
+- App: "AI Description Generator" (Updated with fresh credentials)
+- Client ID: [SECURE - stored in Netlify environment variables]
+- Mode: live (updated from sandbox)
 - Plans: All 3 plans active and correct IDs
 - Site URL: https://zippy-granita-96fbe4.netlify.app
 

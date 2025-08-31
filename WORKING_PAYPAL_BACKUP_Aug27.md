@@ -9,10 +9,10 @@
 - **All UI elements**: ✅ WORKING
 - **Payment confirmations**: ✅ "Subscription successful!" alerts working
 
-## Current Live PayPal Configuration (WORKING - DON'T CHANGE)
+## Current Live PayPal Configuration (REPLACED WITH SECURE SYSTEM)
 - **PAYPAL_MODE**: live
-- **PAYPAL_CLIENT_ID**: AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7
-- **PAYPAL_CLIENT_SECRET**: [live secret - working with Shopify store]
+- **PAYPAL_CLIENT_ID**: [SECURE - stored in Netlify environment variables]
+- **PAYPAL_CLIENT_SECRET**: [SECURE - stored in Netlify environment variables]
 - **SITE_URL**: https://zippy-granita-96fbe4.netlify.app
 
 ## Current Live Subscription Plan IDs (WORKING)
@@ -23,7 +23,8 @@
 ## PayPal SDK Configuration (WORKING)
 Current script tag in index.html:
 ```html
-<script src="https://www.paypal.com/sdk/js?client-id=AVvHPXPfgS7py3D-tfACMOH6N_QFgksU1Kg_XOnaaTTue30lZj2A_eYwL2IcYvAr4ReopSzTzysT0h_7&vault=true&intent=subscription&debug=true"></script>
+<!-- SECURITY UPDATE: PayPal SDK now loaded dynamically via JavaScript -->
+<!-- No hardcoded credentials - Client ID fetched from secure server endpoint -->
 ```
 
 ## Payment Flow Status

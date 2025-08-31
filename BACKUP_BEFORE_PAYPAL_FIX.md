@@ -8,10 +8,10 @@
 - **Barcode lookup**: ✅ WORKING 
 - **All UI elements**: ✅ WORKING
 
-## Current PayPal Configuration (WORKING BASELINE - DON'T CHANGE)
-- **PAYPAL_MODE**: sandbox
-- **PAYPAL_CLIENT_ID**: AdER7Vru1-kaxzTqcIO14xd48otzyHPkdUePW0bEkivwQZWcbbfTnTFatVSPlC4vfgUq2fnaw2kJk4U4
-- **PAYPAL_CLIENT_SECRET**: [sandbox secret for AI Description Generator app]
+## Current PayPal Configuration (REPLACED WITH SECURE SYSTEM)
+- **PAYPAL_MODE**: [NOW SECURE - stored in environment variables]
+- **PAYPAL_CLIENT_ID**: [SECURE - no longer hardcoded]
+- **PAYPAL_CLIENT_SECRET**: [SECURE - no longer hardcoded]
 - **SITE_URL**: https://zippy-granita-96fbe4.netlify.app
 
 ## Current Subscription Plan IDs (THESE ARE THE PROBLEM)
