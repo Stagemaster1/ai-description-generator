@@ -103,7 +103,7 @@ Follow these steps to deploy your AI Description Generator to the web:
    
    PAYPAL_CLIENT_ID = [your PayPal Client ID - REQUIRED]
    PAYPAL_CLIENT_SECRET = [your PayPal Client Secret - REQUIRED]
-   PAYPAL_MODE = sandbox
+   PAYPAL_MODE = [your_paypal_mode]
    
    PAYPAL_STARTER_PLAN_ID = [your starter P- ID from PayPal - REQUIRED]
    PAYPAL_PROFESSIONAL_PLAN_ID = [your professional P- ID from PayPal - REQUIRED] 
@@ -159,7 +159,7 @@ Follow these steps to deploy your AI Description Generator to the web:
    - Generate new live Client ID and Secret
    - Create live subscription plans 
    - Update your Netlify environment variables:
-     - Set `PAYPAL_MODE = live`
+     - Set `PAYPAL_MODE` to your environment mode
      - Update Client ID and Secret with live credentials
      - Update Plan IDs with live plan IDs
 
