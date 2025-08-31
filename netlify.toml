@@ -6,6 +6,7 @@
 [build.environment]
   NODE_VERSION = "18.17.0"
   NPM_VERSION = "9.6.7"
+  SECRETS_SCAN_OMIT_PATHS = "package-lock.json"
 
 [[redirects]]
   from = "/api/*"
@@ -65,20 +66,4 @@
   NODE_ENV = "development"
 
 # Skip secret scanning for package-lock.json (contains dependency metadata with values matching env vars)
-[build.processing]
-  skip_processing = false
-
-[build.processing.css]
-  bundle = true
-  minify = true
-
-[build.processing.js]
-  bundle = true
-  minify = true
-
-[build.processing.html]
-  pretty_urls = true
-
-# Configure secrets scanning to ignore package-lock.json
-[build]
-  environment = { SECRETS_SCAN_OMIT_PATHS = "package-lock.json" }
+# SECRETS_SCAN_OMIT_PATHS is configured in the [build.environment] section above
