@@ -2226,11 +2226,11 @@
         async function syncFromServer() {
             try {
                 // Try to get user data from server
-                const response = await fetch('/.netlify/functions/user', {
+                const response = await fetch('/.netlify/functions/firebase-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'get_usage',
+                        action: 'get_user',
                         userId: userState.userId
                     })
                 });
@@ -2886,7 +2886,7 @@
                     return; // No userId yet
                 }
                 
-                const response = await fetch('/.netlify/functions/user', {
+                const response = await fetch('/.netlify/functions/firebase-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -2918,11 +2918,11 @@
                     return; // No userId yet
                 }
                 
-                const response = await fetch('/.netlify/functions/user', {
+                const response = await fetch('/.netlify/functions/firebase-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'get_usage',
+                        action: 'get_user',
                         userId: userState.userId
                     })
                 });
