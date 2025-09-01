@@ -1,10 +1,9 @@
-// Admin interface for user management
-// Handles user operations, usage resets, subscription management
+// Firebase-enabled Admin interface for user management
+// Now uses Firestore database instead of in-memory storage
+
+const { getFirestore } = require('../../firebase-config');
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'; // Set this in Netlify env vars
-
-// In-memory user storage (replace with database later)
-let users = {};
 
 exports.handler = async (event, context) => {
   // Enable CORS
@@ -43,42 +42,45 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // Initialize Firebase
+    const db = getFirestore();
+
     switch (action) {
       case 'get_all_users':
-        return await getAllUsers(headers);
+        return await getAllUsers(db, headers);
       
       case 'get_user':
-        return await getUser(userId, headers);
+        return await getUser(db, userId, headers);
       
       case 'reset_usage':
-        return await resetUserUsage(userId, headers);
+        return await resetUserUsage(db, userId, headers);
       
       case 'reset_subscription':
-        return await resetUserSubscription(userId, headers);
+        return await resetUserSubscription(db, userId, headers);
       
       case 'update_user':
-        return await updateUser(userId, userData, headers);
+        return await updateUser(db, userId, userData, headers);
       
       case 'delete_user':
-        return await deleteUser(userId, headers);
+        return await deleteUser(db, userId, headers);
       
       case 'create_test_user':
-        return await createTestUser(userData, headers);
+        return await createTestUser(db, userData, headers);
       
       case 'change_password':
         return await changeAdminPassword(userData, headers);
       
       case 'reset_all_usage':
-        return await resetAllUsage(headers);
+        return await resetAllUsage(db, headers);
       
       case 'sync_user':
-        return await syncUser(userId, userData, headers);
+        return await syncUser(db, userId, userData, headers);
       
       case 'manual_add_user':
-        return await manualAddUser(userData, headers);
+        return await manualAddUser(db, userData, headers);
       
       case 'manual_unlock':
-        return await manualUnlockUser(userData, headers);
+        return await manualUnlockUser(db, userData, headers);
       
       default:
         return {
@@ -88,7 +90,7 @@ exports.handler = async (event, context) => {
         };
     }
   } catch (error) {
-    console.error('Admin API Error:', error);
+    console.error('Firebase Admin API Error:', error);
     return {
       statusCode: 500,
       headers,
@@ -100,172 +102,296 @@ exports.handler = async (event, context) => {
   }
 };
 
-// Mock users removed - only real users now
+// Firebase-enabled functions
 
-async function getAllUsers(headers) {
-  // No more mock users - only show real users that were manually added or synced
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      users: Object.values(users),
-      total: Object.keys(users).length
-    })
-  };
-}
-
-async function getUser(userId, headers) {
-  // Look up specific user
-  const user = users[userId] || null;
-  
-  return {
-    statusCode: user ? 200 : 404,
-    headers,
-    body: JSON.stringify({ 
-      user,
-      found: !!user
-    })
-  };
-}
-
-async function resetUserUsage(userId, headers) {
-  // Mock users removed - only work with real users
-  
-  if (users[userId]) {
-    users[userId].monthlyUsage = 0;
-    users[userId].lastReset = new Date().toISOString();
+async function getAllUsers(db, headers) {
+  try {
+    const snapshot = await db.collection('users').limit(100).get();
+    const users = [];
     
+    snapshot.forEach(doc => {
+      users.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        users,
+        total: users.length
+      })
+    };
+  } catch (error) {
+    console.error('Get all users error:', error);
+    throw error;
+  }
+}
+
+async function getUser(db, userId, headers) {
+  try {
+    const doc = await db.collection('users').doc(userId).get();
+    
+    if (!doc.exists) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({ 
+          user: null,
+          found: false
+        })
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        user: {
+          id: doc.id,
+          ...doc.data()
+        },
+        found: true
+      })
+    };
+  } catch (error) {
+    console.error('Get user error:', error);
+    throw error;
+  }
+}
+
+async function resetUserUsage(db, userId, headers) {
+  try {
+    const userRef = db.collection('users').doc(userId);
+    const doc = await userRef.get();
+    
+    if (!doc.exists) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({ 
+          success: false,
+          message: `User ${userId} not found`
+        })
+      };
+    }
+
+    const updateData = {
+      monthlyUsage: 0,
+      lastReset: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    await userRef.update(updateData);
+    
+    const updatedDoc = await userRef.get();
+    const updatedUser = { id: updatedDoc.id, ...updatedDoc.data() };
+
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({ 
         success: true,
         message: `Usage reset for user ${userId}`,
-        user: users[userId]
+        user: updatedUser
       })
     };
-  } else {
-    return {
-      statusCode: 404,
-      headers,
-      body: JSON.stringify({ 
-        success: false,
-        message: `User ${userId} not found`
-      })
-    };
+  } catch (error) {
+    console.error('Reset user usage error:', error);
+    throw error;
   }
 }
 
-async function resetUserSubscription(userId, headers) {
-  if (users[userId]) {
-    users[userId].isSubscribed = false;
-    users[userId].subscriptionType = 'free';
-    users[userId].maxUsage = 5;
-    users[userId].subscriptionId = null;
-    users[userId].subscriptionReset = new Date().toISOString();
-  }
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      success: true,
-      message: `Subscription reset for user ${userId}`,
-      user: users[userId] || null
-    })
-  };
-}
-
-async function updateUser(userId, userData, headers) {
-  if (users[userId]) {
-    users[userId] = { ...users[userId], ...userData };
-    users[userId].updatedAt = new Date().toISOString();
-  } else {
-    users[userId] = {
-      id: userId,
-      ...userData,
-      createdAt: new Date().toISOString(),
+async function resetUserSubscription(db, userId, headers) {
+  try {
+    const userRef = db.collection('users').doc(userId);
+    const doc = await userRef.get();
+    
+    const updateData = {
+      isSubscribed: false,
+      subscriptionType: 'free',
+      maxUsage: 5,
+      subscriptionId: null,
+      subscriptionReset: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
-  }
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      success: true,
-      message: `User ${userId} updated`,
-      user: users[userId]
-    })
-  };
-}
 
-async function deleteUser(userId, headers) {
-  const existed = !!users[userId];
-  delete users[userId];
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      success: true,
-      message: `User ${userId} ${existed ? 'deleted' : 'not found'}`,
-      existed
-    })
-  };
-}
-
-async function createTestUser(userData, headers) {
-  const userId = `test-${Date.now()}`;
-  users[userId] = {
-    id: userId,
-    email: userData.email || `test-${userId}@example.com`,
-    subscriptionType: 'free',
-    monthlyUsage: 0,
-    maxUsage: 5,
-    isSubscribed: false,
-    createdAt: new Date().toISOString(),
-    testUser: true,
-    ...userData
-  };
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      success: true,
-      message: `Test user created`,
-      user: users[userId]
-    })
-  };
-}
-
-async function resetAllUsage(headers) {
-  // Mock users removed - only work with real users
-  
-  let resetCount = 0;
-  const timestamp = new Date().toISOString();
-  
-  // Reset usage for all users
-  for (const userId of Object.keys(users)) {
-    if (users[userId]) {
-      users[userId].monthlyUsage = 0;
-      users[userId].lastReset = timestamp;
-      resetCount++;
+    if (doc.exists) {
+      await userRef.update(updateData);
+    } else {
+      await userRef.set({
+        id: userId,
+        email: 'unknown@example.com',
+        monthlyUsage: 0,
+        createdAt: new Date().toISOString(),
+        ...updateData
+      });
     }
+
+    const updatedDoc = await userRef.get();
+    const updatedUser = updatedDoc.exists ? { id: updatedDoc.id, ...updatedDoc.data() } : null;
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `Subscription reset for user ${userId}`,
+        user: updatedUser
+      })
+    };
+  } catch (error) {
+    console.error('Reset user subscription error:', error);
+    throw error;
   }
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      success: true,
-      message: `Usage reset for ${resetCount} users`,
-      resetCount,
-      timestamp
-    })
-  };
+}
+
+async function updateUser(db, userId, userData, headers) {
+  try {
+    const userRef = db.collection('users').doc(userId);
+    const doc = await userRef.get();
+    
+    const updateData = {
+      ...userData,
+      updatedAt: new Date().toISOString()
+    };
+
+    if (doc.exists) {
+      await userRef.update(updateData);
+    } else {
+      await userRef.set({
+        id: userId,
+        email: userData.email || 'unknown@example.com',
+        subscriptionType: 'free',
+        monthlyUsage: 0,
+        maxUsage: 5,
+        isSubscribed: false,
+        createdAt: new Date().toISOString(),
+        ...updateData
+      });
+    }
+
+    const updatedDoc = await userRef.get();
+    const updatedUser = { id: updatedDoc.id, ...updatedDoc.data() };
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `User ${userId} updated`,
+        user: updatedUser
+      })
+    };
+  } catch (error) {
+    console.error('Update user error:', error);
+    throw error;
+  }
+}
+
+async function deleteUser(db, userId, headers) {
+  try {
+    const userRef = db.collection('users').doc(userId);
+    const doc = await userRef.get();
+    const existed = doc.exists;
+    
+    if (existed) {
+      // Archive user data before deletion
+      await db.collection('deleted_users').doc(userId).set({
+        ...doc.data(),
+        deletedAt: new Date().toISOString(),
+        deletedBy: 'admin'
+      });
+      
+      // Delete the user
+      await userRef.delete();
+    }
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `User ${userId} ${existed ? 'deleted and archived' : 'not found'}`,
+        existed
+      })
+    };
+  } catch (error) {
+    console.error('Delete user error:', error);
+    throw error;
+  }
+}
+
+async function createTestUser(db, userData, headers) {
+  try {
+    const userId = `test-${Date.now()}`;
+    const userRef = db.collection('users').doc(userId);
+    
+    const newUser = {
+      id: userId,
+      email: userData.email || `test-${userId}@example.com`,
+      subscriptionType: 'free',
+      monthlyUsage: 0,
+      maxUsage: 5,
+      isSubscribed: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      testUser: true,
+      ...userData
+    };
+    
+    await userRef.set(newUser);
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `Test user created`,
+        user: newUser
+      })
+    };
+  } catch (error) {
+    console.error('Create test user error:', error);
+    throw error;
+  }
+}
+
+async function resetAllUsage(db, headers) {
+  try {
+    const snapshot = await db.collection('users').get();
+    let resetCount = 0;
+    const timestamp = new Date().toISOString();
+    
+    const batch = db.batch();
+    
+    snapshot.forEach(doc => {
+      batch.update(doc.ref, {
+        monthlyUsage: 0,
+        lastReset: timestamp,
+        updatedAt: timestamp
+      });
+      resetCount++;
+    });
+    
+    await batch.commit();
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        success: true,
+        message: `Usage reset for ${resetCount} users`,
+        resetCount,
+        timestamp
+      })
+    };
+  } catch (error) {
+    console.error('Reset all usage error:', error);
+    throw error;
+  }
 }
 
 async function changeAdminPassword(userData, headers) {
@@ -294,7 +420,6 @@ async function changeAdminPassword(userData, headers) {
   }
   
   // NOTE: In a real implementation, you'd update the environment variable
-  // or store the password securely. For now, we'll just log it.
   console.log('Password change request:', {
     old: ADMIN_PASSWORD,
     new: newPassword,
@@ -312,188 +437,203 @@ async function changeAdminPassword(userData, headers) {
   };
 }
 
-async function syncUser(userId, userData, headers) {
-  // Sync user data from client-side subscription to server storage
-  // This allows admin panel to see real subscription users
-  
-  console.log('Syncing user to server:', { userId, userData });
-  
-  // Merge with existing user data if any
-  const existingUser = users[userId] || {};
-  
-  users[userId] = {
-    ...existingUser,
-    id: userId,
-    email: userData.email || existingUser.email || 'subscriber@unknown.com',
-    subscriptionType: userData.subscriptionType || 'free',
-    monthlyUsage: userData.monthlyUsage || existingUser.monthlyUsage || 0,
-    maxUsage: userData.maxUsage || 5,
-    isSubscribed: userData.isSubscribed || false,
-    subscriptionId: userData.subscriptionId || existingUser.subscriptionId,
-    lastActive: userData.lastActive || new Date().toISOString(),
-    syncedFromClient: true,
-    syncedAt: new Date().toISOString(),
-    createdAt: existingUser.createdAt || new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
-  
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({ 
-      success: true,
-      message: `User ${userId} synced successfully`,
-      user: users[userId]
-    })
-  };
-}
-
-async function manualAddUser(userData, headers) {
-  // Manually add a user to the system (for existing subscribers who weren't synced)
-  
-  const email = userData.email || 'manual@unknown.com';
-  const emailLower = email.toLowerCase().trim();
-  
-  // Check for existing user by email to prevent duplicates
-  let existingUserId = null;
-  for (const userId of Object.keys(users)) {
-    if (users[userId].email === emailLower) {
-      existingUserId = userId;
-      break;
-    }
-  }
-  
-  if (existingUserId) {
-    // Update existing user instead of creating duplicate
-    users[existingUserId] = {
-      ...users[existingUserId],
-      email: emailLower,
-      subscriptionType: userData.subscriptionType || 'starter',
-      monthlyUsage: userData.monthlyUsage || 0,
-      maxUsage: userData.maxUsage || 50,
-      isSubscribed: userData.isSubscribed !== false,
-      subscriptionId: userData.subscriptionId || users[existingUserId].subscriptionId || `manual-${Date.now()}`,
-      lastActive: new Date().toISOString(),
-      manuallyAdded: true,
-      updatedAt: new Date().toISOString()
-    };
+async function syncUser(db, userId, userData, headers) {
+  try {
+    const userRef = db.collection('users').doc(userId);
+    const doc = await userRef.get();
+    const existingUser = doc.exists ? doc.data() : {};
     
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ 
-        success: true,
-        message: `User ${emailLower} updated successfully (existing user)`,
-        user: users[existingUserId]
-      })
-    };
-  } else {
-    // Create new user if doesn't exist
-    const userId = `manual_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-    
-    users[userId] = {
+    const syncedUser = {
+      ...existingUser,
       id: userId,
-      email: emailLower,
-      subscriptionType: userData.subscriptionType || 'starter',
-      monthlyUsage: userData.monthlyUsage || 0,
-      maxUsage: userData.maxUsage || 50,
-      isSubscribed: userData.isSubscribed !== false,
-      subscriptionId: userData.subscriptionId || `manual-${Date.now()}`,
-      lastActive: new Date().toISOString(),
-      manuallyAdded: true,
-      createdAt: new Date().toISOString(),
+      email: userData.email || existingUser.email || 'subscriber@unknown.com',
+      subscriptionType: userData.subscriptionType || 'free',
+      monthlyUsage: userData.monthlyUsage || existingUser.monthlyUsage || 0,
+      maxUsage: userData.maxUsage || 5,
+      isSubscribed: userData.isSubscribed || false,
+      subscriptionId: userData.subscriptionId || existingUser.subscriptionId,
+      lastActive: userData.lastActive || new Date().toISOString(),
+      syncedFromClient: true,
+      syncedAt: new Date().toISOString(),
+      createdAt: existingUser.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+    
+    await userRef.set(syncedUser);
+    
+    console.log('User synced to Firestore:', { userId, userData });
     
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({ 
         success: true,
-        message: `User ${emailLower} added successfully (new user)`,
-        user: users[userId]
+        message: `User ${userId} synced successfully`,
+        user: syncedUser
       })
     };
+  } catch (error) {
+    console.error('Sync user error:', error);
+    throw error;
   }
 }
 
-async function manualUnlockUser(userData, headers) {
-  // Manually unlock a user with unlimited access (for beta testers, special cases)
-  
-  console.log('Manual unlock request:', userData);
-  
-  const email = userData.email;
-  if (!email) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ 
-        success: false,
-        error: 'Email is required'
-      })
-    };
-  }
-
-  const emailLower = email.toLowerCase().trim();
-  
-  // Find existing user by email instead of creating duplicate
-  let existingUserId = null;
-  for (const userId of Object.keys(users)) {
-    if (users[userId].email === emailLower) {
-      existingUserId = userId;
-      break;
+async function manualAddUser(db, userData, headers) {
+  try {
+    const email = userData.email || 'manual@unknown.com';
+    const emailLower = email.toLowerCase().trim();
+    
+    // Check for existing user by email
+    const snapshot = await db.collection('users').where('email', '==', emailLower).get();
+    
+    if (!snapshot.empty) {
+      // Update existing user
+      const doc = snapshot.docs[0];
+      const existingUser = doc.data();
+      
+      const updateData = {
+        ...existingUser,
+        email: emailLower,
+        subscriptionType: userData.subscriptionType || 'starter',
+        monthlyUsage: userData.monthlyUsage || 0,
+        maxUsage: userData.maxUsage || 50,
+        isSubscribed: userData.isSubscribed !== false,
+        subscriptionId: userData.subscriptionId || existingUser.subscriptionId || `manual-${Date.now()}`,
+        lastActive: new Date().toISOString(),
+        manuallyAdded: true,
+        updatedAt: new Date().toISOString()
+      };
+      
+      await doc.ref.update(updateData);
+      
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ 
+          success: true,
+          message: `User ${emailLower} updated successfully (existing user)`,
+          user: { id: doc.id, ...updateData }
+        })
+      };
+    } else {
+      // Create new user
+      const userId = `manual_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+      const userRef = db.collection('users').doc(userId);
+      
+      const newUser = {
+        id: userId,
+        email: emailLower,
+        subscriptionType: userData.subscriptionType || 'starter',
+        monthlyUsage: userData.monthlyUsage || 0,
+        maxUsage: userData.maxUsage || 50,
+        isSubscribed: userData.isSubscribed !== false,
+        subscriptionId: userData.subscriptionId || `manual-${Date.now()}`,
+        lastActive: new Date().toISOString(),
+        manuallyAdded: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      await userRef.set(newUser);
+      
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ 
+          success: true,
+          message: `User ${emailLower} added successfully (new user)`,
+          user: newUser
+        })
+      };
     }
+  } catch (error) {
+    console.error('Manual add user error:', error);
+    throw error;
   }
-  
-  if (existingUserId) {
-    // Update existing user
-    users[existingUserId].manuallyUnlocked = true;
-    users[existingUserId].maxUsage = 999999;
-    users[existingUserId].subscriptionType = 'unlocked';
-    users[existingUserId].updatedAt = new Date().toISOString();
+}
+
+async function manualUnlockUser(db, userData, headers) {
+  try {
+    const email = userData.email;
+    if (!email) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ 
+          success: false,
+          error: 'Email is required'
+        })
+      };
+    }
+
+    const emailLower = email.toLowerCase().trim();
     
-    console.log('Existing user unlocked:', users[existingUserId]);
+    // Check for existing user by email
+    const snapshot = await db.collection('users').where('email', '==', emailLower).get();
     
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ 
-        success: true,
-        message: `${email} unlocked with unlimited access (updated existing user)`,
-        user: users[existingUserId]
-      })
-    };
-  } else {
-    // Create new user if doesn't exist
-    const userId = `unlock_${email.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`;
-    
-    const newUser = {
-      id: userId,
-      email: emailLower,
-      subscriptionType: 'unlocked',
-      monthlyUsage: 0,
-      maxUsage: 999999, // Unlimited
-      isSubscribed: true,
-      subscriptionId: `manual-unlock-${Date.now()}`,
-      lastActive: new Date().toISOString(),
-      manuallyUnlocked: true,
-      unlockedBy: 'admin',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    
-    users[userId] = newUser;
-    
-    console.log('New user created and unlocked:', newUser);
-    
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ 
-        success: true,
-        message: `${email} unlocked with unlimited access (new user created)`,
-        user: users[userId]
-      })
-    };
+    if (!snapshot.empty) {
+      // Update existing user
+      const doc = snapshot.docs[0];
+      
+      const updateData = {
+        manuallyUnlocked: true,
+        maxUsage: 999999,
+        subscriptionType: 'unlocked',
+        updatedAt: new Date().toISOString()
+      };
+      
+      await doc.ref.update(updateData);
+      
+      const updatedDoc = await doc.ref.get();
+      const updatedUser = { id: updatedDoc.id, ...updatedDoc.data() };
+      
+      console.log('Existing user unlocked in Firestore:', updatedUser);
+      
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ 
+          success: true,
+          message: `${email} unlocked with unlimited access (updated existing user)`,
+          user: updatedUser
+        })
+      };
+    } else {
+      // Create new user
+      const userId = `unlock_${email.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}`;
+      const userRef = db.collection('users').doc(userId);
+      
+      const newUser = {
+        id: userId,
+        email: emailLower,
+        subscriptionType: 'unlocked',
+        monthlyUsage: 0,
+        maxUsage: 999999,
+        isSubscribed: true,
+        subscriptionId: `manual-unlock-${Date.now()}`,
+        lastActive: new Date().toISOString(),
+        manuallyUnlocked: true,
+        unlockedBy: 'admin',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      await userRef.set(newUser);
+      
+      console.log('New user created and unlocked in Firestore:', newUser);
+      
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ 
+          success: true,
+          message: `${email} unlocked with unlimited access (new user created)`,
+          user: newUser
+        })
+      };
+    }
+  } catch (error) {
+    console.error('Manual unlock user error:', error);
+    throw error;
   }
 }
