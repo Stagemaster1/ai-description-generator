@@ -99,7 +99,7 @@ async function createUserInAdminSystem(email, planName, subscriptionId) {
   // Call the admin API to create user automatically
   const adminData = {
     action: 'manual_add_user',
-    password: process.env.ADMIN_PASSWORD || 'admin123',
+    password: process.env.ADMIN_PASSWORD || 'set_in_netlify_env',
     userData: {
       email: email.toLowerCase().trim(),
       subscriptionType: planName,
