@@ -3,7 +3,7 @@
 
 const { getFirestore } = require('../../firebase-config');
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'; // Set this in Netlify env vars
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'set_in_netlify_env'; // Set this in Netlify env vars
 
 exports.handler = async (event, context) => {
   // Enable CORS
