@@ -21,3 +21,4 @@ CleanAppVersion/
 .DS_Store
 .vscode/
 .claude/
+.netlify/
