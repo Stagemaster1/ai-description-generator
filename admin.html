@@ -86,6 +86,17 @@
             margin-bottom: 20px;
         }
 
+        .password-fields {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .password-fields .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
         label {
             display: block;
             margin-bottom: 5px;
@@ -385,17 +396,19 @@
                     <!-- Admin Settings -->
                     <div class="admin-panel">
                         <h2>Admin Settings</h2>
-                <div class="form-group">
-                    <label for="currentPassword">Current Password</label>
-                    <input type="password" id="currentPassword" placeholder="Enter current admin password">
-                </div>
-                <div class="form-group">
-                    <label for="newPassword">New Password</label>
-                    <input type="password" id="newPassword" placeholder="Enter new admin password">
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm New Password</label>
-                    <input type="password" id="confirmPassword" placeholder="Confirm new admin password">
+                <div class="password-fields">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter current admin password">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" placeholder="Enter new admin password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm new admin password">
+                    </div>
                 </div>
                 <div class="actions">
                     <button onclick="changeAdminPassword()" class="btn-success">🔒 Change Password</button>
