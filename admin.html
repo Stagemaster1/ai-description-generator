@@ -112,10 +112,6 @@
             border: none;
             cursor: pointer;
             font-weight: 600;
-            padding: 6px 10px;
-            font-size: 12px;
-            border-radius: 4px;
-            margin: 2px;
         }
 
         button:hover {
@@ -139,11 +135,10 @@
         }
 
         .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-bottom: 8px;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
         .users-table {
