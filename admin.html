@@ -368,9 +368,13 @@
                     <button onclick="resetUserSubscription()">Reset Subscription</button>
                     <button onclick="deleteUser()" class="btn-danger" disabled style="opacity: 0.5; cursor: not-allowed;" title="Use delete buttons in user table instead">Delete User (Disabled)</button>
                 </div>
+                    </div>
+                </div>
 
-                <!-- Admin Settings -->
-                <h2>Admin Settings</h2>
+                <div class="admin-right-column">
+                    <!-- Admin Settings -->
+                    <div class="admin-panel">
+                        <h2>Admin Settings</h2>
                 <div class="form-group">
                     <label for="currentPassword">Current Password</label>
                     <input type="password" id="currentPassword" placeholder="Enter current admin password">
@@ -386,9 +390,11 @@
                 <div class="actions">
                     <button onclick="changeAdminPassword()" class="btn-success">🔒 Change Password</button>
                 </div>
+                    </div>
 
-                <!-- Users Table -->
-                <h2>All Users</h2>
+                    <!-- Users Table -->
+                    <div class="admin-panel">
+                        <h2>All Users</h2>
                 <table class="users-table" id="usersTable">
                     <thead>
                         <tr>
@@ -408,6 +414,8 @@
                         </tr>
                     </tbody>
                 </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
