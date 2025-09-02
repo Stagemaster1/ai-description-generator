@@ -346,11 +346,8 @@
                 </div>
             </div>
 
-            <!-- Two-column layout for admin sections -->
-            <div class="admin-content">
-                <div class="admin-left-column">
-                    <!-- Quick Actions -->
-                    <div class="admin-panel">
+            <!-- Quick Actions -->
+            <div class="admin-panel">
                 <h2>Quick Actions</h2>
                 <div class="actions">
                     <button onclick="refreshUsers()" class="btn-success">🔄 Refresh Users</button>
@@ -376,10 +373,7 @@
                     <button onclick="resetUserSubscription()">Reset Subscription</button>
                     <button onclick="deleteUser()" class="btn-danger" disabled style="opacity: 0.5; cursor: not-allowed;" title="Use delete buttons in user table instead">Delete User (Disabled)</button>
                 </div>
-                    </div>
-                </div>
 
-                <div class="admin-right-column">
                     <!-- Admin Settings -->
                     <div class="admin-panel">
                         <h2>Admin Settings</h2>
@@ -398,10 +392,10 @@
                 <div class="actions">
                     <button onclick="changeAdminPassword()" class="btn-success">🔒 Change Password</button>
                 </div>
-                    </div>
+                </div>
 
-                    <!-- Users Table -->
-                    <div class="admin-panel">
+            <!-- Users Table -->
+            <div class="admin-panel">
                         <h2>All Users</h2>
                 <table class="users-table" id="usersTable">
                     <thead>
@@ -422,9 +416,8 @@
                         </tr>
                     </tbody>
                 </table>
-                    </div>
-                </div>
             </div>
+        </div>
         </div>
     </div>
 
