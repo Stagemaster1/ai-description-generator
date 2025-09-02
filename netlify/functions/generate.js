@@ -393,11 +393,11 @@ async function checkUsageLimits(db, userId, userEmail) {
       return {
         canGenerate: true, // For now, allow anonymous users (free tier)
         currentUsage: 0,
-        maxUsage: 5,
-        subscriptionType: 'free',
+        maxUsage: 3,
+        subscriptionType: 'visitor',
         userId: null,
         userEmail: null,
-        message: 'Anonymous user - 5 free generations per session'
+        message: 'Anonymous visitor - 3 free generations to try our service'
       };
     }
 
@@ -442,11 +442,11 @@ async function checkUsageLimits(db, userId, userEmail) {
     return {
       canGenerate: true,
       currentUsage: 0,
-      maxUsage: 5,
-      subscriptionType: 'free',
+      maxUsage: 3,
+      subscriptionType: 'visitor',
       userId: null,
       userEmail: null,
-      message: 'Error checking limits - proceeding with free tier'
+      message: 'Error checking limits - proceeding with visitor tier'
     };
   }
 }
@@ -459,8 +459,8 @@ async function trackUsage(db, userId, userEmail) {
       console.log('Anonymous generation - not tracked');
       return {
         monthlyUsage: 0,
-        maxUsage: 5,
-        subscriptionType: 'free'
+        maxUsage: 3,
+        subscriptionType: 'visitor'
       };
     }
 
@@ -479,8 +479,8 @@ async function trackUsage(db, userId, userEmail) {
       console.log('User not found for tracking - may be anonymous');
       return {
         monthlyUsage: 1,
-        maxUsage: 5,
-        subscriptionType: 'free'
+        maxUsage: 3,
+        subscriptionType: 'visitor'
       };
     }
 
@@ -507,8 +507,8 @@ async function trackUsage(db, userId, userEmail) {
     // Return default values on error
     return {
       monthlyUsage: 0,
-      maxUsage: 5,
-      subscriptionType: 'free'
+      maxUsage: 3,
+      subscriptionType: 'visitor'
     };
   }
 }
