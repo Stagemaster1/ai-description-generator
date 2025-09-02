@@ -302,17 +302,17 @@
 <body>
     <div class="container">
         <!-- Login Form -->
-        <div id="loginForm" class="login-form hidden">
+        <div id="loginForm" class="login-form">
             <h1>🔐 Admin Login</h1>
             <div class="form-group">
                 <label for="adminPassword">Admin Password</label>
                 <input type="password" id="adminPassword" placeholder="Enter admin password">
             </div>
-            <button onclick="return false;" disabled style="opacity: 0.5; cursor: not-allowed;">Login (Disabled for Review)</button>
+            <button onclick="login()">Login</button>
         </div>
 
         <!-- Admin Panel (hidden initially) -->
-        <div id="adminPanel" class="">
+        <div id="adminPanel" class="hidden">
             <div class="header">
                 <h1>🛠️ Admin Panel - AI Description Generator</h1>
                 <p>Manage users, reset limits, and monitor system usage</p>
