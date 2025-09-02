@@ -13,9 +13,10 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #6b7280;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #1e293b 100%);
             color: #334155;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         .container {
@@ -227,6 +228,40 @@
         .hidden {
             display: none;
         }
+
+        /* Multi-column layout for better horizontal space usage */
+        .admin-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .admin-left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .admin-right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .admin-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 1200px) {
+            .admin-content {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -302,8 +337,11 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="admin-panel">
+            <!-- Two-column layout for admin sections -->
+            <div class="admin-content">
+                <div class="admin-left-column">
+                    <!-- Quick Actions -->
+                    <div class="admin-panel">
                 <h2>Quick Actions</h2>
                 <div class="actions">
                     <button onclick="refreshUsers()" class="btn-success">🔄 Refresh Users</button>
