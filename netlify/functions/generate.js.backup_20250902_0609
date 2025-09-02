@@ -1,5 +1,4 @@
 const { OpenAI } = require('openai');
-const { getFirestore } = require('../../firebase-config');
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -40,38 +39,15 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { productUrl, productInfo, brandTone, descriptionLength, language, targetAudience, keyFeatures, userId, userEmail, inputMode } = JSON.parse(event.body);
+    const { productUrl, productInfo, brandTone, descriptionLength, language, targetAudience, keyFeatures, userId, inputMode } = JSON.parse(event.body);
     
     console.log('Generation request:', {
       brandTone,
       descriptionLength,
       inputMode,
       hasProductInfo: !!productInfo,
-      hasProductUrl: !!productUrl,
-      userId: userId || 'anonymous',
-      userEmail: userEmail || 'none'
+      hasProductUrl: !!productUrl
     });
-
-    // Initialize Firebase for usage tracking
-    const db = getFirestore();
-
-    // Check usage limits and get user data
-    const userLimits = await checkUsageLimits(db, userId, userEmail);
-    
-    // Check if user has exceeded their limits
-    if (!userLimits.canGenerate) {
-      return {
-        statusCode: 429,
-        headers,
-        body: JSON.stringify({ 
-          error: 'Usage limit exceeded',
-          message: userLimits.message,
-          currentUsage: userLimits.currentUsage,
-          maxUsage: userLimits.maxUsage,
-          subscriptionType: userLimits.subscriptionType
-        })
-      };
-    }
 
     // Validate required fields
     if (!brandTone) {
@@ -132,21 +108,12 @@ exports.handler = async (event, context) => {
       inputMode
     });
 
-    // Track successful generation
-    const updatedUsage = await trackUsage(db, userLimits.userId, userLimits.userEmail);
-
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({ 
         description,
-        success: true,
-        usage: {
-          current: updatedUsage.monthlyUsage,
-          max: updatedUsage.maxUsage,
-          remaining: Math.max(0, updatedUsage.maxUsage - updatedUsage.monthlyUsage),
-          subscriptionType: updatedUsage.subscriptionType
-        }
+        success: true 
       })
     };
 
@@ -359,156 +326,5 @@ Please generate a professional product description that matches the specified br
   } catch (error) {
     console.error('OpenAI API call failed:', error);
     throw error;
-  }
-}
-
-// Check usage limits and get user data
-async function checkUsageLimits(db, userId, userEmail) {
-  try {
-    let userData = null;
-    let actualUserId = null;
-
-    // If we have userId, look up by userId
-    if (userId) {
-      const userDoc = await db.collection('users').doc(userId).get();
-      if (userDoc.exists) {
-        userData = userDoc.data();
-        actualUserId = userId;
-      }
-    }
-
-    // If no userData found and we have email, look up by email
-    if (!userData && userEmail) {
-      const emailQuery = await db.collection('users').where('email', '==', userEmail.toLowerCase()).get();
-      if (!emailQuery.empty) {
-        const userDoc = emailQuery.docs[0];
-        userData = userDoc.data();
-        actualUserId = userDoc.id;
-      }
-    }
-
-    // If no user found, treat as anonymous free user
-    if (!userData) {
-      console.log('Anonymous user - no tracking, free tier limits');
-      return {
-        canGenerate: true, // For now, allow anonymous users (free tier)
-        currentUsage: 0,
-        maxUsage: 5,
-        subscriptionType: 'free',
-        userId: null,
-        userEmail: null,
-        message: 'Anonymous user - 5 free generations per session'
-      };
-    }
-
-    // Check current usage against limits
-    const currentUsage = userData.monthlyUsage || 0;
-    const maxUsage = userData.maxUsage || 5;
-    const subscriptionType = userData.subscriptionType || 'free';
-    const isUnlocked = userData.manuallyUnlocked || false;
-
-    // Allow unlimited for manually unlocked users
-    if (isUnlocked) {
-      return {
-        canGenerate: true,
-        currentUsage,
-        maxUsage: 999999,
-        subscriptionType: 'unlocked',
-        userId: actualUserId,
-        userEmail: userData.email,
-        message: 'Unlimited access granted'
-      };
-    }
-
-    // Check if user has exceeded their limit
-    const canGenerate = currentUsage < maxUsage;
-    const remaining = Math.max(0, maxUsage - currentUsage);
-
-    return {
-      canGenerate,
-      currentUsage,
-      maxUsage,
-      subscriptionType,
-      userId: actualUserId,
-      userEmail: userData.email,
-      message: canGenerate 
-        ? `${remaining} generations remaining this month`
-        : `Monthly limit of ${maxUsage} generations reached. Please upgrade your subscription.`
-    };
-
-  } catch (error) {
-    console.error('Error checking usage limits:', error);
-    // On error, allow generation but log the issue
-    return {
-      canGenerate: true,
-      currentUsage: 0,
-      maxUsage: 5,
-      subscriptionType: 'free',
-      userId: null,
-      userEmail: null,
-      message: 'Error checking limits - proceeding with free tier'
-    };
-  }
-}
-
-// Track successful generation
-async function trackUsage(db, userId, userEmail) {
-  try {
-    // For anonymous users, no tracking needed
-    if (!userId && !userEmail) {
-      console.log('Anonymous generation - not tracked');
-      return {
-        monthlyUsage: 0,
-        maxUsage: 5,
-        subscriptionType: 'free'
-      };
-    }
-
-    // Find user document
-    let userDoc = null;
-    if (userId) {
-      userDoc = await db.collection('users').doc(userId).get();
-    } else if (userEmail) {
-      const emailQuery = await db.collection('users').where('email', '==', userEmail.toLowerCase()).get();
-      if (!emailQuery.empty) {
-        userDoc = emailQuery.docs[0];
-      }
-    }
-
-    if (!userDoc || !userDoc.exists) {
-      console.log('User not found for tracking - may be anonymous');
-      return {
-        monthlyUsage: 1,
-        maxUsage: 5,
-        subscriptionType: 'free'
-      };
-    }
-
-    // Update usage count
-    const currentData = userDoc.data();
-    const newUsage = (currentData.monthlyUsage || 0) + 1;
-
-    await userDoc.ref.update({
-      monthlyUsage: newUsage,
-      lastActive: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-
-    console.log(`Usage tracked for user ${userDoc.id}: ${newUsage}/${currentData.maxUsage || 5}`);
-
-    return {
-      monthlyUsage: newUsage,
-      maxUsage: currentData.maxUsage || 5,
-      subscriptionType: currentData.subscriptionType || 'free'
-    };
-
-  } catch (error) {
-    console.error('Error tracking usage:', error);
-    // Return default values on error
-    return {
-      monthlyUsage: 0,
-      maxUsage: 5,
-      subscriptionType: 'free'
-    };
   }
 }

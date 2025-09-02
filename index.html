@@ -2820,7 +2820,8 @@
                     language,
                     targetAudience,
                     keyFeatures,
-                    userId: userState.userId,
+                    userId: currentUser ? currentUser.id : null,
+                    userEmail: currentUser ? currentUser.email : null,
                     inputMode
                 };
 
@@ -2853,10 +2854,13 @@
                 const data = await response.json();
 
                 if (data.success && data.description) {
-                    // Update usage count on backend and sync locally
-                    await updateUsageCount();
-                    await syncUserData();
-                    updateUsageDisplay();
+                    // Update local user data with usage info from response
+                    if (currentUser && data.usage) {
+                        currentUser.monthlyUsage = data.usage.current;
+                        currentUser.maxUsage = data.usage.max;
+                        localStorage.setItem('user', JSON.stringify(currentUser));
+                        updateAuthUI(); // Refresh the UI with new usage data
+                    }
                     
                     // Show results
                     resultsContent.textContent = data.description;
@@ -2866,7 +2870,16 @@
                     // Scroll to results
                     results.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     
-                    showNotification('Description generated successfully!', 'success');
+                    // Show success message with usage info
+                    if (data.usage && data.usage.remaining !== undefined) {
+                        showNotification(`Description generated! ${data.usage.remaining} generations remaining.`, 'success');
+                    } else {
+                        showNotification('Description generated successfully!', 'success');
+                    }
+                } else if (data.error === 'Usage limit exceeded') {
+                    // Handle usage limit exceeded
+                    showNotification(data.message || 'Usage limit exceeded. Please upgrade your subscription.', 'error');
+                    document.querySelector('.pricing-section').scrollIntoView({ behavior: 'smooth' });
                 } else {
                     throw new Error(data.error || 'Failed to generate description');
                 }
