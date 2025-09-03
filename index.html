@@ -4056,7 +4056,7 @@
                         background: rgba(255, 255, 255, 0.1);
                         color: #ffffff;
                         font-size: 1rem;
-                    " placeholder="your@email.com">
+                    " data-translate-placeholder="emailPlaceholder" placeholder="your@email.com">
                 </div>
                 
                 <div>
@@ -4085,7 +4085,7 @@
                         cursor: pointer;
                         transition: transform 0.2s ease;
                     " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                        Login
+                        <span data-translate="loginButton">Login</span>
                     </button>
                     <button type="button" onclick="closeLoginModal()" style="
                         flex: 0.3;
@@ -4096,12 +4096,12 @@
                         padding: 12px;
                         font-size: 1rem;
                         cursor: pointer;
-                    ">Cancel</button>
+                    "><span data-translate="cancel">Cancel</span></button>
                 </div>
                 
                 <div style="text-align: center; margin-top: 15px;">
                     <a href="#" onclick="showSignupModal(); closeLoginModal();" style="color: #10b981; font-size: 0.9rem; text-decoration: none;">
-                        Don't have an account? Sign up here
+                        <span data-translate="signupPrompt">Don't have an account? Sign up here</span>
                     </a>
                 </div>
             </form>
@@ -4133,13 +4133,13 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
         ">
-            <h2 style="color: #ffffff; text-align: center; margin-bottom: 25px; font-size: 1.5rem;">
+            <h2 style="color: #ffffff; text-align: center; margin-bottom: 25px; font-size: 1.5rem;" data-translate="signupTitle">
                 ✨ Create Your Account
             </h2>
             
             <form id="signupForm" style="display: flex; flex-direction: column; gap: 18px;">
                 <div>
-                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 5px; display: block;">Email Address</label>
+                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 5px; display: block;" data-translate="emailAddress">Email Address</label>
                     <input type="email" id="signupEmail" required style="
                         width: 100%;
                         padding: 12px;
@@ -4148,11 +4148,11 @@
                         background: rgba(255, 255, 255, 0.1);
                         color: #ffffff;
                         font-size: 1rem;
-                    " placeholder="your@email.com">
+                    " data-translate-placeholder="emailPlaceholder" placeholder="your@email.com">
                 </div>
                 
                 <div>
-                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 5px; display: block;">Create Password</label>
+                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 5px; display: block;" data-translate="createPassword">Create Password</label>
                     <input type="password" id="signupPassword" required style="
                         width: 100%;
                         padding: 12px;
@@ -4161,11 +4161,11 @@
                         background: rgba(255, 255, 255, 0.1);
                         color: #ffffff;
                         font-size: 1rem;
-                    " placeholder="Create a secure password">
+                    " data-translate-placeholder="createPasswordPlaceholder" placeholder="Create a secure password">
                 </div>
                 
                 <div>
-                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 5px; display: block;">Confirm Password</label>
+                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 5px; display: block;" data-translate="confirmPassword">Confirm Password</label>
                     <input type="password" id="signupPasswordConfirm" required style="
                         width: 100%;
                         padding: 12px;
@@ -4174,7 +4174,7 @@
                         background: rgba(255, 255, 255, 0.1);
                         color: #ffffff;
                         font-size: 1rem;
-                    " placeholder="Confirm your password">
+                    " data-translate-placeholder="confirmPasswordPlaceholder" placeholder="Confirm your password">
                 </div>
                 
                 <!-- Terms of Service Agreement -->
@@ -4182,9 +4182,9 @@
                     <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
                         <input type="checkbox" id="agreeToTerms" required style="margin-top: 2px;">
                         <span style="color: #cbd5e1; font-size: 0.85rem; line-height: 1.4;">
-                            I agree to the <a href="#" onclick="showTermsModal()" style="color: #10b981; text-decoration: underline;">Terms of Service</a> 
-                            and <a href="#" onclick="showPrivacyModal()" style="color: #10b981; text-decoration: underline;">Privacy Policy</a>.
-                            I understand my data will be processed according to these terms.
+                            <span data-translate="termsAgreement">I agree to the</span> <a href="#" onclick="showTermsModal()" style="color: #10b981; text-decoration: underline;" data-translate="termsOfService">Terms of Service</a> 
+                            <span data-translate="and">and</span> <a href="#" onclick="showPrivacyModal()" style="color: #10b981; text-decoration: underline;" data-translate="privacyPolicy">Privacy Policy</a>.
+                            <span data-translate="dataProcessingNotice">I understand my data will be processed according to these terms.</span>
                         </span>
                     </label>
                 </div>
@@ -4202,7 +4202,7 @@
                         cursor: pointer;
                         transition: transform 0.2s ease;
                     " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                        Create Account
+                        <span data-translate="createAccount">Create Account</span>
                     </button>
                     <button type="button" onclick="closeSignupModal()" style="
                         flex: 0.3;
@@ -4213,12 +4213,12 @@
                         padding: 12px;
                         font-size: 1rem;
                         cursor: pointer;
-                    ">Cancel</button>
+                    "><span data-translate="cancel">Cancel</span></button>
                 </div>
                 
                 <div style="text-align: center; margin-top: 10px;">
                     <a href="#" onclick="showLoginModal(); closeSignupModal();" style="color: #3b82f6; font-size: 0.9rem; text-decoration: none;">
-                        Already have an account? Login here
+                        <span data-translate="loginPrompt">Already have an account? Login here</span>
                     </a>
                 </div>
             </form>
