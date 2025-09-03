@@ -861,7 +861,7 @@
                 <div class="usage-tracker" id="usageTracker">
                     <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between;">
                         <span data-translate="monthlyUsage">Monthly Usage</span>
-                        <button onclick="refreshUsage()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 2px; font-size: 0.8rem;" title="Refresh usage data">🔄</button>
+                        <button id="refreshButton" onclick="refreshUsage()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 2px; font-size: 0.8rem;" title="Refresh usage data">🔄</button>
                     </div>
                     <div style="color: #ffffff; font-weight: 600;" id="usageText">0 of 5 free descriptions used</div>
                     <div class="usage-bar">
@@ -1205,7 +1205,31 @@
                 usageDataRefreshed: 'Usage data refreshed',
                 
                 // Language Switcher
-                selectLanguage: 'Language'
+                selectLanguage: 'Language',
+                
+                // Login Modal
+                loginTitle: '🔑 Login to Your Account',
+                emailAddress: 'Email Address',
+                emailPlaceholder: 'your@email.com',
+                password: 'Password',
+                passwordPlaceholder: 'Your password',
+                loginButton: 'Login',
+                cancel: 'Cancel',
+                signupPrompt: "Don't have an account? Sign up here",
+                
+                // Signup Modal
+                signupTitle: '✨ Create Your Account',
+                createPassword: 'Create Password',
+                createPasswordPlaceholder: 'Create a secure password',
+                confirmPassword: 'Confirm Password',
+                confirmPasswordPlaceholder: 'Confirm your password',
+                createAccount: 'Create Account',
+                loginPrompt: 'Already have an account? Login here',
+                termsAgreement: 'I agree to the',
+                termsOfService: 'Terms of Service',
+                and: 'and',
+                privacyPolicy: 'Privacy Policy',
+                dataProcessingNotice: 'I understand my data will be processed according to these terms.'
             },
             
             es: {
@@ -1325,7 +1349,31 @@
                 usageDataRefreshed: 'Datos de uso actualizados',
                 
                 // Language Switcher
-                selectLanguage: 'Idioma'
+                selectLanguage: 'Idioma',
+                
+                // Login Modal
+                loginTitle: '🔑 Iniciar Sesión en Tu Cuenta',
+                emailAddress: 'Dirección de Correo Electrónico',
+                emailPlaceholder: 'tu@email.com',
+                password: 'Contraseña',
+                passwordPlaceholder: 'Tu contraseña',
+                loginButton: 'Iniciar Sesión',
+                cancel: 'Cancelar',
+                signupPrompt: '¿No tienes una cuenta? Regístrate aquí',
+                
+                // Signup Modal
+                signupTitle: '✨ Crea Tu Cuenta',
+                createPassword: 'Crear Contraseña',
+                createPasswordPlaceholder: 'Crea una contraseña segura',
+                confirmPassword: 'Confirmar Contraseña',
+                confirmPasswordPlaceholder: 'Confirma tu contraseña',
+                createAccount: 'Crear Cuenta',
+                loginPrompt: '¿Ya tienes una cuenta? Inicia sesión aquí',
+                termsAgreement: 'Acepto los',
+                termsOfService: 'Términos de Servicio',
+                and: 'y la',
+                privacyPolicy: 'Política de Privacidad',
+                dataProcessingNotice: 'Entiendo que mis datos serán procesados según estos términos.'
             },
             
             fr: {
@@ -1355,6 +1403,7 @@
                 manualEntry: '✏️ Saisie Manuelle',
                 
                 // Form Labels
+                productIdentification: 'Identification du Produit',
                 productUrl: 'URL du Produit',
                 productUrlPlaceholder: 'https://exemple.com/page-produit',
                 barcodeNumber: 'Numéro de Code-barres/UPC',
@@ -1374,11 +1423,14 @@
                 keyFeatures: 'Caractéristiques Clés (Optionnel)',
                 keyFeaturesPlaceholder: 'ex., Étanche, Garantie 5 ans, Charge rapide',
                 
+                // Form Options
+                selectBrandVoice: 'Sélectionnez votre voix de marque...',
+                
                 // Brand Tone Options
                 luxuryPremium: 'Luxe et Premium',
                 casualFriendly: 'Décontracté et Amical',
                 professionalAuthoritative: 'Professionnel et Autoritaire',
-                playfulFun: 'Ludique et Amusant',
+                funQuirky: 'Ludique et Amusant',
                 minimalistClean: 'Minimaliste et Épuré',
                 
                 // Length Options
@@ -1388,7 +1440,7 @@
                 
                 // Buttons
                 generateDescription: 'Générer Description IA',
-                copyDescription: 'Copier Description',
+                copyToClipboard: '📋 Copier dans le Presse-papiers',
                 
                 // Results
                 optimizedDescription: '✨ Votre Description de Produit Optimisée',
@@ -1530,8 +1582,31 @@
                 luxuryPremium: 'Luxuriös & Premium',
                 casualFriendly: 'Lässig & Freundlich',
                 professionalAuthoritative: 'Professionell & Kompetent',
-                playfulFun: 'Verspielt & Spaßig',
-                minimalistClean: 'Minimalistisch & Sauber'
+                funQuirky: 'Verspielt & Spaßig',
+                minimalistClean: 'Minimalistisch & Sauber',
+                
+                // Missing Keys - Added for completeness
+                of: 'von',
+                barcodeNumber: 'Barcode/UPC-Nummer',
+                barcodePlaceholder: 'Barcode oder UPC-Nummer eingeben',
+                lookupProduct: '🔍 Produkt nachschlagen',
+                productName: 'Produktname',
+                productNamePlaceholder: 'Produktname eingeben',
+                brand: 'Marke',
+                brandPlaceholder: 'Markenname eingeben',
+                category: 'Kategorie',
+                categoryPlaceholder: 'z.B. Elektronik, Kleidung',
+                mediumLength: 'Mittel (150-250 Wörter) - Empfohlen',
+                extensiveLength: 'Ausführlich (300-500 Wörter) - Detailliert',
+                copyToClipboard: '📋 In die Zwischenablage kopieren',
+                choosePlan: 'Plan wählen',
+                currentPlan: 'Aktueller Plan',
+                descriptionsGenerated: 'Generierte Beschreibungen',
+                happyCustomers: 'Zufriedene Kunden',
+                timesSaved: 'Gesparte Stunden',
+                descriptionCopied: 'Beschreibung in die Zwischenablage kopiert!',
+                subscriptionSuccess: 'Erfolgreich abonniert',
+                usageDataRefreshed: 'Nutzungsdaten aktualisiert'
             },
             
             it: {
@@ -1593,7 +1668,73 @@
                 customBrandTones: 'Toni di marca personalizzati',
                 apiAccess: 'Accesso API',
                 teamCollaboration: 'Collaborazione di squadra',
-                dedicatedSupport: 'Supporto dedicato'
+                dedicatedSupport: 'Supporto dedicato',
+                
+                // Missing Keys - Adding for completeness
+                of: 'di',
+                productIdentification: 'Identificazione del Prodotto',
+                productURL: '🔗 URL del Prodotto',
+                barcodeUPC: '📊 Codice a Barre/UPC',
+                manualEntry: '✏️ Inserimento Manuale',
+                barcodeNumber: 'Numero Codice a Barre/UPC',
+                barcodePlaceholder: 'Inserisci codice a barre o numero UPC',
+                lookupProduct: '🔍 Cerca Prodotto',
+                productName: 'Nome Prodotto',
+                productNamePlaceholder: 'Inserisci nome prodotto',
+                brand: 'Marca',
+                brandPlaceholder: 'Inserisci nome marca',
+                category: 'Categoria',
+                categoryPlaceholder: 'es., Elettronica, Abbigliamento',
+                brandTone: 'Tono di Marca',
+                selectBrandVoice: 'Seleziona la voce del tuo marchio...',
+                luxuryPremium: 'Lusso e Premium',
+                casualFriendly: 'Casual e Amichevole',
+                professionalAuthoritative: 'Professionale e Autorevole',
+                funQuirky: 'Divertente e Stravagante',
+                minimalistClean: 'Minimalista e Pulito',
+                descriptionLength: 'Lunghezza Descrizione',
+                shortLength: 'Breve (50-100 parole) - Veloce e Incisivo',
+                mediumLength: 'Media (150-250 parole) - Raccomandato',
+                extensiveLength: 'Estesa (300-500 parole) - Dettagliato',
+                language: 'Lingua',
+                targetAudience: 'Pubblico Target (Opzionale)',
+                targetAudiencePlaceholder: 'es., genitori impegnati, appassionati di fitness, professionisti tech',
+                keyFeatures: 'Caratteristiche Principali da Evidenziare (Opzionale)',
+                keyFeaturesPlaceholder: 'Elenca le caratteristiche più importanti che vuoi enfatizzare...',
+                copyToClipboard: '📋 Copia negli Appunti',
+                choosePlan: 'Scegli Piano',
+                currentPlan: 'Piano Attuale',
+                descriptionsGenerated: 'Descrizioni Generate',
+                happyCustomers: 'Clienti Soddisfatti',
+                timesSaved: 'Ore Risparmiate',
+                descriptionCopied: 'Descrizione copiata negli appunti!',
+                subscriptionSuccess: 'Abbonamento riuscito a',
+                usageDataRefreshed: 'Dati di utilizzo aggiornati',
+                selectLanguage: 'Lingua',
+                
+                // Login Modal
+                loginTitle: '🔑 Accedi al Tuo Account',
+                emailAddress: 'Indirizzo Email',
+                emailPlaceholder: 'tuo@email.com',
+                password: 'Password',
+                passwordPlaceholder: 'La tua password',
+                loginButton: 'Accedi',
+                cancel: 'Annulla',
+                signupPrompt: 'Non hai un account? Registrati qui',
+                
+                // Signup Modal
+                signupTitle: '✨ Crea il Tuo Account',
+                createPassword: 'Crea Password',
+                createPasswordPlaceholder: 'Crea una password sicura',
+                confirmPassword: 'Conferma Password',
+                confirmPasswordPlaceholder: 'Conferma la tua password',
+                createAccount: 'Crea Account',
+                loginPrompt: 'Hai già un account? Accedi qui',
+                termsAgreement: 'Accetto i',
+                termsOfService: 'Termini di Servizio',
+                and: 'e la',
+                privacyPolicy: 'Politica sulla Privacy',
+                dataProcessingNotice: 'Comprendo che i miei dati saranno elaborati secondo questi termini.'
             },
             
             pt: {
@@ -1655,7 +1796,73 @@
                 customBrandTones: 'Tons de marca personalizados',
                 apiAccess: 'Acesso à API',
                 teamCollaboration: 'Colaboração em equipe',
-                dedicatedSupport: 'Suporte dedicado'
+                dedicatedSupport: 'Suporte dedicado',
+                
+                // Missing Keys - Adding for completeness
+                of: 'de',
+                productIdentification: 'Identificação do Produto',
+                productURL: '🔗 URL do Produto',
+                barcodeUPC: '📊 Código de Barras/UPC',
+                manualEntry: '✏️ Entrada Manual',
+                barcodeNumber: 'Número do Código de Barras/UPC',
+                barcodePlaceholder: 'Digite código de barras ou número UPC',
+                lookupProduct: '🔍 Procurar Produto',
+                productName: 'Nome do Produto',
+                productNamePlaceholder: 'Digite nome do produto',
+                brand: 'Marca',
+                brandPlaceholder: 'Digite nome da marca',
+                category: 'Categoria',
+                categoryPlaceholder: 'ex., Eletrônicos, Roupas',
+                brandTone: 'Tom da Marca',
+                selectBrandVoice: 'Selecione a voz da sua marca...',
+                luxuryPremium: 'Luxo e Premium',
+                casualFriendly: 'Casual e Amigável',
+                professionalAuthoritative: 'Profissional e Autorativo',
+                funQuirky: 'Divertido e Peculiar',
+                minimalistClean: 'Minimalista e Limpo',
+                descriptionLength: 'Comprimento da Descrição',
+                shortLength: 'Curta (50-100 palavras) - Rápida e Impactante',
+                mediumLength: 'Média (150-250 palavras) - Recomendado',
+                extensiveLength: 'Extensa (300-500 palavras) - Detalhada',
+                language: 'Idioma',
+                targetAudience: 'Público-Alvo (Opcional)',
+                targetAudiencePlaceholder: 'ex., pais ocupados, entusiastas de fitness, profissionais de tecnologia',
+                keyFeatures: 'Características Principais a Destacar (Opcional)',
+                keyFeaturesPlaceholder: 'Liste as características mais importantes que você deseja enfatizar...',
+                copyToClipboard: '📋 Copiar para Área de Transferência',
+                choosePlan: 'Escolher Plano',
+                currentPlan: 'Plano Atual',
+                descriptionsGenerated: 'Descrições Geradas',
+                happyCustomers: 'Clientes Satisfeitos',
+                timesSaved: 'Horas Economizadas',
+                descriptionCopied: 'Descrição copiada para a área de transferência!',
+                subscriptionSuccess: 'Assinatura realizada com sucesso para',
+                usageDataRefreshed: 'Dados de uso atualizados',
+                selectLanguage: 'Idioma',
+                
+                // Login Modal
+                loginTitle: '🔑 Entre na Sua Conta',
+                emailAddress: 'Endereço de Email',
+                emailPlaceholder: 'seu@email.com',
+                password: 'Senha',
+                passwordPlaceholder: 'Sua senha',
+                loginButton: 'Entrar',
+                cancel: 'Cancelar',
+                signupPrompt: 'Não tem uma conta? Cadastre-se aqui',
+                
+                // Signup Modal
+                signupTitle: '✨ Crie Sua Conta',
+                createPassword: 'Criar Senha',
+                createPasswordPlaceholder: 'Crie uma senha segura',
+                confirmPassword: 'Confirmar Senha',
+                confirmPasswordPlaceholder: 'Confirme sua senha',
+                createAccount: 'Criar Conta',
+                loginPrompt: 'Já tem uma conta? Entre aqui',
+                termsAgreement: 'Concordo com os',
+                termsOfService: 'Termos de Serviço',
+                and: 'e a',
+                privacyPolicy: 'Política de Privacidade',
+                dataProcessingNotice: 'Entendo que meus dados serão processados de acordo com estes termos.'
             },
             
             nl: {
@@ -1718,7 +1925,72 @@
                 customBrandTones: 'Aangepaste merktonen',
                 apiAccess: 'API toegang',
                 teamCollaboration: 'Team samenwerking',
-                dedicatedSupport: 'Toegewijde ondersteuning'
+                dedicatedSupport: 'Toegewijde ondersteuning',
+                
+                // Missing Keys - Adding for completeness
+                productURL: '🔗 Product URL',
+                barcodeUPC: '📊 Barcode/UPC',
+                manualEntry: '✏️ Handmatige Invoer',
+                productUrlPlaceholder: 'https://voorbeeld.com/product-pagina',
+                barcodeNumber: 'Barcode/UPC Nummer',
+                barcodePlaceholder: 'Voer barcode of UPC nummer in',
+                lookupProduct: '🔍 Product Opzoeken',
+                productName: 'Product Naam',
+                productNamePlaceholder: 'Voer product naam in',
+                brand: 'Merk',
+                brandPlaceholder: 'Voer merk naam in',
+                category: 'Categorie',
+                categoryPlaceholder: 'bijv. Elektronica, Kleding',
+                brandTone: 'Merk Toon',
+                selectBrandVoice: 'Selecteer uw merk stem...',
+                luxuryPremium: 'Luxe & Premium',
+                casualFriendly: 'Casual & Vriendelijk',
+                professionalAuthoritative: 'Professioneel & Gezaghebbend',
+                funQuirky: 'Leuk & Eigenzinnig',
+                minimalistClean: 'Minimalistisch & Schoon',
+                descriptionLength: 'Beschrijving Lengte',
+                shortLength: 'Kort (50-100 woorden) - Snel & Krachtig',
+                mediumLength: 'Gemiddeld (150-250 woorden) - Aanbevolen',
+                extensiveLength: 'Uitgebreid (300-500 woorden) - Gedetailleerd',
+                language: 'Taal',
+                targetAudience: 'Doelgroep (Optioneel)',
+                targetAudiencePlaceholder: 'bijv. drukke ouders, fitness liefhebbers, tech professionals',
+                keyFeatures: 'Belangrijkste Kenmerken om te Benadrukken (Optioneel)',
+                keyFeaturesPlaceholder: 'Lijst de belangrijkste kenmerken die je wilt benadrukken...',
+                copyToClipboard: '📋 Kopieer naar Klembord',
+                choosePlan: 'Kies Plan',
+                currentPlan: 'Huidig Plan',
+                descriptionsGenerated: 'Beschrijvingen Gegenereerd',
+                happyCustomers: 'Tevreden Klanten',
+                timesSaved: 'Uren Bespaard',
+                descriptionCopied: 'Beschrijving gekopieerd naar klembord!',
+                subscriptionSuccess: 'Succesvol geabonneerd op',
+                usageDataRefreshed: 'Gebruiksgegevens vernieuwd',
+                selectLanguage: 'Taal',
+                
+                // Login Modal
+                loginTitle: '🔑 Inloggen op Uw Account',
+                emailAddress: 'E-mail Adres',
+                emailPlaceholder: 'uw@email.com',
+                password: 'Wachtwoord',
+                passwordPlaceholder: 'Uw wachtwoord',
+                loginButton: 'Inloggen',
+                cancel: 'Annuleren',
+                signupPrompt: 'Heeft u geen account? Registreer hier',
+                
+                // Signup Modal
+                signupTitle: '✨ Maak Uw Account',
+                createPassword: 'Wachtwoord Aanmaken',
+                createPasswordPlaceholder: 'Maak een veilig wachtwoord',
+                confirmPassword: 'Bevestig Wachtwoord',
+                confirmPasswordPlaceholder: 'Bevestig uw wachtwoord',
+                createAccount: 'Account Aanmaken',
+                loginPrompt: 'Heeft u al een account? Log hier in',
+                termsAgreement: 'Ik ga akkoord met de',
+                termsOfService: 'Servicevoorwaarden',
+                and: 'en',
+                privacyPolicy: 'Privacybeleid',
+                dataProcessingNotice: 'Ik begrijp dat mijn gegevens zullen worden verwerkt volgens deze voorwaarden.'
             },
             
             ja: {
@@ -1781,7 +2053,72 @@
                 customBrandTones: 'カスタムブランドトーン',
                 apiAccess: 'APIアクセス',
                 teamCollaboration: 'チーム連携',
-                dedicatedSupport: '専任サポート'
+                dedicatedSupport: '専任サポート',
+                
+                // Missing Keys - Adding for completeness  
+                productURL: '🔗 商品URL',
+                barcodeUPC: '📊 バーコード/UPC',
+                manualEntry: '✏️ 手動入力',
+                productUrlPlaceholder: 'https://example.com/product-page',
+                barcodeNumber: 'バーコード/UPC番号',
+                barcodePlaceholder: 'バーコードまたはUPC番号を入力',
+                lookupProduct: '🔍 商品検索',
+                productName: '商品名',
+                productNamePlaceholder: '商品名を入力',
+                brand: 'ブランド',
+                brandPlaceholder: 'ブランド名を入力',
+                category: 'カテゴリ',
+                categoryPlaceholder: '例：電子機器、衣類',
+                brandTone: 'ブランドトーン',
+                selectBrandVoice: 'ブランドボイスを選択...',
+                luxuryPremium: 'ラグジュアリー＆プレミアム',
+                casualFriendly: 'カジュアル＆フレンドリー',
+                professionalAuthoritative: 'プロフェッショナル＆権威的',
+                funQuirky: 'ファン＆ユニーク',
+                minimalistClean: 'ミニマリスト＆クリーン',
+                descriptionLength: '説明の長さ',
+                shortLength: '短い（50-100語）- 簡潔で力強い',
+                mediumLength: '中程度（150-250語）- 推奨',
+                extensiveLength: '詳細（300-500語）- 詳しい',
+                language: '言語',
+                targetAudience: 'ターゲット層（任意）',
+                targetAudiencePlaceholder: '例：忙しい親、フィットネス愛好者、技術専門家',
+                keyFeatures: '強調すべき主要機能（任意）',
+                keyFeaturesPlaceholder: '強調したい最も重要な機能をリストしてください...',
+                copyToClipboard: '📋 クリップボードにコピー',
+                choosePlan: 'プラン選択',
+                currentPlan: '現在のプラン',
+                descriptionsGenerated: '生成された説明',
+                happyCustomers: '満足顧客',
+                timesSaved: '節約時間',
+                descriptionCopied: '説明をクリップボードにコピーしました！',
+                subscriptionSuccess: '正常に登録されました',
+                usageDataRefreshed: '使用データが更新されました',
+                selectLanguage: '言語',
+                
+                // Login Modal
+                loginTitle: '🔑 アカウントにログイン',
+                emailAddress: 'メールアドレス',
+                emailPlaceholder: 'your@email.com',
+                password: 'パスワード',
+                passwordPlaceholder: 'パスワード',
+                loginButton: 'ログイン',
+                cancel: 'キャンセル',
+                signupPrompt: 'アカウントをお持ちでない方はこちら',
+                
+                // Signup Modal
+                signupTitle: '✨ アカウント作成',
+                createPassword: 'パスワード作成',
+                createPasswordPlaceholder: '安全なパスワードを作成',
+                confirmPassword: 'パスワード確認',
+                confirmPasswordPlaceholder: 'パスワードを確認',
+                createAccount: 'アカウント作成',
+                loginPrompt: 'すでにアカウントをお持ちの方はこちら',
+                termsAgreement: '同意します',
+                termsOfService: '利用規約',
+                and: 'と',
+                privacyPolicy: 'プライバシーポリシー',
+                dataProcessingNotice: 'これらの規約に従ってデータが処理されることを理解しています。'
             },
             
             zh: {
@@ -1844,7 +2181,72 @@
                 customBrandTones: '自定义品牌语调',
                 apiAccess: 'API访问',
                 teamCollaboration: '团队协作',
-                dedicatedSupport: '专属支持'
+                dedicatedSupport: '专属支持',
+                
+                // Missing Keys - Adding for completeness
+                productURL: '🔗 产品URL',
+                barcodeUPC: '📊 条形码/UPC',
+                manualEntry: '✏️ 手动输入',
+                productUrlPlaceholder: 'https://example.com/product-page',
+                barcodeNumber: '条形码/UPC号码',
+                barcodePlaceholder: '输入条形码或UPC号码',
+                lookupProduct: '🔍 查找产品',
+                productName: '产品名称',
+                productNamePlaceholder: '输入产品名称',
+                brand: '品牌',
+                brandPlaceholder: '输入品牌名称',
+                category: '类别',
+                categoryPlaceholder: '例如：电子产品，服装',
+                brandTone: '品牌语调',
+                selectBrandVoice: '选择您的品牌声音...',
+                luxuryPremium: '奢华&高端',
+                casualFriendly: '休闲&友好',
+                professionalAuthoritative: '专业&权威',
+                funQuirky: '有趣&独特',
+                minimalistClean: '简约&清洁',
+                descriptionLength: '描述长度',
+                shortLength: '简短（50-100字）- 简洁有力',
+                mediumLength: '中等（150-250字）- 推荐',
+                extensiveLength: '详细（300-500字）- 详尽',
+                language: '语言',
+                targetAudience: '目标受众（可选）',
+                targetAudiencePlaceholder: '例如：忙碌的父母，健身爱好者，技术专业人士',
+                keyFeatures: '要突出的主要特征（可选）',
+                keyFeaturesPlaceholder: '列出您想要强调的最重要特征...',
+                copyToClipboard: '📋 复制到剪贴板',
+                choosePlan: '选择计划',
+                currentPlan: '当前计划',
+                descriptionsGenerated: '已生成描述',
+                happyCustomers: '满意客户',
+                timesSaved: '节省时间',
+                descriptionCopied: '描述已复制到剪贴板！',
+                subscriptionSuccess: '成功订阅',
+                usageDataRefreshed: '使用数据已更新',
+                selectLanguage: '语言',
+                
+                // Login Modal
+                loginTitle: '🔑 登录您的账户',
+                emailAddress: '邮箱地址',
+                emailPlaceholder: 'your@email.com',
+                password: '密码',
+                passwordPlaceholder: '您的密码',
+                loginButton: '登录',
+                cancel: '取消',
+                signupPrompt: '没有账户？点击注册',
+                
+                // Signup Modal
+                signupTitle: '✨ 创建您的账户',
+                createPassword: '创建密码',
+                createPasswordPlaceholder: '创建一个安全密码',
+                confirmPassword: '确认密码',
+                confirmPasswordPlaceholder: '确认您的密码',
+                createAccount: '创建账户',
+                loginPrompt: '已有账户？点击登录',
+                termsAgreement: '我同意',
+                termsOfService: '服务条款',
+                and: '和',
+                privacyPolicy: '隐私政策',
+                dataProcessingNotice: '我理解我的数据将根据这些条款进行处理。'
             },
             
             ru: {
@@ -1907,7 +2309,60 @@
                 customBrandTones: 'Индивидуальные брендовые тоны',
                 apiAccess: 'Доступ к API',
                 teamCollaboration: 'Командная работа',
-                dedicatedSupport: 'Персональная поддержка'
+                dedicatedSupport: 'Персональная поддержка',
+                
+                // Missing Keys - Adding for completeness
+                of: 'из',
+                productIdentification: 'Идентификация товара',
+                productURL: '🔗 URL товара',
+                productTitle: '📝 Название товара',
+                productImage: '📷 Изображение товара',
+                brandTone: '🎯 Тон бренда',
+                brandToneOption1: 'Профессиональный',
+                brandToneOption2: 'Дружелюбный',
+                brandToneOption3: 'Роскошный',
+                brandToneOption4: 'Игривый',
+                brandToneOption5: 'Минималистичный',
+                brandToneOption6: 'Болдовый',
+                brandToneOption7: 'Винтажный',
+                brandToneOption8: 'Экологичный',
+                productCategory: '🏷️ Категория товара',
+                targetAudience: '👥 Целевая аудитория',
+                keyFeatures: '⭐ Ключевые особенности',
+                additionalInfo: 'ℹ️ Дополнительная информация',
+                generate: 'Генерировать',
+                generating: 'Генерирую...',
+                result: 'Результат',
+                copy: 'Копировать',
+                copied: 'Скопировано!',
+                refresh: 'Обновить',
+                
+                // Login/Signup Modal Translations
+                loginTitle: 'Войти в аккаунт',
+                signupTitle: 'Создать аккаунт',
+                emailLabel: 'Email',
+                emailPlaceholder: 'Введите ваш email',
+                passwordLabel: 'Пароль',
+                passwordPlaceholder: 'Введите пароль',
+                confirmPasswordLabel: 'Подтвердите пароль',
+                confirmPasswordPlaceholder: 'Подтвердите ваш пароль',
+                loginButton: 'Войти',
+                signupButton: 'Создать аккаунт',
+                forgotPassword: 'Забыли пароль?',
+                noAccount: 'Нет аккаунта?',
+                hasAccount: 'Уже есть аккаунт?',
+                signupLink: 'Зарегистрируйтесь',
+                loginLink: 'Войдите',
+                loggingIn: 'Входим...',
+                signingUp: 'Создаем...',
+                loginSuccess: 'Вход выполнен успешно!',
+                signupSuccess: 'Аккаунт создан успешно!',
+                loginError: 'Ошибка входа. Проверьте данные.',
+                signupError: 'Ошибка создания аккаунта.',
+                passwordMismatch: 'Пароли не совпадают',
+                invalidEmail: 'Неверный email',
+                requiredField: 'Обязательное поле',
+                dataProcessingNotice: 'Я понимаю, что мои данные будут обрабатываться согласно этим условиям.'
             },
             
             ar: {
@@ -1970,7 +2425,60 @@
                 customBrandTones: 'نبرات علامة تجارية مخصصة',
                 apiAccess: 'دخول API',
                 teamCollaboration: 'تعاون الفريق',
-                dedicatedSupport: 'دعم مخصص'
+                dedicatedSupport: 'دعم مخصص',
+                
+                // Missing Keys - Adding for completeness
+                of: 'من',
+                productIdentification: 'تحديد المنتج',
+                productURL: '🔗 رابط المنتج',
+                productTitle: '📝 عنوان المنتج',
+                productImage: '📷 صورة المنتج',
+                brandTone: '🎯 نبرة العلامة التجارية',
+                brandToneOption1: 'مهني',
+                brandToneOption2: 'ودود',
+                brandToneOption3: 'فاخر',
+                brandToneOption4: 'مرح',
+                brandToneOption5: 'بسيط',
+                brandToneOption6: 'جريء',
+                brandToneOption7: 'عتيق',
+                brandToneOption8: 'صديق للبيئة',
+                productCategory: '🏷️ فئة المنتج',
+                targetAudience: '👥 الجمهور المستهدف',
+                keyFeatures: '⭐ الميزات الرئيسية',
+                additionalInfo: 'ℹ️ معلومات إضافية',
+                generate: 'توليد',
+                generating: 'جاري التوليد...',
+                result: 'النتيجة',
+                copy: 'نسخ',
+                copied: 'تم النسخ!',
+                refresh: 'تحديث',
+                
+                // Login/Signup Modal Translations
+                loginTitle: 'تسجيل الدخول',
+                signupTitle: 'إنشاء حساب',
+                emailLabel: 'البريد الإلكتروني',
+                emailPlaceholder: 'أدخل بريدك الإلكتروني',
+                passwordLabel: 'كلمة المرور',
+                passwordPlaceholder: 'أدخل كلمة المرور',
+                confirmPasswordLabel: 'تأكيد كلمة المرور',
+                confirmPasswordPlaceholder: 'أكد كلمة المرور',
+                loginButton: 'تسجيل الدخول',
+                signupButton: 'إنشاء حساب',
+                forgotPassword: 'نسيت كلمة المرور؟',
+                noAccount: 'لا يوجد حساب؟',
+                hasAccount: 'لديك حساب بالفعل؟',
+                signupLink: 'سجل هنا',
+                loginLink: 'سجل دخولك',
+                loggingIn: 'جاري تسجيل الدخول...',
+                signingUp: 'جاري إنشاء الحساب...',
+                loginSuccess: 'تم تسجيل الدخول بنجاح!',
+                signupSuccess: 'تم إنشاء الحساب بنجاح!',
+                loginError: 'خطأ في تسجيل الدخول. تحقق من البيانات.',
+                signupError: 'خطأ في إنشاء الحساب.',
+                passwordMismatch: 'كلمات المرور غير متطابقة',
+                invalidEmail: 'بريد إلكتروني غير صحيح',
+                requiredField: 'حقل مطلوب',
+                dataProcessingNotice: 'أفهم أن بياناتي ستتم معالجتها وفقاً لهذه الشروط.'
             },
             
             hi: {
@@ -2033,7 +2541,60 @@
                 customBrandTones: 'कस्टम ब्रांड टोन',
                 apiAccess: 'API एक्सेस',
                 teamCollaboration: 'टीम सहयोग',
-                dedicatedSupport: 'समर्पित समर्थन'
+                dedicatedSupport: 'समर्पित समर्थन',
+                
+                // Missing Keys - Adding for completeness
+                of: 'का',
+                productIdentification: 'उत्पाद पहचान',
+                productURL: '🔗 उत्पाद URL',
+                productTitle: '📝 उत्पाद शीर्षक',
+                productImage: '📷 उत्पाद छवि',
+                brandTone: '🎯 ब्रांड टोन',
+                brandToneOption1: 'व्यावसायिक',
+                brandToneOption2: 'मैत्रीपूर्ण',
+                brandToneOption3: 'लक्जरी',
+                brandToneOption4: 'खुशमिजाज',
+                brandToneOption5: 'न्यूनतम',
+                brandToneOption6: 'साहसिक',
+                brandToneOption7: 'विंटेज',
+                brandToneOption8: 'पर्यावरण-अनुकूल',
+                productCategory: '🏷️ उत्पाद श्रेणी',
+                targetAudience: '👥 लक्षित दर्शक',
+                keyFeatures: '⭐ मुख्य विशेषताएं',
+                additionalInfo: 'ℹ️ अतिरिक्त जानकारी',
+                generate: 'उत्पन्न करें',
+                generating: 'उत्पन्न कर रहे हैं...',
+                result: 'परिणाम',
+                copy: 'कॉपी करें',
+                copied: 'कॉपी हो गया!',
+                refresh: 'रीफ्रेश करें',
+                
+                // Login/Signup Modal Translations
+                loginTitle: 'खाते में लॉग इन करें',
+                signupTitle: 'खाता बनाएं',
+                emailLabel: 'ईमेल',
+                emailPlaceholder: 'अपना ईमेल दर्ज करें',
+                passwordLabel: 'पासवर्ड',
+                passwordPlaceholder: 'पासवर्ड दर्ज करें',
+                confirmPasswordLabel: 'पासवर्ड की पुष्टि करें',
+                confirmPasswordPlaceholder: 'अपने पासवर्ड की पुष्टि करें',
+                loginButton: 'लॉग इन करें',
+                signupButton: 'खाता बनाएं',
+                forgotPassword: 'पासवर्ड भूल गए?',
+                noAccount: 'कोई खाता नहीं है?',
+                hasAccount: 'पहले से खाता है?',
+                signupLink: 'साइन अप करें',
+                loginLink: 'लॉग इन करें',
+                loggingIn: 'लॉग इन हो रहे हैं...',
+                signingUp: 'साइन अप हो रहे हैं...',
+                loginSuccess: 'सफलतापूर्वक लॉग इन हो गए!',
+                signupSuccess: 'खाता सफलतापूर्वक बनाया गया!',
+                loginError: 'लॉग इन त्रुटि। अपनी जानकारी जांचें।',
+                signupError: 'साइन अप त्रुटि।',
+                passwordMismatch: 'पासवर्ड मेल नहीं खाते',
+                invalidEmail: 'अमान्य ईमेल',
+                requiredField: 'आवश्यक फ़ील्ड',
+                dataProcessingNotice: 'मैं समझता हूं कि मेरा डेटा इन शर्तों के अनुसार प्रसंस्कृत किया जाएगा।'
             },
             
             ko: {
@@ -2096,13 +2657,66 @@
                 customBrandTones: '사용자 정의 브랜드 톤',
                 apiAccess: 'API 액세스',
                 teamCollaboration: '팀 협업',
-                dedicatedSupport: '전용 지원'
+                dedicatedSupport: '전용 지원',
+                
+                // Missing Keys - Adding for completeness
+                of: '의',
+                productIdentification: '제품 식별',
+                productURL: '🔗 제품 URL',
+                productTitle: '📝 제품 제목',
+                productImage: '📷 제품 이미지',
+                brandTone: '🎯 브랜드 톤',
+                brandToneOption1: '전문적인',
+                brandToneOption2: '친근한',
+                brandToneOption3: '럭셔리',
+                brandToneOption4: '재미있는',
+                brandToneOption5: '미니멀',
+                brandToneOption6: '대담한',
+                brandToneOption7: '빈티지',
+                brandToneOption8: '친환경적인',
+                productCategory: '🏷️ 제품 카테고리',
+                targetAudience: '👥 타겟 고객',
+                keyFeatures: '⭐ 주요 기능',
+                additionalInfo: 'ℹ️ 추가 정보',
+                generate: '생성',
+                generating: '생성 중...',
+                result: '결과',
+                copy: '복사',
+                copied: '복사됨!',
+                refresh: '새로고침',
+                
+                // Login/Signup Modal Translations
+                loginTitle: '계정 로그인',
+                signupTitle: '계정 생성',
+                emailLabel: '이메일',
+                emailPlaceholder: '이메일을 입력하세요',
+                passwordLabel: '비밀번호',
+                passwordPlaceholder: '비밀번호를 입력하세요',
+                confirmPasswordLabel: '비밀번호 확인',
+                confirmPasswordPlaceholder: '비밀번호를 확인하세요',
+                loginButton: '로그인',
+                signupButton: '계정 생성',
+                forgotPassword: '비밀번호를 잊으셨나요?',
+                noAccount: '계정이 없으신가요?',
+                hasAccount: '이미 계정이 있으신가요?',
+                signupLink: '가입하기',
+                loginLink: '로그인하기',
+                loggingIn: '로그인 중...',
+                signingUp: '가입 중...',
+                loginSuccess: '성공적으로 로그인되었습니다!',
+                signupSuccess: '계정이 성공적으로 생성되었습니다!',
+                loginError: '로그인 오류. 정보를 확인하세요.',
+                signupError: '계정 생성 오류.',
+                passwordMismatch: '비밀번호가 일치하지 않습니다',
+                invalidEmail: '유효하지 않은 이메일',
+                requiredField: '필수 필드',
+                dataProcessingNotice: '내 데이터가 이 약관에 따라 처리될 것임을 이해합니다.'
             }
         };
 
         // User state object
         let userState = {
-            subscriptionType: 'free',
+            subscriptionType: 'visitor', // Anonymous users are 'visitor', not 'free'
             monthlyUsage: 0,
             maxUsage: 3,
             isSubscribed: false,
@@ -2327,15 +2941,121 @@
                     saveUserState();
                 }
 
-                // Sync with server to get correct usage and limits
-                await syncFromServer();
+                // For anonymous users, use simple cookie tracking
+                if (!currentUser) {
+                    loadAnonymousUsageFromCookie();
+                } else {
+                    // Sync with server to get correct usage and limits
+                    await syncFromServer();
+                }
             } catch (error) {
                 console.error('Error loading user state:', error);
             }
         }
 
+        function loadAnonymousUsageFromCookie() {
+            // Load usage from multiple sources - take the highest to prevent reset abuse
+            const cookieUsage1 = getCookie('au'); // Main cookie
+            const cookieUsage2 = getCookie('_usage'); // Backup cookie  
+            const localUsage = localStorage.getItem('anonymousUsage');
+            
+            let maxUsage = 0;
+            if (cookieUsage1) maxUsage = Math.max(maxUsage, parseInt(cookieUsage1));
+            if (cookieUsage2) maxUsage = Math.max(maxUsage, parseInt(cookieUsage2));
+            if (localUsage) maxUsage = Math.max(maxUsage, parseInt(localUsage));
+            
+            userState.monthlyUsage = maxUsage;
+            console.log(`Anonymous usage loaded: ${maxUsage}/3 from multiple sources`);
+        }
+
+        async function generateBrowserFingerprint() {
+            // Create a unique browser fingerprint
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('Browser fingerprint', 2, 2);
+            
+            const fingerprint = [
+                navigator.userAgent,
+                navigator.language,
+                screen.width + 'x' + screen.height,
+                new Date().getTimezoneOffset(),
+                canvas.toDataURL(),
+                navigator.hardwareConcurrency || 0,
+                navigator.deviceMemory || 0
+            ].join('|');
+            
+            // Hash the fingerprint for privacy
+            return await hashString(fingerprint);
+        }
+
+        async function hashString(str) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days = 30) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/`;
+        }
+
+        async function getAnonymousUsageFromServer(fingerprint) {
+            try {
+                const response = await fetch('/.netlify/functions/anonymous-tracking', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'get_usage',
+                        fingerprint: fingerprint
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.usage || 0;
+                }
+            } catch (error) {
+                console.warn('Could not get server usage:', error);
+            }
+            return 0;
+        }
+
+        async function updateAnonymousUsageToServer(fingerprint, usage) {
+            try {
+                await fetch('/.netlify/functions/anonymous-tracking', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'update_usage',
+                        fingerprint: fingerprint,
+                        usage: usage
+                    })
+                });
+            } catch (error) {
+                console.warn('Could not update server usage:', error);
+            }
+        }
+
         async function syncFromServer() {
             try {
+                // For anonymous users, don't sync with server - keep local settings
+                if (!currentUser) {
+                    console.log('Anonymous user - skipping server sync, using local tracking');
+                    return;
+                }
+                
                 // Create userId if it doesn't exist
                 if (!userState.userId) {
                     userState.userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -2777,11 +3497,52 @@
         }
 
         async function generateDescription() {
-            // Check usage limits
-            if (!userState.isSubscribed && userState.monthlyUsage >= userState.maxUsage) {
+            // Check usage limits and show upgrade warnings
+            const remainingGenerations = userState.maxUsage - userState.monthlyUsage;
+            const planName = userState.subscriptionType || 'free';
+            
+            // Hard limit check - different logic for anonymous vs authenticated users
+            if (!currentUser) {
+                // Anonymous user - use local tracking only
+                if (userState.monthlyUsage >= userState.maxUsage) {
+                    showNotification('You\'ve reached your free limit! Please sign up to continue.', 'error');
+                    document.querySelector('.pricing-section').scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
+            } else if (!userState.isSubscribed && userState.monthlyUsage >= userState.maxUsage) {
+                // Authenticated user - use standard check
                 showNotification('You\'ve reached your free limit! Please upgrade to continue.', 'error');
                 document.querySelector('.pricing-section').scrollIntoView({ behavior: 'smooth' });
                 return;
+            }
+            
+            // Upgrade warning thresholds - ONLY for paid plan users approaching limits
+            let shouldShowWarning = false;
+            if (!currentUser) {
+                // Anonymous visitors: NO upgrade warning popup (they get signup encouragement instead)
+                shouldShowWarning = false;
+            } else if (!userState.isSubscribed) {
+                // Logged-in free users: NO upgrade warning popup (they should upgrade directly)
+                shouldShowWarning = false;
+            } else if (userState.subscriptionType === 'starter') {
+                // Starter plan: warn at 5 generations left
+                shouldShowWarning = remainingGenerations <= 5;
+            } else if (userState.subscriptionType === 'professional') {
+                // Professional plan: warn at 10-20 generations left
+                shouldShowWarning = remainingGenerations <= 20;
+            }
+            
+            // Show warning if threshold reached and not already shown recently
+            const lastWarningShown = localStorage.getItem('lastUpgradeWarning');
+            const now = Date.now();
+            const oneHourMs = 60 * 60 * 1000; // 1 hour in milliseconds
+            
+            if (shouldShowWarning && (!lastWarningShown || (now - parseInt(lastWarningShown)) > oneHourMs)) {
+                localStorage.setItem('lastUpgradeWarning', now.toString());
+                // Show warning after generation completes successfully
+                window.showUpgradeWarningAfterGeneration = () => {
+                    setTimeout(() => showUpgradeWarning(remainingGenerations, planName), 1000);
+                };
             }
             
             // Get form values
@@ -2870,12 +3631,34 @@
                     // Scroll to results
                     results.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     
+                    // Update usage counter after successful generation
+                    await updateUsageCount();
+                    
                     // Show success message with usage info
-                    if (data.usage && data.usage.remaining !== undefined) {
+                    if (!currentUser) {
+                        // For anonymous users, use local tracking
+                        const remaining = Math.max(0, userState.maxUsage - userState.monthlyUsage);
+                        showNotification(`Description generated! ${remaining} generations remaining.`, 'success');
+                        
+                        // Show signup encouragement after first generation
+                        if (userState.monthlyUsage === 1) {
+                            setTimeout(() => showSignupEncouragement(), 2000);
+                        }
+                    } else if (data.usage && data.usage.remaining !== undefined) {
+                        // For logged-in users, use backend data
                         showNotification(`Description generated! ${data.usage.remaining} generations remaining.`, 'success');
                     } else {
                         showNotification('Description generated successfully!', 'success');
                     }
+                    
+                    // Check if upgrade warning should be shown after successful generation
+                    if (window.showUpgradeWarningAfterGeneration) {
+                        window.showUpgradeWarningAfterGeneration();
+                        window.showUpgradeWarningAfterGeneration = null; // Clear it after use
+                    }
+                    
+                    // Clear form fields after successful generation
+                    clearFormFields();
                 } else if (data.error === 'Usage limit exceeded') {
                     // Handle usage limit exceeded
                     showNotification(data.message || 'Usage limit exceeded. Please upgrade your subscription.', 'error');
@@ -2994,8 +3777,56 @@
             });
         }
 
+        function clearFormFields() {
+            // Clear URL input
+            const productUrl = document.getElementById('productUrl');
+            if (productUrl) productUrl.value = '';
+            
+            // Clear barcode input
+            const productBarcode = document.getElementById('productBarcode');
+            if (productBarcode) productBarcode.value = '';
+            
+            // Clear manual entry fields
+            const productName = document.getElementById('productName');
+            if (productName) productName.value = '';
+            
+            const targetAudience = document.getElementById('targetAudience');
+            if (targetAudience) targetAudience.value = '';
+            
+            const keyFeatures = document.getElementById('keyFeatures');
+            if (keyFeatures) keyFeatures.value = '';
+            
+            // Clear product preview if exists
+            const productPreview = document.getElementById('productPreview');
+            if (productPreview) {
+                productPreview.style.display = 'none';
+                productPreview.innerHTML = '';
+            }
+            
+            // Reset current product info
+            currentProductInfo = null;
+            
+            // Clear any error states
+            clearErrors();
+        }
+
         async function updateUsageCount() {
-            // Increment usage on backend
+            // For anonymous users, store in multiple places to prevent easy bypass
+            if (!currentUser) {
+                console.log('Anonymous user - updating usage in multiple storage locations');
+                userState.monthlyUsage++;
+                
+                // Store in multiple places - harder to clear all of them
+                setCookie('au', userState.monthlyUsage, 365); // 1 year cookie
+                setCookie('_usage', userState.monthlyUsage, 365); // Backup cookie
+                localStorage.setItem('anonymousUsage', userState.monthlyUsage);
+                
+                saveUserState();
+                updateUsageDisplay();
+                return;
+            }
+            
+            // For logged-in users, try backend tracking
             try {
                 if (!userState.userId) {
                     return; // No userId yet
@@ -3016,6 +3847,7 @@
                         // Update local state with updated backend data
                         userState.monthlyUsage = data.user.monthlyUsage || 0;
                         saveUserState();
+                        updateUsageDisplay();
                     }
                 }
             } catch (error) {
@@ -3023,6 +3855,7 @@
                 // Fallback to local increment if backend fails
                 userState.monthlyUsage++;
                 saveUserState();
+                updateUsageDisplay();
             }
         }
 
@@ -3070,6 +3903,7 @@
             const usageText = document.getElementById('usageText');
             const usageFill = document.getElementById('usageFill');
             const upgradePrompt = document.getElementById('upgradePrompt');
+            const refreshButton = document.getElementById('refreshButton');
             
             if (usageText) {
                 if (userState.isSubscribed) {
@@ -3090,6 +3924,15 @@
                     upgradePrompt.textContent = `${userState.subscriptionType.charAt(0).toUpperCase() + userState.subscriptionType.slice(1)} Plan Active`;
                 } else {
                     upgradePrompt.textContent = t('upgradePrompt');
+                }
+            }
+            
+            // Hide refresh button for anonymous users - it's not useful for them
+            if (refreshButton) {
+                if (currentUser) {
+                    refreshButton.style.display = 'inline-block';
+                } else {
+                    refreshButton.style.display = 'none';
                 }
             }
         }
@@ -3146,6 +3989,8 @@
             userState.isSubscribed = true;
             userState.subscriptionType = 'professional'; // This would come from your backend
             userState.maxUsage = 200; // This would come from your backend
+            userState.hasUsedFreeTrial = true; // Mark as having used free trial
+            userState.trialUsedAt = new Date().toISOString();
             saveUserState();
             updateUsageDisplay();
             
@@ -3162,12 +4007,12 @@
     </script>
     
     <!-- Support Footer -->
-    <footer style="background: #1e293b; padding: 20px 0; text-align: center; margin-top: 40px; border-top: 1px solid #334155;">
+    <footer style="background: #1e293b; padding: 30px 0; text-align: center; margin-top: 40px; border-top: 1px solid #334155;">
         <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-            <p style="color: #94a3b8; margin-bottom: 10px; font-size: 14px;">Need help or have questions?</p>
             <p style="margin: 0;">
+                <span style="color: #ffffff; font-weight: bold; font-size: 18px;">Need help? / Have feedback? Please contact our support at </span>
                 <a href="mailto:support@soltecsol.com" 
-                   style="color: #60a5fa; text-decoration: none; font-weight: 600; font-size: 16px;">
+                   style="color: #60a5fa; text-decoration: none; font-weight: bold; font-size: 18px;">
                    support@soltecsol.com
                 </a>
             </p>
@@ -3196,13 +4041,13 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
         ">
-            <h2 style="color: #ffffff; text-align: center; margin-bottom: 25px; font-size: 1.5rem;">
+            <h2 style="color: #ffffff; text-align: center; margin-bottom: 25px; font-size: 1.5rem;" data-translate="loginTitle">
                 🔑 Login to Your Account
             </h2>
             
             <form id="loginForm" style="display: flex; flex-direction: column; gap: 20px;">
                 <div>
-                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 5px; display: block;">Email Address</label>
+                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 5px; display: block;" data-translate="emailAddress">Email Address</label>
                     <input type="email" id="loginEmail" required style="
                         width: 100%;
                         padding: 12px;
@@ -3510,6 +4355,202 @@
 
         function showTermsModal() {
             alert('Terms of Service modal - to be implemented with full legal document');
+        }
+
+        // Upgrade Warning Modal Functions
+        function showUpgradeWarning(remainingGenerations, planName) {
+            const modal = document.getElementById('upgradeWarningModal');
+            const messageElement = document.getElementById('warningMessage');
+            
+            // Customize message based on plan
+            let message = '';
+            if (planName === 'visitor' || planName === 'free') {
+                message = `Only ${remainingGenerations} free generation${remainingGenerations === 1 ? '' : 's'} remaining! Sign up to get more.`;
+            } else if (planName === 'starter') {
+                message = `Only ${remainingGenerations} generations remaining on your Starter plan!`;
+            } else if (planName === 'professional') {
+                message = `Only ${remainingGenerations} generations remaining on your Professional plan!`;
+            } else {
+                message = `Only ${remainingGenerations} generations remaining on your current plan!`;
+            }
+            
+            messageElement.textContent = message;
+            
+            // Customize buttons for anonymous users
+            const upgradeOptions = document.getElementById('upgradeOptions');
+            if (planName === 'visitor' || planName === 'free') {
+                upgradeOptions.innerHTML = `
+                    <button onclick="showSignupModal(); closeUpgradeWarning();" style="
+                        background: linear-gradient(135deg, #10b981, #059669);
+                        border: none;
+                        border-radius: 10px;
+                        color: #ffffff;
+                        padding: 15px;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: transform 0.2s ease;
+                        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+                        grid-column: 1 / -1;
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        ✨ Sign Up Free<br>
+                        <span style="font-size: 0.9rem; opacity: 0.9;">Get your free account now</span>
+                    </button>
+                `;
+            } else {
+                // Reset to original upgrade options for paid users
+                upgradeOptions.innerHTML = `
+                    <button onclick="handleUpgradeClick('professional')" style="
+                        background: linear-gradient(135deg, #3b82f6, #2563eb);
+                        border: none;
+                        border-radius: 10px;
+                        color: #ffffff;
+                        padding: 15px;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: transform 0.2s ease;
+                        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        🚀 Professional<br>
+                        <span style="font-size: 0.9rem; opacity: 0.9;">200/month - $49.99</span>
+                    </button>
+                    
+                    <button onclick="handleUpgradeClick('enterprise')" style="
+                        background: linear-gradient(135deg, #10b981, #059669);
+                        border: none;
+                        border-radius: 10px;
+                        color: #ffffff;
+                        padding: 15px;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: transform 0.2s ease;
+                        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        💎 Enterprise<br>
+                        <span style="font-size: 0.9rem; opacity: 0.9;">Unlimited - $99.99</span>
+                    </button>
+                `;
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeUpgradeWarning() {
+            document.getElementById('upgradeWarningModal').style.display = 'none';
+        }
+
+        function handleUpgradeClick(planType) {
+            closeUpgradeWarning();
+            // Scroll to pricing section
+            document.querySelector('.pricing-section').scrollIntoView({ behavior: 'smooth' });
+            // Highlight the selected plan (optional visual feedback)
+            setTimeout(() => {
+                const planButton = document.querySelector(`button[data-plan="${planType}"]`);
+                if (planButton) {
+                    planButton.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        planButton.style.transform = 'scale(1)';
+                    }, 300);
+                }
+            }, 500);
+        }
+
+        function continueWithCurrentPlan() {
+            closeUpgradeWarning();
+        }
+
+        // Signup encouragement for anonymous users
+        function showSignupEncouragement() {
+            // Create and show a friendly signup prompt
+            const modal = document.createElement('div');
+            modal.id = 'signupEncouragementModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(5px);
+                z-index: 10000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1d4ed8 100%);
+                    border-radius: 15px;
+                    padding: 30px;
+                    width: 480px;
+                    max-width: 90%;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+                    border: 2px solid rgba(255, 255, 255, 0.2);
+                    text-align: center;
+                    color: #ffffff;
+                ">
+                    <h2 style="color: #ffffff; margin-bottom: 15px; font-size: 1.5rem; font-weight: 700;">
+                        🎉 Great Description!
+                    </h2>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 25px;">
+                        <p style="font-size: 1.1rem; margin-bottom: 10px; font-weight: 500;">
+                            You just experienced the power of AI-generated product descriptions!
+                        </p>
+                        <p style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.9);">
+                            Sign up for free to save your progress and get 2 more generations to try different styles.
+                        </p>
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="showSignupModal(); closeSignupEncouragement();" style="
+                            background: linear-gradient(135deg, #10b981, #059669);
+                            border: none;
+                            border-radius: 10px;
+                            color: #ffffff;
+                            padding: 12px 24px;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: transform 0.2s ease;
+                            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+                        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            ✨ Sign Up Free
+                        </button>
+                        
+                        <button onclick="closeSignupEncouragement()" style="
+                            background: rgba(255, 255, 255, 0.2);
+                            border: 1px solid rgba(255, 255, 255, 0.3);
+                            border-radius: 10px;
+                            color: #ffffff;
+                            padding: 12px 24px;
+                            font-size: 1rem;
+                            cursor: pointer;
+                        ">
+                            Continue as Visitor
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Close on outside click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeSignupEncouragement();
+                }
+            });
+            
+            document.body.appendChild(modal);
+        }
+
+        function closeSignupEncouragement() {
+            const modal = document.getElementById('signupEncouragementModal');
+            if (modal) {
+                modal.remove();
+            }
         }
 
         function showPrivacyModal() {
