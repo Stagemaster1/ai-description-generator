@@ -1,311 +1,237 @@
-// User Authentication API
-// Handles login, signup, and password verification
+const { initializeFirebase, getAuth, getFirestore } = require('../../firebase-config');
 
-const { getFirestore } = require('../../firebase-config');
-const crypto = require('crypto');
+// Simple in-memory rate limiting (use Redis in production)
+const rateLimitMap = new Map();
+
+function isRateLimited(ip) {
+    const now = Date.now();
+    const windowMs = 15 * 60 * 1000; // 15 minutes
+    const maxAttempts = 5;
+    
+    const attempts = rateLimitMap.get(ip) || [];
+    const recentAttempts = attempts.filter(time => now - time < windowMs);
+    
+    if (recentAttempts.length >= maxAttempts) {
+        return true;
+    }
+    
+    recentAttempts.push(now);
+    rateLimitMap.set(ip, recentAttempts);
+    return false;
+}
 
 exports.handler = async (event, context) => {
-  // Enable CORS
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS'
-  };
-
-  // Handle preflight requests
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers,
-      body: ''
+    const headers = {
+        'Access-Control-Allow-Origin': 'https://ai-generator.soltecsol.com',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Credentials': 'true'
     };
-  }
 
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
-  }
-
-  try {
-    const { action, email, password } = JSON.parse(event.body || '{}');
-
-    if (!action || !email) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ 
-          success: false,
-          message: 'Missing required fields' 
-        })
-      };
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
     }
 
-    // Initialize Firebase
-    const db = getFirestore();
-
-    switch (action) {
-      case 'login':
-        return await handleLogin(db, email, password, headers);
-      
-      case 'signup':
-        return await handleSignup(db, email, password, headers);
-      
-      default:
+    // Check rate limit
+    const clientIp = event.headers['x-forwarded-for'] || event.headers['x-real-ip'] || 'unknown';
+    if (isRateLimited(clientIp)) {
         return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ 
-            success: false,
-            message: 'Invalid action' 
-          })
+            statusCode: 429,
+            headers,
+            body: JSON.stringify({
+                success: false,
+                message: 'Too many attempts. Please try again later.'
+            })
         };
     }
-  } catch (error) {
-    console.error('User auth API error:', error);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ 
-        success: false,
-        message: 'Internal server error' 
-      })
-    };
-  }
+
+    try {
+        const { action, email, password } = JSON.parse(event.body || '{}');
+
+        // Validate and sanitize inputs
+        if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({
+                    success: false,
+                    message: 'Invalid request data.'
+                })
+            };
+        }
+
+        // Sanitize email
+        const sanitizedEmail = email.trim().toLowerCase();
+        if (sanitizedEmail.length > 254) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({
+                    success: false,
+                    message: 'Invalid email address.'
+                })
+            };
+        }
+
+        // CRITICAL: Email validation on backend
+        if (!isValidEmail(sanitizedEmail)) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({
+                    success: false,
+                    message: 'Please enter a valid email address.'
+                })
+            };
+        }
+
+        initializeFirebase();
+        const auth = getAuth();
+        const db = getFirestore();
+
+        switch (action) {
+            case 'signup':
+                return await handleSignup(auth, db, sanitizedEmail, password, headers);
+            case 'login':
+                return await handleLogin(auth, db, sanitizedEmail, password, headers);
+            default:
+                return {
+                    statusCode: 400,
+                    headers,
+                    body: JSON.stringify({ success: false, message: 'Invalid action' })
+                };
+        }
+    } catch (error) {
+        console.error('Auth Error:', error);
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({
+                success: false,
+                message: 'Authentication failed. Please try again.'
+            })
+        };
+    }
 };
 
-// Handle user login
-async function handleLogin(db, email, password, headers) {
-  if (!password) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ 
-        success: false,
-        message: 'Password is required' 
-      })
-    };
-  }
-
-  try {
-    // Find user by email
-    const usersSnapshot = await db.collection('users').where('email', '==', email.toLowerCase()).get();
+function isValidEmail(email) {
+    // Comprehensive email validation
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
     
-    if (usersSnapshot.empty) {
-      return {
-        statusCode: 401,
-        headers,
-        body: JSON.stringify({ 
-          success: false,
-          message: 'Invalid email or password' 
-        })
-      };
+    if (!emailRegex.test(email)) {
+        return false;
     }
-
-    const userDoc = usersSnapshot.docs[0];
-    const userData = userDoc.data();
-
-    // Check if user has a password (existing subscribers might not have one)
-    if (!userData.password) {
-      return {
-        statusCode: 401,
-        headers,
-        body: JSON.stringify({ 
-          success: false,
-          message: 'Please use Sign Up to set a password for your account' 
-        })
-      };
+    
+    // Additional domain validation
+    const emailParts = email.split('@');
+    if (emailParts.length !== 2 || emailParts[1].indexOf('.') === -1) {
+        return false;
     }
-
-    // Verify password
-    const passwordHash = hashPassword(password);
-    if (userData.password !== passwordHash) {
-      return {
-        statusCode: 401,
-        headers,
-        body: JSON.stringify({ 
-          success: false,
-          message: 'Invalid email or password' 
-        })
-      };
-    }
-
-    // Update last login
-    await userDoc.ref.update({
-      lastLogin: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-
-    // Return user data (without password)
-    const userResponse = {
-      id: userDoc.id,
-      email: userData.email,
-      subscriptionType: userData.subscriptionType || 'free',
-      maxUsage: userData.maxUsage || 5,
-      monthlyUsage: userData.monthlyUsage || 0,
-      isSubscribed: userData.isSubscribed || false,
-      manuallyUnlocked: userData.manuallyUnlocked || false
-    };
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ 
-        success: true,
-        message: 'Login successful',
-        user: userResponse 
-      })
-    };
-
-  } catch (error) {
-    console.error('Login error:', error);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ 
-        success: false,
-        message: 'Login failed' 
-      })
-    };
-  }
+    
+    return true;
 }
 
-// Handle user signup
-async function handleSignup(db, email, password, headers) {
-  if (!password) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ 
-        success: false,
-        message: 'Password is required' 
-      })
-    };
-  }
+async function handleSignup(auth, db, email, password, headers) {
+    try {
+        // Enforce password strength
+        if (password.length < 8) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({
+                    success: false,
+                    message: 'Password must be at least 8 characters long.'
+                })
+            };
+        }
 
-  if (password.length < 6) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ 
-        success: false,
-        message: 'Password must be at least 6 characters long' 
-      })
-    };
-  }
-
-  try {
-    // Check if user already exists
-    const existingUsersSnapshot = await db.collection('users').where('email', '==', email.toLowerCase()).get();
-    
-    if (!existingUsersSnapshot.empty) {
-      const existingUserData = existingUsersSnapshot.docs[0].data();
-      
-      // If user exists but has no password (existing subscriber), allow them to set password
-      if (!existingUserData.password) {
-        const userDoc = existingUsersSnapshot.docs[0];
-        const passwordHash = hashPassword(password);
-        
-        await userDoc.ref.update({
-          password: passwordHash,
-          lastLogin: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          passwordSetAt: new Date().toISOString()
+        // Create Firebase user
+        const userRecord = await auth.createUser({
+            email: email,
+            password: password
         });
 
-        // Return updated user data
-        const updatedUserData = await userDoc.ref.get();
-        const userData = updatedUserData.data();
+        // Create user document in Firestore
+        await db.collection('users').doc(userRecord.uid).set({
+            email: email,
+            createdAt: new Date(),
+            monthlyUsage: 0,
+            maxUsage: 5,
+            subscriptionType: 'free',
+            isSubscribed: false,
+            lastActive: new Date()
+        });
+
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+                success: true,
+                user: {
+                    uid: userRecord.uid,
+                    email: userRecord.email
+                },
+                message: 'Account created successfully!'
+            })
+        };
+    } catch (error) {
+        // Generic error messages to prevent information disclosure
+        let errorMessage = 'Account creation failed. Please try again.';
         
-        const userResponse = {
-          id: userDoc.id,
-          email: userData.email,
-          subscriptionType: userData.subscriptionType || 'free',
-          maxUsage: userData.maxUsage || 5,
-          monthlyUsage: userData.monthlyUsage || 0,
-          isSubscribed: userData.isSubscribed || false,
-          manuallyUnlocked: userData.manuallyUnlocked || false
-        };
+        if (error.code === 'auth/email-already-exists') {
+            errorMessage = 'An account with this email already exists.';
+        } else if (error.code === 'auth/weak-password') {
+            errorMessage = 'Password must be at least 8 characters long.';
+        }
 
         return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({ 
-            success: true,
-            message: 'Password set successfully for existing account',
-            user: userResponse 
-          })
+            statusCode: 400,
+            headers,
+            body: JSON.stringify({
+                success: false,
+                message: errorMessage
+            })
         };
-      } else {
-        return {
-          statusCode: 409,
-          headers,
-          body: JSON.stringify({ 
-            success: false,
-            message: 'Account already exists. Please login instead.' 
-          })
-        };
-      }
     }
-
-    // Create new user
-    const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-    const passwordHash = hashPassword(password);
-    
-    const newUser = {
-      id: userId,
-      email: email.toLowerCase(),
-      password: passwordHash,
-      subscriptionType: 'free',
-      maxUsage: 5,
-      monthlyUsage: 0,
-      isSubscribed: false,
-      manuallyUnlocked: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      lastLogin: new Date().toISOString(),
-      signupMethod: 'email_password'
-    };
-
-    await db.collection('users').doc(userId).set(newUser);
-
-    // Return user data (without password)
-    const userResponse = {
-      id: userId,
-      email: newUser.email,
-      subscriptionType: newUser.subscriptionType,
-      maxUsage: newUser.maxUsage,
-      monthlyUsage: newUser.monthlyUsage,
-      isSubscribed: newUser.isSubscribed,
-      manuallyUnlocked: newUser.manuallyUnlocked
-    };
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ 
-        success: true,
-        message: 'Account created successfully',
-        user: userResponse 
-      })
-    };
-
-  } catch (error) {
-    console.error('Signup error:', error);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ 
-        success: false,
-        message: 'Account creation failed' 
-      })
-    };
-  }
 }
 
-// Simple password hashing (for production, use bcrypt or similar)
-function hashPassword(password) {
-  return crypto.createHash('sha256').update(password + 'soltecsol_salt_2024').digest('hex');
+async function handleLogin(auth, db, email, password, headers) {
+    try {
+        // CRITICAL: Use Firebase Admin SDK to verify user exists
+        const userRecord = await auth.getUserByEmail(email);
+        
+        // Create custom token for verified user
+        const customToken = await auth.createCustomToken(userRecord.uid);
+        
+        // Get user data from Firestore
+        const userDoc = await db.collection('users').doc(userRecord.uid).get();
+        const userData = userDoc.data();
+        
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+                success: true,
+                customToken: customToken,
+                user: {
+                    uid: userRecord.uid,
+                    email: userData.email,
+                    subscriptionType: userData.subscriptionType || 'free',
+                    monthlyUsage: userData.monthlyUsage || 0,
+                    maxUsage: userData.maxUsage || 5
+                },
+                message: 'Login successful!'
+            })
+        };
+    } catch (error) {
+        // Generic error message to prevent user enumeration
+        return {
+            statusCode: 401,
+            headers,
+            body: JSON.stringify({
+                success: false,
+                message: 'Invalid credentials.'
+            })
+        };
+    }
 }
