@@ -4575,6 +4575,13 @@
                 return;
             }
             
+            // Email validation for login too
+            const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            if (!emailRegex.test(email)) {
+                showError('loginError', 'Please enter a valid email address.');
+                return;
+            }
+            
             try {
                 const response = await fetch('/.netlify/functions/user-auth', {
                     method: 'POST',
@@ -4614,6 +4621,20 @@
             
             if (!email || !password || !confirmPassword) {
                 showError('signupError', 'Please fill in all fields.');
+                return;
+            }
+            
+            // Comprehensive email validation
+            const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            if (!emailRegex.test(email)) {
+                showError('signupError', 'Please enter a valid email address.');
+                return;
+            }
+            
+            // Additional domain validation
+            const emailParts = email.split('@');
+            if (emailParts.length !== 2 || emailParts[1].indexOf('.') === -1) {
+                showError('signupError', 'Please enter a valid email address with a proper domain.');
                 return;
             }
             
