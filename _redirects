@@ -1,6 +1,7 @@
 # SECURITY: Block admin panel access
 /admin.html /index.html 301
 /admin      /index.html 301
+/secure-admin-k9mx7q.html /secure-admin-k9mx7q.html 200
 
 # Stripe success/cancel redirects
 /success    /success.html   200
