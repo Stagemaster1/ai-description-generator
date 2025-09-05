@@ -1,39 +1,15 @@
-// Firebase User Management - Secure replacement for user.js
+// Firebase User Management - BACKUP BEFORE SECURITY FIXES
+// Created: 2025-09-05 15:45
 // Handles all user operations with Firebase Firestore
 
 const { getFirestore } = require('../../firebase-config');
 
 exports.handler = async (event, context) => {
-    // Secure CORS configuration with proper origin validation
-    const allowedOrigins = [
-        'https://www.soltecsol.com',
-        'https://ai-generator.soltecsol.com'
-    ];
-
-    const origin = event.headers.origin || event.headers.Origin || '';
-
-    // Validate origin - reject requests from unauthorized origins
-    if (!allowedOrigins.includes(origin)) {
-        return {
-            statusCode: 403,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-                error: 'Origin not allowed',
-                message: 'CORS policy violation' 
-            })
-        };
-    }
-
+    // Enable CORS
     const headers = {
-        'Access-Control-Allow-Origin': origin,
+        'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-        'Access-Control-Allow-Credentials': 'true',
-        'X-Content-Type-Options': 'nosniff',
-        'X-Frame-Options': 'DENY',
-        'X-XSS-Protection': '1; mode=block'
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS'
     };
 
     // Handle preflight requests
