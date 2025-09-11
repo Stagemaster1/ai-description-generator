@@ -1,0 +1,80 @@
+// SESSION 4D6: Secured Notion Token Test - Admin only access
+// Tests Notion API token functionality with Firebase Auth and admin role validation
+
+const firebaseAuthMiddleware = require('./firebase-auth-middleware');
+const securityLogger = require('./security-logger');
+
+exports.handler = async (event, context) => {
+  try {
+    // SESSION 4D6: Apply comprehensive authentication and security
+    const authResult = await firebaseAuthMiddleware.authenticateRequest(event, {
+      requireAuth: true,
+      requireSubscription: false, // Admin endpoints don't need subscription validation
+      requireAdmin: true, // CRITICAL: Admin-only access for Notion testing
+      allowedMethods: ['POST', 'GET'],
+      rateLimit: true
+    });
+
+    if (!authResult.success) {
+      // Log admin access failure for Notion test
+      securityLogger.logAuthFailure({
+        reason: 'notion_test_access_denied',
+        error: 'Authentication failed for Notion test endpoint',
+        clientIP: event.headers['x-forwarded-for'] || 'unknown',
+        endpoint: 'notion-test',
+        method: event.httpMethod
+      });
+      
+      return authResult.response;
+    }
+
+    const { headers, user, clientIP } = authResult;
+
+    // Log admin access to Notion test endpoint
+    securityLogger.logAdminAccess({
+      userId: user.uid,
+      email: user.email,
+      resourceAccessed: 'notion_test_endpoint',
+      clientIP: clientIP,
+      timestamp: new Date().toISOString()
+    });
+
+    // Notion integration has been removed for security reasons
+    securityLogger.logConfigIssue({
+      component: 'notion-test',
+      issue: 'Notion integration disabled',
+      severity: 'INFO',
+      recommendation: 'Notion functionality has been permanently disabled'
+    });
+
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ 
+        error: 'Notion integration has been disabled',
+        message: 'This functionality is no longer available'
+      })
+    };
+    
+    
+  } catch (error) {
+    console.error('Notion test error:', error);
+    
+    // Log server error
+    securityLogger.logOperationFailure({
+      operation: 'notion_token_test',
+      endpoint: 'notion-test',
+      error: error.message,
+      stackTrace: error.stack
+    });
+
+    return {
+      statusCode: 500,
+      headers: firebaseAuthMiddleware.createSecureHeaders(),
+      body: JSON.stringify({
+        error: 'Server error during token test',
+        message: 'Notion test service temporarily unavailable'
+      })
+    };
+  }
+};

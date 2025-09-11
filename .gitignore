@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Package lock file - let Netlify generate during build  
+package-lock.json
+
+# Documentation and backup files
+*.md
+*.txt
+*_backup*
+*.backup*
+.git_backup/
+*SESSION*
+*PROMPT*
+*INSTRUCTION*
+*PLAN*
+*AUDIT*
+User info for Claude/
+messy_backups/
+original_files/
+CleanAppVersion/
+
+# Environment variables
+.env
+.env.local  
+.env.production
+
+# IDE and system files
+.DS_Store
+.vscode/
+.claude/
+
+# Local Netlify folder
+.netlify

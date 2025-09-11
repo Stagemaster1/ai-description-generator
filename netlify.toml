@@ -1,0 +1,73 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  command = "npm install"
+
+[build.environment]
+  NODE_VERSION = "18.17.0"
+  NPM_VERSION = "9.6.7"
+  SECRETS_SCAN_OMIT_PATHS = "package-lock.json"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Success page for Stripe checkout
+[[redirects]]
+  from = "/success"
+  to = "/index.html?success=true"
+  status = 200
+
+# Cancel page for Stripe checkout
+[[redirects]]
+  from = "/cancel"
+  to = "/index.html?cancelled=true"
+  status = 200
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+
+# Cache static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# API headers for CORS - Cross-domain authentication support
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Headers = "Content-Type, Authorization, X-CSRF-Token, PayPal-Request-Id"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Credentials = "true"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# Environment-specific settings
+[context.production.environment]
+  NODE_ENV = "production"
+
+[context.deploy-preview.environment]
+  NODE_ENV = "development"
+
+[context.branch-deploy.environment]
+  NODE_ENV = "development"
+
+# Skip secret scanning for package-lock.json (contains dependency metadata with values matching env vars)
+# SECRETS_SCAN_OMIT_PATHS is configured in the [build.environment] section above

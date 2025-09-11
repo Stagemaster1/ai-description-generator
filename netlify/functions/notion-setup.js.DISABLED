@@ -1,0 +1,84 @@
+// SESSION 4D6: Secured Notion Database Setup - Admin only access
+// One-time Notion database creation with Firebase Auth and admin role validation
+
+const firebaseAuthMiddleware = require('./firebase-auth-middleware');
+const securityLogger = require('./security-logger');
+
+exports.handler = async (event, context) => {
+  try {
+    // SESSION 4D6: Apply comprehensive authentication and security
+    const authResult = await firebaseAuthMiddleware.authenticateRequest(event, {
+      requireAuth: true,
+      requireSubscription: false, // Admin endpoints don't need subscription validation
+      requireAdmin: true, // CRITICAL: Admin-only access for Notion setup
+      allowedMethods: ['POST'],
+      rateLimit: true
+    });
+
+    if (!authResult.success) {
+      // Log admin access failure for Notion setup
+      securityLogger.logAuthFailure({
+        reason: 'notion_setup_access_denied',
+        error: 'Authentication failed for Notion setup endpoint',
+        clientIP: event.headers['x-forwarded-for'] || 'unknown',
+        endpoint: 'notion-setup',
+        method: event.httpMethod
+      });
+      
+      return authResult.response;
+    }
+
+    const { headers, user, clientIP } = authResult;
+
+    // Log admin access to Notion setup endpoint
+    securityLogger.logAdminAccess({
+      userId: user.uid,
+      email: user.email,
+      resourceAccessed: 'notion_setup_endpoint',
+      clientIP: clientIP,
+      timestamp: new Date().toISOString()
+    });
+
+    console.log('[ADMIN] Notion setup initiated by:', user.email);
+    
+    // Notion integration has been removed for security reasons
+    securityLogger.logConfigIssue({
+      component: 'notion-setup',
+      issue: 'Notion integration disabled',
+      severity: 'INFO',
+      recommendation: 'Notion functionality has been permanently disabled'
+    });
+
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ 
+        error: 'Notion integration has been disabled',
+        message: 'This functionality is no longer available'
+      })
+    };
+
+
+  } catch (error) {
+    console.error('Notion setup error:', error);
+    
+    // Log server error
+    securityLogger.logOperationFailure({
+      operation: 'notion_database_creation',
+      endpoint: 'notion-setup',
+      error: error.message,
+      stackTrace: error.stack
+    });
+
+    return {
+      statusCode: 500,
+      headers: firebaseAuthMiddleware.createSecureHeaders(),
+      body: JSON.stringify({ 
+        error: 'Notion setup service temporarily unavailable',
+        message: 'Please try again later'
+      })
+    };
+  }
+};
+
+// Notion database creation function has been removed for security reasons

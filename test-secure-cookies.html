@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Cookie Test - Session 5</title>
+</head>
+<body>
+    <h1>Session 5: Secure Cookie Implementation Test</h1>
+    
+    <div id="test-results">
+        <h2>Test Results</h2>
+        <div id="results"></div>
+    </div>
+
+    <button onclick="testCookies()">Test Secure Cookies</button>
+    <button onclick="clearCookies()">Clear All Cookies</button>
+    <button onclick="showCurrentCookies()">Show Current Cookies</button>
+
+    <script>
+        // Mock Firebase token for testing
+        const mockFirebaseToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRlc3QgVXNlciIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+
+        // Secure Cookie Manager - Exact implementation from Session 5
+        class SecureCookieManager {
+            constructor() {
+                this.isSecureContext = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+            }
+
+            // Generate CSRF token
+            generateCSRFToken() {
+                const array = new Uint8Array(32);
+                crypto.getRandomValues(array);
+                return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+            }
+
+            // Generate session ID
+            generateSessionId() {
+                const array = new Uint8Array(16);
+                crypto.getRandomValues(array);
+                return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+            }
+
+            // Set authentication token cookie with exact specified attributes
+            setAuthTokenCookie(firebaseToken) {
+                if (!firebaseToken) {
+                    console.warn('Cannot set auth token cookie: no token provided');
+                    return;
+                }
+                
+                const cookieValue = `soltecsol_auth_token=${firebaseToken}; Domain=.soltecsol.com; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600`;
+                document.cookie = cookieValue;
+                console.log('Authentication token cookie set');
+            }
+
+            // Set CSRF protection cookie with exact specified attributes
+            setCSRFCookie() {
+                const csrfToken = this.generateCSRFToken();
+                const cookieValue = `soltecsol_csrf_token=${csrfToken}; Domain=.soltecsol.com; Path=/; Secure; SameSite=Strict; Max-Age=3600`;
+                document.cookie = cookieValue;
+                console.log('CSRF protection cookie set');
+                return csrfToken;
+            }
+
+            // Set session management cookie with exact specified attributes
+            setSessionCookie() {
+                const sessionId = this.generateSessionId();
+                const cookieValue = `soltecsol_session_id=${sessionId}; Domain=.soltecsol.com; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`;
+                document.cookie = cookieValue;
+                console.log('Session management cookie set');
+                return sessionId;
+            }
+
+            // Initialize all secure cookies
+            async initializeSecureCookies() {
+                try {
+                    // Use mock token for testing
+                    const firebaseToken = mockFirebaseToken;
+                    
+                    // Set all three required cookies
+                    this.setAuthTokenCookie(firebaseToken);
+                    const csrfToken = this.setCSRFCookie();
+                    const sessionId = this.setSessionCookie();
+                    
+                    console.log('All secure cookies initialized successfully');
+                    return { csrfToken, sessionId };
+                } catch (error) {
+                    console.error('Failed to initialize secure cookies:', error);
+                    throw error;
+                }
+            }
+
+            // Get cookie value by name
+            getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+
+            // Clear all soltecsol cookies
+            clearAllCookies() {
+                const cookieNames = ['soltecsol_auth_token', 'soltecsol_csrf_token', 'soltecsol_session_id'];
+                cookieNames.forEach(name => {
+                    document.cookie = `${name}=; Domain=.soltecsol.com; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+                });
+                console.log('All soltecsol cookies cleared');
+            }
+        }
+
+        // Initialize cookie manager
+        const cookieManager = new SecureCookieManager();
+
+        // Test function
+        async function testCookies() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Testing secure cookies...</p>';
+            
+            try {
+                // Initialize cookies
+                await cookieManager.initializeSecureCookies();
+                
+                // Check if cookies were set
+                const authCookie = cookieManager.getCookie('soltecsol_auth_token');
+                const csrfCookie = cookieManager.getCookie('soltecsol_csrf_token');
+                const sessionCookie = cookieManager.getCookie('soltecsol_session_id');
+                
+                let results = '<h3>Test Results:</h3>';
+                results += `<p>✅ Authentication Token Cookie: ${authCookie ? 'SET' : 'NOT SET'}</p>`;
+                results += `<p>✅ CSRF Protection Cookie: ${csrfCookie ? 'SET' : 'NOT SET'}</p>`;
+                results += `<p>✅ Session Management Cookie: ${sessionCookie ? 'SET' : 'NOT SET'}</p>`;
+                
+                if (authCookie && csrfCookie && sessionCookie) {
+                    results += '<p style="color: green; font-weight: bold;">✅ ALL SECURE COOKIES IMPLEMENTED SUCCESSFULLY</p>';
+                } else {
+                    results += '<p style="color: red; font-weight: bold;">❌ SOME COOKIES FAILED TO SET</p>';
+                }
+                
+                resultsDiv.innerHTML = results;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">❌ Test failed: ${error.message}</p>`;
+                console.error('Test failed:', error);
+            }
+        }
+
+        function clearCookies() {
+            cookieManager.clearAllCookies();
+            document.getElementById('results').innerHTML = '<p>All cookies cleared</p>';
+        }
+
+        function showCurrentCookies() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `<h3>Current Cookies:</h3><pre>${document.cookie || 'No cookies set'}</pre>`;
+        }
+    </script>
+</body>
+</html>

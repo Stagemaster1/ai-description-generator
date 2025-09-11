@@ -1,0 +1,40 @@
+// Direct Notion API test - minimal version
+const fetch = require('node-fetch');
+
+exports.handler = async (event, context) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  };
+
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
+  try {
+    console.log('=== DIRECT NOTION TEST ===');
+    console.log('Notion integration has been disabled');
+    
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ 
+        error: 'Notion integration has been disabled',
+        message: 'This functionality is no longer available'
+      })
+    };
+
+
+  } catch (error) {
+    console.error('Direct test error:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'Server error',
+        message: error.message
+      })
+    };
+  }
+};

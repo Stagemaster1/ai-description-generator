@@ -1,0 +1,9 @@
+# Stripe success/cancel redirects
+/success    /success.html   200
+/cancel     /index.html     200
+
+# API routes to Netlify Functions
+/api/*      /.netlify/functions/:splat   200
+
+# SPA fallback for client-side routing
+/*          /index.html     200
