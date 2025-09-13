@@ -1,7 +1,6 @@
 // SESSION 4D3: Secure Admin interface with Firebase authentication and RBAC
 // Enhanced with proper authentication middleware and admin role validation
 
-const { getFirestore } = require('../../firebase-config');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 const dns = require('dns').promises;
 
