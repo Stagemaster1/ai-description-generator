@@ -1,5 +1,5 @@
  # Subdomain routing
-  https://app.soltecsol.com/*    https://soltecsol.com/app/:splat    200
+  https://app.soltecsol.com/*    /app/:splat    200
   https://genyx.soltecsol.com/*  https://soltecsol.com/genyx/:splat  200
   https://tos.soltecsol.com/*    https://soltecsol.com/tos/:splat    200
   https://dpa.soltecsol.com/*    https://soltecsol.com/dpa/:splat    200
@@ -9,6 +9,8 @@
   https://signup.soltecsol.com/* https://soltecsol.com/signup/:splat 200
   https://login.soltecsol.com/*  https://soltecsol.com/login/:splat  200
   https://helpdesk.soltecsol.com/* https://soltecsol.com/helpdesk/:splat 200
+  https://soltecsol.com/*        /company/:splat    200
+  https://www.soltecsol.com/*    /company/:splat    200
 
 # Stripe success/cancel redirects
 /success    /success.html   200
