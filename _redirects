@@ -1,14 +1,20 @@
-# Domain-specific routing
-https://www.soltecsol.com/*    /company-home.html   200
-https://app.soltecsol.com/success    /success.html   200
-https://app.soltecsol.com/cancel     /index.html     200
+# Subdomain routing
+https://tos.soltecsol.com/*           /tos.html           200!
+https://dpa.soltecsol.com/*           /dpa.html           200!
+https://gdpr.soltecsol.com/*          /gdpr.html          200!
+https://helpdesk.soltecsol.com/*      /helpdesk.html      200!
+https://genyx.soltecsol.com/*         /genyx.html         200!
+https://subscriptions.soltecsol.com/* /subscriptions.html 200!
+https://pricing.soltecsol.com/*       /pricing.html       200!
+https://signup.soltecsol.com/*        /signup.html        200!
+https://login.soltecsol.com/*         /login.html         200!
 
-# Stripe success/cancel redirects
+# App success/cancel pages
 /success    /success.html   200
 /cancel     /index.html     200
 
 # API routes to Netlify Functions
 /api/*      /.netlify/functions/:splat   200
 
-# SPA fallback for client-side routing
+# SPA fallback for app domain
 /*          /index.html     200
