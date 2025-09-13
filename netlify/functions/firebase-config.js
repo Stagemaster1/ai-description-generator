@@ -1,31 +1,24 @@
-// Firebase Configuration - Public endpoint for client-side Firebase initialization
-// This endpoint provides only public configuration values needed for Firebase client setup
+// SESSION 4D3: Firebase Configuration - Admin-only access to Firebase client config
+// Secured with firebase-auth-middleware and admin role validation
+
+const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 
 exports.handler = async (event, context) => {
-    // CORS headers for cross-origin requests
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Content-Type': 'application/json'
-    };
+    // SESSION 4D3: Use firebase-auth-middleware for secure admin authentication
+    const authResult = await firebaseAuthMiddleware.authenticateRequest(event, {
+        requireAuth: true,
+        requireSubscription: false, // Admin endpoints don't need subscription validation
+        requireAdmin: true, // CRITICAL: Require admin role for Firebase config access
+        allowedMethods: ['GET'],
+        rateLimit: true
+    });
 
-    // Handle preflight requests
-    if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers
-        };
+    // Handle authentication failures
+    if (!authResult.success) {
+        return authResult.response;
     }
 
-    // Only allow GET requests
-    if (event.httpMethod !== 'GET') {
-        return {
-            statusCode: 405,
-            headers,
-            body: JSON.stringify({ error: 'Method not allowed' })
-        };
-    }
+    const { headers, user } = authResult;
 
     // Return the Firebase configuration as JSON
     // Only public configuration values - no sensitive credentials exposed
@@ -55,17 +48,18 @@ exports.handler = async (event, context) => {
         };
     }
 
-    // Log public access to Firebase config (no sensitive data)
-    console.log('[PUBLIC ACCESS] Firebase config requested:', {
-        timestamp: new Date().toISOString(),
-        origin: event.headers.origin
+    // SESSION 4D3: Log admin access to Firebase config
+    console.log('[ADMIN ACCESS] Firebase config accessed by:', {
+        adminId: user.uid,
+        adminEmail: user.email,
+        timestamp: new Date().toISOString()
     });
 
     return {
         statusCode: 200,
         headers: {
             ...headers,
-            'Cache-Control': 'public, max-age=300' // Public data can be cached for 5 minutes
+            'Cache-Control': 'private, no-cache' // Admin-only data should not be cached
         },
         body: JSON.stringify(firebaseConfig)
     };
