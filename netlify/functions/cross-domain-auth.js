@@ -2,7 +2,6 @@
 // Handles secure authentication between www.soltecsol.com and ai-generator.soltecsol.com
 // SESSION 4B Implementation
 
-const { getAuth } = require('../../firebase-config');
 const jwt = require('jsonwebtoken');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 
