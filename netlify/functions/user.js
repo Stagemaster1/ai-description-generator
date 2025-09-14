@@ -3,7 +3,7 @@
 
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 const securityLogger = require('./security-logger');
-const { getFirestore } = require('../../firebase-config');
+const { getFirestore } = require('./firebase-config');
 
 // Basic RBAC role definitions
 const USER_ROLES = {
