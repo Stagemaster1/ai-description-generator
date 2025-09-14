@@ -2,7 +2,7 @@
 // Provides consistent authentication validation across all endpoints
 // SESSION 4B Implementation - Server Side
 
-const { getAuth } = require('../../firebase-config');
+const { getAuth } = require('./firebase-config');
 const jwt = require('jsonwebtoken');
 
 // SECURITY: Domain validation for cross-domain requests
