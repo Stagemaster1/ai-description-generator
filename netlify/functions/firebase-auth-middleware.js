@@ -2,7 +2,7 @@
 // Centralized authentication framework for all endpoints
 // SESSION 4D1 Implementation - Authentication Framework
 
-const { getAuth, getFirestore } = require('../../firebase-config');
+const { getAuth, getFirestore } = require('./firebase-config');
 const securityLogger = require('./security-logger');
 
 /**
