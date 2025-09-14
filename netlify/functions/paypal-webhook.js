@@ -274,7 +274,7 @@ async function verifyWebhookWithPayPal(webhookEvent, webhookId, transmissionId, 
         }
         
         const paypalMode = process.env.PAYPAL_MODE || 'sandbox';
-        const baseURL = paypalMode === 'process.env.PAYPAL_MODE' 
+        const baseURL = paypalMode === process.env.PAYPAL_MODE 
             ? 'https://api.paypal.com' 
             : 'https://api.sandbox.paypal.com';
         
@@ -333,7 +333,7 @@ async function getPayPalAccessToken() {
         const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
         const paypalMode = process.env.PAYPAL_MODE || 'sandbox';
         
-        const baseURL = paypalMode === 'process.env.PAYPAL_MODE' 
+        const baseURL = paypalMode === process.env.PAYPAL_MODE 
             ? 'https://api.paypal.com' 
             : 'https://api.sandbox.paypal.com';
         
