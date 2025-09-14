@@ -2,7 +2,7 @@
 // SESSION 4D7 Implementation - Penetration Testing for Security Audit
 // Tests all security implementations from Sessions 4D1-4D6
 
-const { getAuth, getFirestore } = require('../../firebase-config');
+const { getAuth, getFirestore } = require('./firebase-config');
 const securityLogger = require('./security-logger');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 const crossDomainValidator = require('./cross-domain-validator');
