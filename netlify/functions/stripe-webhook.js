@@ -2,7 +2,7 @@
 // SESSION 4D2 Implementation - Revenue Protection
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { getFirestore } = require('../../firebase-config');
+const { getFirestore } = require('./firebase-config');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 const securityLogger = require('./security-logger');
 
