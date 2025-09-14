@@ -1,7 +1,7 @@
 // PayPal Webhook Handler - Secure Firebase Integration
 // Handles PayPal subscription events and stores data securely in Firebase
 
-const { getFirestore } = require('../../firebase-config');
+const { getFirestore } = require('./firebase-config');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
 const securityLogger = require('./security-logger');
