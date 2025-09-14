@@ -1,7 +1,7 @@
 // SESSION 4D3: Firebase Admin Panel - Secure Firebase Auth + RBAC
 // Enhanced with firebase-auth-middleware and proper admin role validation
 
-const { getFirestore } = require('../../firebase-config');
+const { getFirestore } = require('./firebase-config');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 
 exports.handler = async (event, context) => {
