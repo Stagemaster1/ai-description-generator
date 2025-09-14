@@ -1,5 +1,5 @@
 const { OpenAI } = require('openai');
-const { getAuth, getFirestore } = require('../../firebase-config');
+const { getAuth, getFirestore } = require('./firebase-config');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 const securityLogger = require('./security-logger');
 
