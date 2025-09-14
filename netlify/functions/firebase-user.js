@@ -1,7 +1,7 @@
 // Firebase User Management - Secure replacement for user.js
 // Handles all user operations with Firebase Firestore
 
-const { getFirestore } = require('../../firebase-config');
+const { getFirestore } = require('./firebase-config');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 
 // SECURITY FIX: Rate limiting implementation
