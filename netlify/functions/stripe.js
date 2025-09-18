@@ -3,6 +3,7 @@
 
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 const securityLogger = require('./security-logger');
+const distributedRateLimiter = require('./distributed-rate-limiter');
 
 // Stripe configuration - disabled for PayPal focus but kept for future use
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -87,14 +88,23 @@ exports.handler = async (event, context) => {
             operation: `stripe_${action}`
         });
 
-        // SESSION 4D5: Rate limiting specifically for payment operations
-        const paymentRateLimit = checkPaymentRateLimit(clientIP, user.uid);
+        // SESSION 1C-2: Distributed payment rate limiting with fraud detection
+        const paymentRateLimit = await distributedRateLimiter.checkRateLimit(`payment:${clientIP}:${user.uid}`, {
+            maxRequests: 5, // 5 payment requests per 5 minutes
+            windowMs: 5 * 60 * 1000, // 5 minutes
+            type: 'payment',
+            clientIP: clientIP,
+            userId: user.uid,
+            userAgent: event.headers['user-agent'] || 'unknown',
+            endpoint: 'stripe-payment'
+        });
+
         if (!paymentRateLimit.allowed) {
             securityLogger.logRateLimitExceeded({
                 clientIP: clientIP,
                 endpoint: 'stripe-payment',
-                requestCount: paymentRateLimit.requestCount,
-                timeWindow: paymentRateLimit.timeWindow,
+                requestCount: paymentRateLimit.total || 0,
+                timeWindow: 300, // 5 minutes
                 userId: user.uid,
                 operation: action
             });
@@ -103,14 +113,15 @@ exports.handler = async (event, context) => {
                 statusCode: 429,
                 headers: {
                     ...headers,
-                    'Retry-After': '300', // 5 minutes for payment operations
+                    'Retry-After': paymentRateLimit.retryAfter?.toString() || '300',
                     'X-RateLimit-Limit': '5',
-                    'X-RateLimit-Remaining': '0'
+                    'X-RateLimit-Remaining': paymentRateLimit.remaining?.toString() || '0'
                 },
                 body: JSON.stringify({
                     error: 'Payment rate limit exceeded',
                     message: 'Too many payment requests. Please wait 5 minutes before trying again.',
-                    retryAfter: 300
+                    retryAfter: paymentRateLimit.retryAfter || 300,
+                    resetTime: paymentRateLimit.resetTime
                 })
             };
         }
@@ -171,45 +182,34 @@ exports.handler = async (event, context) => {
     }
 };
 
-// SESSION 4D5: Payment-specific rate limiting system
-const paymentRateLimitMap = new Map();
+// SESSION 1C-2: Payment rate limiting configuration
+// SECURITY FIX: Replaced stateful Map with distributed rate limiting
 const PAYMENT_RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes
 const MAX_PAYMENT_REQUESTS = 5; // 5 payment requests per 5 minutes
 
 /**
- * Check payment-specific rate limiting
+ * SESSION 1C-2: Payment rate limiting now handled by distributed rate limiter
+ * This function is kept for backward compatibility but delegates to the distributed system
  * @param {string} clientIP - Client IP address
  * @param {string} userId - User ID
- * @returns {Object} Rate limit result
+ * @returns {Promise<Object>} Rate limit result
  */
-function checkPaymentRateLimit(clientIP, userId) {
+async function checkPaymentRateLimit(clientIP, userId) {
     try {
-        const key = `${clientIP}:${userId}`;
-        const now = Date.now();
-        const userRequests = paymentRateLimitMap.get(key) || [];
-        
-        // Remove requests outside the current window
-        const validRequests = userRequests.filter(timestamp => now - timestamp < PAYMENT_RATE_LIMIT_WINDOW);
-        
-        // Check if user has exceeded payment rate limit
-        if (validRequests.length >= MAX_PAYMENT_REQUESTS) {
-            return { 
-                allowed: false, 
-                requestCount: validRequests.length,
-                timeWindow: PAYMENT_RATE_LIMIT_WINDOW / 1000
-            };
-        }
-        
-        // Add current request timestamp
-        validRequests.push(now);
-        paymentRateLimitMap.set(key, validRequests);
-        
-        return { 
-            allowed: true,
-            requestCount: validRequests.length,
+        const result = await distributedRateLimiter.checkRateLimit(`payment:${clientIP}:${userId}`, {
+            maxRequests: MAX_PAYMENT_REQUESTS,
+            windowMs: PAYMENT_RATE_LIMIT_WINDOW,
+            type: 'payment',
+            clientIP: clientIP,
+            userId: userId,
+            endpoint: 'stripe-payment'
+        });
+
+        return {
+            allowed: result.allowed,
+            requestCount: result.total || 0,
             timeWindow: PAYMENT_RATE_LIMIT_WINDOW / 1000
         };
-
     } catch (error) {
         console.error('Payment rate limit check failed:', error);
         // Allow request on error to avoid breaking functionality
@@ -422,24 +422,16 @@ async function verifyWebhook(event, headers, user) {
     }
 }
 
-// SESSION 4D5: Cleanup function for payment rate limiting
-function cleanupPaymentRateLimit() {
+// SESSION 1C-2: Cleanup function for payment rate limiting
+// SECURITY FIX: Cleanup now handled by distributed rate limiter with Firestore TTL
+async function cleanupPaymentRateLimit() {
     try {
-        const now = Date.now();
-        
-        // Clean payment rate limit entries
-        for (const [key, requests] of paymentRateLimitMap.entries()) {
-            const validRequests = requests.filter(timestamp => now - timestamp < PAYMENT_RATE_LIMIT_WINDOW);
-            if (validRequests.length === 0) {
-                paymentRateLimitMap.delete(key);
-            } else {
-                paymentRateLimitMap.set(key, validRequests);
-            }
-        }
+        // Distributed rate limiter handles cleanup automatically via Firestore TTL
+        await distributedRateLimiter.cleanup();
     } catch (error) {
         console.error('Payment rate limit cleanup failed:', error);
     }
 }
 
-// Periodic cleanup every 10 minutes
-setInterval(cleanupPaymentRateLimit, 10 * 60 * 1000);
+// REMOVED: setInterval for serverless compatibility
+// Cleanup will be handled by infrastructure or periodic cloud functions

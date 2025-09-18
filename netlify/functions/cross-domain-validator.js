@@ -4,11 +4,15 @@
 
 const { getAuth } = require('./firebase-config');
 const jwt = require('jsonwebtoken');
+const distributedRateLimiter = require('./distributed-rate-limiter');
 
 // SECURITY: Domain validation for cross-domain requests
 const ALLOWED_DOMAINS = [
     'https://www.soltecsol.com',
-    'https://ai-generator.soltecsol.com'
+    'https://ai-generator.soltecsol.com',
+    'https://app.soltecsol.com',
+    'https://subscriptions.soltecsol.com',
+    'https://signup.soltecsol.com'
 ];
 
 // SECURITY: Cookie configuration constants
@@ -18,9 +22,10 @@ const COOKIE_NAMES = {
 };
 
 // Cross-domain authentication validator class
+// SESSION 1C-2: Converted to use distributed rate limiting
 class CrossDomainValidator {
     constructor() {
-        this.rateLimitMap = new Map();
+        // SESSION 1C-2: Removed stateful Map, now using distributed rate limiter
         this.RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
         this.MAX_REQUESTS_PER_MINUTE = 30;
     }
@@ -59,24 +64,28 @@ class CrossDomainValidator {
         return headers;
     }
 
-    // Rate limiting check
-    checkRateLimit(clientIP) {
-        const now = Date.now();
-        const userRequests = this.rateLimitMap.get(clientIP) || [];
-        
-        // Remove requests outside the current window
-        const validRequests = userRequests.filter(timestamp => now - timestamp < this.RATE_LIMIT_WINDOW);
-        
-        // Check if user has exceeded rate limit
-        if (validRequests.length >= this.MAX_REQUESTS_PER_MINUTE) {
-            return { allowed: false, retryAfter: 60 };
+    // SESSION 1C-2: Distributed rate limiting check
+    async checkRateLimit(clientIP, options = {}) {
+        try {
+            const result = await distributedRateLimiter.checkRateLimit(clientIP, {
+                maxRequests: this.MAX_REQUESTS_PER_MINUTE,
+                windowMs: this.RATE_LIMIT_WINDOW,
+                type: 'general',
+                clientIP: clientIP,
+                userAgent: options.userAgent || 'unknown',
+                endpoint: options.endpoint || 'cross-domain-validator'
+            });
+
+            return {
+                allowed: result.allowed,
+                retryAfter: result.retryAfter || 60,
+                remaining: result.remaining
+            };
+        } catch (error) {
+            console.error('Distributed rate limit check failed:', error);
+            // Fail open for availability, but log the error
+            return { allowed: true, error: 'rate_limit_check_failed' };
         }
-        
-        // Add current request timestamp
-        validRequests.push(now);
-        this.rateLimitMap.set(clientIP, validRequests);
-        
-        return { allowed: true };
     }
 
     // Validate Firebase authentication token
@@ -307,9 +316,13 @@ class CrossDomainValidator {
             };
         }
 
-        // Rate limiting check
+        // SESSION 1C-2: Distributed rate limiting check
         if (rateLimit) {
-            const rateLimitCheck = this.checkRateLimit(clientIP);
+            const rateLimitCheck = await this.checkRateLimit(clientIP, {
+                userAgent: event.headers['user-agent'],
+                endpoint: 'cross-domain-validator'
+            });
+
             if (!rateLimitCheck.allowed) {
                 return {
                     valid: false,
@@ -317,11 +330,13 @@ class CrossDomainValidator {
                         statusCode: 429,
                         headers: {
                             ...headers,
-                            'Retry-After': rateLimitCheck.retryAfter.toString()
+                            'Retry-After': rateLimitCheck.retryAfter.toString(),
+                            'X-RateLimit-Remaining': rateLimitCheck.remaining?.toString() || '0'
                         },
                         body: JSON.stringify({
                             error: 'Rate limit exceeded',
-                            retryAfter: rateLimitCheck.retryAfter
+                            retryAfter: rateLimitCheck.retryAfter,
+                            remaining: rateLimitCheck.remaining
                         })
                     }
                 };
@@ -395,16 +410,13 @@ class CrossDomainValidator {
         };
     }
 
-    // Clean up old rate limit entries
-    cleanup() {
-        const now = Date.now();
-        for (const [ip, requests] of this.rateLimitMap.entries()) {
-            const validRequests = requests.filter(timestamp => now - timestamp < this.RATE_LIMIT_WINDOW);
-            if (validRequests.length === 0) {
-                this.rateLimitMap.delete(ip);
-            } else {
-                this.rateLimitMap.set(ip, validRequests);
-            }
+    // SESSION 1C-2: Cleanup now handled by distributed rate limiter
+    // Firestore TTL automatically handles expired entries
+    async cleanup() {
+        try {
+            await distributedRateLimiter.cleanup();
+        } catch (error) {
+            console.error('Distributed rate limiter cleanup failed:', error);
         }
     }
 }
@@ -412,9 +424,7 @@ class CrossDomainValidator {
 // Export singleton instance
 const validator = new CrossDomainValidator();
 
-// Periodic cleanup
-setInterval(() => {
-    validator.cleanup();
-}, 5 * 60 * 1000); // Clean every 5 minutes
+// REMOVED: setInterval for serverless compatibility
+// Cleanup will be handled by infrastructure or periodic cloud functions
 
 module.exports = validator;

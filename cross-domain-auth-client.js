@@ -10,6 +10,58 @@ class CrossDomainAuthManager {
         this.csrfToken = null;
         this.retryCount = 0;
         this.maxRetries = 3;
+        this.lastAuthTime = null;
+        this.authTimeoutThreshold = 60 * 60 * 1000; // 1 hour
+    }
+
+    // SECURITY ENHANCEMENT: Validate JWT token format
+    isValidJWTFormat(token) {
+        try {
+            if (!token || typeof token !== 'string') {
+                return false;
+            }
+
+            // JWT should have exactly 3 parts separated by dots
+            const parts = token.split('.');
+            if (parts.length !== 3) {
+                return false;
+            }
+
+            // Each part should be valid base64
+            for (const part of parts) {
+                if (!/^[A-Za-z0-9_-]+$/.test(part)) {
+                    return false;
+                }
+            }
+
+            // Basic payload validation
+            const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+
+            // Check for required Firebase JWT claims
+            if (!payload.iss || !payload.aud || !payload.exp || !payload.iat) {
+                return false;
+            }
+
+            // Check if token is expired
+            if (payload.exp * 1000 < Date.now()) {
+                console.warn('Token validation failed: expired');
+                return false;
+            }
+
+            return true;
+
+        } catch (error) {
+            console.error('JWT validation error:', error);
+            return false;
+        }
+    }
+
+    // SECURITY ENHANCEMENT: Check authentication timeout
+    isAuthenticationStale() {
+        if (!this.lastAuthTime) {
+            return true;
+        }
+        return (Date.now() - this.lastAuthTime) > this.authTimeoutThreshold;
     }
 
     // Initialize cross-domain authentication
@@ -31,24 +83,34 @@ class CrossDomainAuthManager {
         }
     }
 
-    // Authenticate user with Firebase token and set cross-domain cookies
+    // SECURITY ENHANCEMENT: Authenticate user with enhanced token validation
     async authenticate(firebaseIdToken) {
         try {
             if (!firebaseIdToken) {
                 throw new Error('Firebase ID token required for cross-domain authentication');
             }
 
+            // Validate token format before sending
+            if (!this.isValidJWTFormat(firebaseIdToken)) {
+                throw new Error('Invalid Firebase token format');
+            }
+
+            // Enhanced request with additional security headers
             const response = await fetch(this.authEndpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'Sec-Fetch-Mode': 'cors',
                     ...(this.csrfToken && { 'X-CSRF-Token': this.csrfToken })
                 },
                 credentials: 'include', // Important for cross-domain cookies
                 body: JSON.stringify({
                     action: 'authenticate',
                     idToken: firebaseIdToken,
-                    csrfToken: this.csrfToken
+                    csrfToken: this.csrfToken,
+                    timestamp: Date.now() // Add timestamp for replay attack prevention
                 })
             });
 
@@ -71,11 +133,12 @@ class CrossDomainAuthManager {
                 throw new Error(data.message || data.error || 'Authentication failed');
             }
 
-            // Store authentication state
+            // Store authentication state with timestamp
             this.authenticated = true;
             this.userInfo = data.user;
             this.csrfToken = data.csrfToken;
             this.retryCount = 0;
+            this.lastAuthTime = Date.now();
 
             console.log('Cross-domain authentication successful:', this.userInfo);
             
@@ -102,24 +165,39 @@ class CrossDomainAuthManager {
         }
     }
 
-    // Verify existing authentication via cookies
+    // SECURITY ENHANCEMENT: Verify existing authentication with enhanced checks
     async verifyAuthentication() {
         try {
+            // Check if authentication is stale before making request
+            if (this.authenticated && this.isAuthenticationStale()) {
+                console.log('Authentication stale, clearing state');
+                this.clearAuthenticationState();
+                return { authenticated: false };
+            }
+
             const response = await fetch(this.authEndpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'Sec-Fetch-Mode': 'cors',
                     ...(this.csrfToken && { 'X-CSRF-Token': this.csrfToken })
                 },
                 credentials: 'include', // Important for cross-domain cookies
                 body: JSON.stringify({
-                    action: 'verify'
+                    action: 'verify',
+                    timestamp: Date.now(),
+                    ...(this.lastAuthTime && { lastAuthTime: this.lastAuthTime })
                 })
             });
 
             const data = await response.json();
 
             if (response.ok && data.authenticated) {
+                // Update authentication timestamp
+                this.lastAuthTime = Date.now();
+
                 return {
                     authenticated: true,
                     user: data.user,
@@ -127,12 +205,24 @@ class CrossDomainAuthManager {
                 };
             }
 
+            // Clear stale authentication state
+            this.clearAuthenticationState();
             return { authenticated: false };
 
         } catch (error) {
             console.error('Authentication verification failed:', error);
+            this.clearAuthenticationState();
             return { authenticated: false };
         }
+    }
+
+    // SECURITY ENHANCEMENT: Clear authentication state securely
+    clearAuthenticationState() {
+        this.authenticated = false;
+        this.userInfo = null;
+        this.csrfToken = null;
+        this.lastAuthTime = null;
+        this.retryCount = 0;
     }
 
     // Logout and clear cross-domain cookies
@@ -151,9 +241,7 @@ class CrossDomainAuthManager {
             });
 
             // Clear local state regardless of response
-            this.authenticated = false;
-            this.userInfo = null;
-            this.csrfToken = null;
+            this.clearAuthenticationState();
 
             console.log('Cross-domain logout completed');
 
@@ -165,9 +253,7 @@ class CrossDomainAuthManager {
         } catch (error) {
             console.error('Logout failed:', error);
             // Clear local state even if logout request fails
-            this.authenticated = false;
-            this.userInfo = null;
-            this.csrfToken = null;
+            this.clearAuthenticationState();
             return false;
         }
     }
@@ -210,10 +296,8 @@ class CrossDomainAuthManager {
             
             // Handle authentication errors
             if (response.status === 401) {
-                this.authenticated = false;
-                this.userInfo = null;
-                this.csrfToken = null;
-                
+                this.clearAuthenticationState();
+
                 window.dispatchEvent(new CustomEvent('crossDomainAuthExpired'));
                 throw new Error('Authentication expired');
             }

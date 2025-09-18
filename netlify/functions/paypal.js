@@ -5,47 +5,43 @@ const fetch = require('node-fetch');
 const dns = require('dns').promises;
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 const securityLogger = require('./security-logger');
+const distributedRateLimiter = require('./distributed-rate-limiter');
 
 // CRITICAL: Domain whitelist for approved email providers
 const approvedDomains = ['gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'yahoo.com', 'icloud.com', 'protonmail.com', 'aol.com'];
 
-// SESSION 4D5: PayPal-specific rate limiting system
-const paypalRateLimitMap = new Map();
+// SESSION 1C-2: PayPal-specific rate limiting configuration
+// SECURITY FIX: Replaced stateful Map with distributed rate limiting
 const PAYPAL_RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes
 const MAX_PAYPAL_REQUESTS = 3; // 3 PayPal requests per 5 minutes (stricter than general payments)
 
 /**
- * Check PayPal-specific rate limiting
+ * SESSION 1C-2: Check PayPal-specific rate limiting using distributed system
  * @param {string} clientIP - Client IP address
  * @param {string} userId - User ID
- * @returns {Object} Rate limit result
+ * @param {Object} options - Additional options
+ * @returns {Promise<Object>} Rate limit result
  */
-function checkPayPalRateLimit(clientIP, userId) {
+async function checkPayPalRateLimit(clientIP, userId, options = {}) {
     try {
         const key = `paypal:${clientIP}:${userId}`;
-        const now = Date.now();
-        const userRequests = paypalRateLimitMap.get(key) || [];
-        
-        // Remove requests outside the current window
-        const validRequests = userRequests.filter(timestamp => now - timestamp < PAYPAL_RATE_LIMIT_WINDOW);
-        
-        // Check if user has exceeded PayPal rate limit
-        if (validRequests.length >= MAX_PAYPAL_REQUESTS) {
-            return { 
-                allowed: false, 
-                requestCount: validRequests.length,
-                timeWindow: PAYPAL_RATE_LIMIT_WINDOW / 1000
-            };
-        }
-        
-        // Add current request timestamp
-        validRequests.push(now);
-        paypalRateLimitMap.set(key, validRequests);
-        
-        return { 
-            allowed: true,
-            requestCount: validRequests.length,
-            timeWindow: PAYPAL_RATE_LIMIT_WINDOW / 1000
+
+        const result = await distributedRateLimiter.checkRateLimit(key, {
+            maxRequests: MAX_PAYPAL_REQUESTS,
+            windowMs: PAYPAL_RATE_LIMIT_WINDOW,
+            type: 'payment_paypal',
+            clientIP: clientIP,
+            userId: userId,
+            userAgent: options.userAgent || 'unknown',
+            endpoint: options.endpoint || 'paypal-payment'
+        });
+
+        return {
+            allowed: result.allowed,
+            requestCount: result.total || 0,
+            timeWindow: PAYPAL_RATE_LIMIT_WINDOW / 1000,
+            retryAfter: result.retryAfter,
+            remaining: result.remaining
         };
 
     } catch (error) {
@@ -197,8 +193,11 @@ exports.handler = async (event, context) => {
 
         const { headers, user, clientIP } = authResult;
 
-        // SESSION 4D5: PayPal-specific rate limiting (stricter than general)
-        const paypalRateLimit = checkPayPalRateLimit(clientIP, user.uid);
+        // SESSION 1C-2: PayPal-specific distributed rate limiting (stricter than general)
+        const paypalRateLimit = await checkPayPalRateLimit(clientIP, user.uid, {
+            userAgent: event.headers['user-agent'],
+            endpoint: 'paypal-payment'
+        });
         if (!paypalRateLimit.allowed) {
             securityLogger.logRateLimitExceeded({
                 clientIP: clientIP,
@@ -866,19 +865,13 @@ function cleanupPayPalRateLimit() {
     try {
         const now = Date.now();
         
-        // Clean PayPal rate limit entries
-        for (const [key, requests] of paypalRateLimitMap.entries()) {
-            const validRequests = requests.filter(timestamp => now - timestamp < PAYPAL_RATE_LIMIT_WINDOW);
-            if (validRequests.length === 0) {
-                paypalRateLimitMap.delete(key);
-            } else {
-                paypalRateLimitMap.set(key, validRequests);
-            }
-        }
+        // SESSION 1C-2: PayPal rate limit cleanup now handled by distributed rate limiter
+        await distributedRateLimiter.cleanup();
+        console.log('PayPal rate limit cleanup completed via distributed system');
     } catch (error) {
         console.error('PayPal rate limit cleanup failed:', error);
     }
 }
 
-// Periodic cleanup every 10 minutes
-setInterval(cleanupPayPalRateLimit, 10 * 60 * 1000);
+// REMOVED: setInterval for serverless compatibility
+// Cleanup will be handled by infrastructure or periodic cloud functions

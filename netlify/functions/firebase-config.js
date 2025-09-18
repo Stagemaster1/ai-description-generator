@@ -3,6 +3,9 @@
 
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 
+// Import Firebase Admin SDK functions
+const { getAuth, getFirestore, initializeFirebaseAdmin } = require('./firebase-admin-config');
+
 exports.handler = async (event, context) => {
     // SESSION 4D3: Use firebase-auth-middleware for secure admin authentication
     const authResult = await firebaseAuthMiddleware.authenticateRequest(event, {
@@ -64,3 +67,8 @@ exports.handler = async (event, context) => {
         body: JSON.stringify(firebaseConfig)
     };
 };
+
+// Export Firebase Admin SDK functions for other modules
+module.exports.getAuth = getAuth;
+module.exports.getFirestore = getFirestore;
+module.exports.initializeFirebaseAdmin = initializeFirebaseAdmin;

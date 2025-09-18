@@ -4,17 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SolTecSol</title>
+    <meta http-equiv="refresh" content="0;url=https://signup.soltecsol.com?tab=signin">
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; text-align: center; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; }
         h1 { color: #333; }
-        .placeholder { color: #666; font-style: italic; }
+        .message { color: #666; font-style: italic; margin: 20px 0; }
+        .redirect-link { color: #3b82f6; text-decoration: none; font-weight: 600; }
+        .redirect-link:hover { text-decoration: underline; }
     </style>
+    <script>
+        // SESSION 4C: Redirect to unified authentication page with return URL handling
+        (function() {
+            // Get current return URL parameter if any
+            const urlParams = new URLSearchParams(window.location.search);
+            const returnUrl = urlParams.get('return_to') || urlParams.get('returnUrl');
+
+            // Build redirect URL to signup page with signin tab
+            let redirectUrl = 'https://signup.soltecsol.com?tab=signin';
+
+            // Add return URL if provided
+            if (returnUrl) {
+                redirectUrl += `&return_to=${encodeURIComponent(returnUrl)}`;
+            }
+
+            // Redirect immediately
+            window.location.href = redirectUrl;
+        })();
+    </script>
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
-        <p class="placeholder">Login form will be added here.</p>
+        <h1>Redirecting to Login...</h1>
+        <p class="message">You are being redirected to the unified authentication page.</p>
+        <p>
+            If you are not redirected automatically,
+            <a href="https://signup.soltecsol.com?tab=signin" class="redirect-link">click here to sign in</a>
+        </p>
         <p><a href="https://app.soltecsol.com">← Back to App</a></p>
     </div>
 </body>

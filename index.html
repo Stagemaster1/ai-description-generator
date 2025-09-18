@@ -3,376 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.openai.com https://world.openfoodfacts.org https://api.upcdatabase.org https://api.barcodelookup.com https://www.paypal.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://www.paypal.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://api.openai.com https://world.openfoodfacts.org https://api.upcdatabase.org https://api.barcodelookup.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; font-src 'self' https://fonts.gstatic.com;">
     <title>SolTecSol - AI Product Description Generator</title>
-    <!-- PayPal SDK will be loaded dynamically via JavaScript -->
     
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-        import { getAuth, signInAnonymously, onAuthStateChanged, onIdTokenChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-        
-        // SECURITY FIX: Load Firebase configuration securely from endpoint
-        async function initializeFirebaseSecure() {
-            try {
-                // Fetch Firebase configuration from secure endpoint
-                const response = await fetch('/.netlify/functions/firebase-config');
-                
-                if (!response.ok) {
-                    throw new Error(`Firebase config fetch failed: ${response.status} ${response.statusText}`);
-                }
-                
-                const firebaseConfig = await response.json();
-                
-                // Validate configuration
-                if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-                    throw new Error('Invalid Firebase configuration received');
-                }
-                
-                // Initialize Firebase with secure configuration
-                const app = initializeApp(firebaseConfig);
-                const auth = getAuth(app);
-                
-                // Make Firebase available globally
-                window.firebaseApp = app;
-                window.firebaseAuth = auth;
-                window.firebaseSignInAnonymously = signInAnonymously;
-                window.firebaseOnAuthStateChanged = onAuthStateChanged;
-                window.firebaseOnIdTokenChanged = onIdTokenChanged;
-                
-                console.log('Firebase initialized securely');
-                
-                // Initialize centralized token management
-                initializeTokenManager();
-                
-                // Initialize secure cookies after token manager is ready
-                try {
-                    await window.secureCookieManager.initializeSecureCookies();
-                } catch (error) {
-                    console.error('Failed to initialize secure cookies during Firebase setup:', error);
-                }
-                
-                // Dispatch custom event to signal Firebase is ready
-                window.dispatchEvent(new CustomEvent('firebaseReady'));
-                
-            } catch (error) {
-                console.error('Firebase initialization failed:', error);
-                // Show user-friendly error message
-                const errorDiv = document.createElement('div');
-                errorDiv.style.cssText = 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 16px; border-radius: 8px; z-index: 9999; font-family: Inter, sans-serif;';
-                errorDiv.textContent = 'Service temporarily unavailable. Please try again later.';
-                document.body.appendChild(errorDiv);
-                setTimeout(() => errorDiv.remove(), 5000);
-            }
-        }
-        
-        // Initialize Firebase securely when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeFirebaseSecure);
-        } else {
-            initializeFirebaseSecure();
-        }
-    </script>
+    <!-- Firebase SDK and Security Modules -->
 
     <!-- Cross-Domain Authentication Client -->
     <script src="./cross-domain-auth-client.js"></script>
 
-    <!-- Centralized Token Management -->
-    <script>
-        // SECURITY ENHANCEMENT: Centralized Firebase token management
-        class FirebaseTokenManager {
-            constructor() {
-                this.currentToken = null;
-                this.tokenRefreshPromise = null;
-                this.retryCount = 0;
-                this.maxRetries = 3;
-                this.retryDelay = 1000; // 1 second
-            }
-
-            // Get current Firebase ID token with automatic refresh
-            async getToken(forceRefresh = false) {
-                try {
-                    const auth = window.firebaseAuth;
-                    const user = auth?.currentUser;
-                    
-                    if (!user) {
-                        throw new Error('User not authenticated');
-                    }
-
-                    // Use cached token if available and not forcing refresh
-                    if (!forceRefresh && this.currentToken) {
-                        // Check if token is still valid (not expired)
-                        const tokenData = this.parseJWT(this.currentToken);
-                        if (tokenData && tokenData.exp > Date.now() / 1000) {
-                            return this.currentToken;
-                        }
-                    }
-
-                    // Get fresh token from Firebase
-                    const token = await user.getIdToken(forceRefresh);
-                    this.currentToken = token;
-                    this.retryCount = 0; // Reset retry count on success
-                    return token;
-
-                } catch (error) {
-                    console.error('Token retrieval failed:', error);
-                    
-                    // Implement retry logic for token failures
-                    if (this.retryCount < this.maxRetries) {
-                        this.retryCount++;
-                        console.log(`Retrying token fetch (${this.retryCount}/${this.maxRetries})...`);
-                        await this.delay(this.retryDelay * this.retryCount);
-                        return this.getToken(true); // Force refresh on retry
-                    }
-                    
-                    throw new Error('Failed to obtain authentication token after retries');
-                }
-            }
-
-            // Parse JWT token to check expiration
-            parseJWT(token) {
-                try {
-                    const base64Url = token.split('.')[1];
-                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                    }).join(''));
-                    return JSON.parse(jsonPayload);
-                } catch (error) {
-                    console.warn('Failed to parse JWT token:', error);
-                    return null;
-                }
-            }
-
-            // Clear cached token
-            clearToken() {
-                this.currentToken = null;
-                this.retryCount = 0;
-            }
-
-            // Utility delay function
-            delay(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-        }
-
-        // Global token manager instance
-        window.tokenManager = new FirebaseTokenManager();
-
-        // Initialize token management with automatic refresh monitoring
-        function initializeTokenManager() {
-            const auth = window.firebaseAuth;
-            if (!auth) {
-                console.error('Firebase Auth not available for token management');
-                return;
-            }
-
-            // Set up automatic token refresh monitoring
-            window.firebaseOnIdTokenChanged(auth, (user) => {
-                if (user) {
-                    console.log('Token changed - clearing cached token');
-                    window.tokenManager.clearToken();
-                    // Optionally preload the new token
-                    window.tokenManager.getToken().catch(error => {
-                        console.warn('Failed to preload new token:', error);
-                    });
-                } else {
-                    console.log('User signed out - clearing token cache and cookies');
-                    window.tokenManager.clearToken();
-                    window.secureCookieManager.clearAllCookies();
-                }
-            });
-
-            console.log('Token manager initialized with automatic refresh monitoring');
-        }
-
-        // SECURE COOKIE IMPLEMENTATION - Session 5 Requirements
-        class SecureCookieManager {
-            constructor() {
-                this.isSecureContext = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
-            }
-
-            // Generate CSRF token
-            generateCSRFToken() {
-                const array = new Uint8Array(32);
-                crypto.getRandomValues(array);
-                return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-            }
-
-            // Generate session ID
-            generateSessionId() {
-                const array = new Uint8Array(16);
-                crypto.getRandomValues(array);
-                return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-            }
-
-            // Set authentication token cookie with exact specified attributes
-            setAuthTokenCookie(firebaseToken) {
-                if (!firebaseToken) {
-                    console.warn('Cannot set auth token cookie: no token provided');
-                    return;
-                }
-                
-                const cookieValue = `soltecsol_auth_token=${firebaseToken}; Domain=.soltecsol.com; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600`;
-                document.cookie = cookieValue;
-                console.log('Authentication token cookie set');
-            }
-
-            // Set CSRF protection cookie with exact specified attributes
-            setCSRFCookie() {
-                const csrfToken = this.generateCSRFToken();
-                const cookieValue = `soltecsol_csrf_token=${csrfToken}; Domain=.soltecsol.com; Path=/; Secure; SameSite=Strict; Max-Age=3600`;
-                document.cookie = cookieValue;
-                console.log('CSRF protection cookie set');
-                return csrfToken;
-            }
-
-            // Set session management cookie with exact specified attributes
-            setSessionCookie() {
-                const sessionId = this.generateSessionId();
-                const cookieValue = `soltecsol_session_id=${sessionId}; Domain=.soltecsol.com; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`;
-                document.cookie = cookieValue;
-                console.log('Session management cookie set');
-                return sessionId;
-            }
-
-            // Initialize all secure cookies
-            async initializeSecureCookies() {
-                try {
-                    // Get Firebase token for authentication cookie
-                    const firebaseToken = await window.tokenManager.getToken();
-                    
-                    // Set all three required cookies
-                    this.setAuthTokenCookie(firebaseToken);
-                    const csrfToken = this.setCSRFCookie();
-                    const sessionId = this.setSessionCookie();
-                    
-                    console.log('All secure cookies initialized successfully');
-                    return { csrfToken, sessionId };
-                } catch (error) {
-                    console.error('Failed to initialize secure cookies:', error);
-                    throw error;
-                }
-            }
-
-            // Get cookie value by name
-            getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-                return null;
-            }
-
-            // Clear all soltecsol cookies
-            clearAllCookies() {
-                const cookieNames = ['soltecsol_auth_token', 'soltecsol_csrf_token', 'soltecsol_session_id'];
-                cookieNames.forEach(name => {
-                    document.cookie = `${name}=; Domain=.soltecsol.com; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-                });
-                console.log('All soltecsol cookies cleared');
-            }
-        }
-
-        // Global secure cookie manager instance
-        window.secureCookieManager = new SecureCookieManager();
-
-        // Test function for secure cookie implementation
-        async function testSecureCookies() {
-            console.log('Testing secure cookie implementation...');
-            
-            try {
-                // Test all three cookies
-                const result = await window.secureCookieManager.initializeSecureCookies();
-                
-                // Verify cookies were set by checking their existence
-                const authCookie = window.secureCookieManager.getCookie('soltecsol_auth_token');
-                const csrfCookie = window.secureCookieManager.getCookie('soltecsol_csrf_token'); 
-                const sessionCookie = window.secureCookieManager.getCookie('soltecsol_session_id');
-                
-                console.log('Cookie Test Results:');
-                console.log('- Authentication Token Cookie:', authCookie ? 'SET' : 'NOT SET');
-                console.log('- CSRF Protection Cookie:', csrfCookie ? 'SET' : 'NOT SET');  
-                console.log('- Session Management Cookie:', sessionCookie ? 'SET' : 'NOT SET');
-                
-                if (authCookie && csrfCookie && sessionCookie) {
-                    console.log('✅ All secure cookies implemented successfully');
-                    return true;
-                } else {
-                    console.error('❌ Some cookies failed to set');
-                    return false;
-                }
-            } catch (error) {
-                console.error('❌ Cookie test failed:', error);
-                return false;
-            }
-        }
-
-        // Make test function globally available
-        window.testSecureCookies = testSecureCookies;
-
-        // Enhanced API call wrapper with automatic token handling and retry logic
-        async function makeAuthenticatedRequest(url, options = {}) {
-            const maxRetries = 2;
-            let attempt = 0;
-
-            while (attempt <= maxRetries) {
-                try {
-                    // Get current token
-                    const token = await window.tokenManager.getToken(attempt > 0); // Force refresh on retries
-                    
-                    // Prepare headers
-                    const headers = {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                        ...options.headers
-                    };
-
-                    // Make the request
-                    const response = await fetch(url, {
-                        ...options,
-                        headers
-                    });
-
-                    // Handle authentication errors with specific handling
-                    if (response.status === 401 && attempt < maxRetries) {
-                        const errorData = await response.json().catch(() => ({}));
-                        const errorCode = errorData.code;
-                        
-                        console.log(`Authentication error (${errorCode}), refreshing and retrying...`);
-                        
-                        // Clear token and force refresh based on error type
-                        window.tokenManager.clearToken();
-                        
-                        // For revoked tokens, we need to re-authenticate
-                        if (errorCode === 'TOKEN_REVOKED') {
-                            console.warn('Token revoked, may need to re-authenticate');
-                            // Force Firebase to re-authenticate
-                            const auth = window.firebaseAuth;
-                            if (auth && auth.currentUser) {
-                                try {
-                                    await auth.currentUser.reload();
-                                } catch (reloadError) {
-                                    console.error('Failed to reload user:', reloadError);
-                                }
-                            }
-                        }
-                        
-                        attempt++;
-                        continue;
-                    }
-
-                    return response;
-
-                } catch (error) {
-                    if (attempt >= maxRetries) {
-                        throw error;
-                    }
-                    attempt++;
-                    console.warn(`Request attempt ${attempt} failed, retrying...`, error);
-                }
-            }
-        }
-    </script>
+    <!-- External Security and Token Management Scripts -->
+    <script src="./js/token-manager.js"></script>
+    <script src="./js/secure-cookies.js"></script>
+    <script type="module" src="./js/firebase-init.js"></script>
 
     <style>
         * {
@@ -510,7 +152,7 @@
             align-items: stretch;
         }
 
-        .generator-section, .pricing-section {
+        .generator-section {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -520,7 +162,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .generator-section:hover, .pricing-section:hover {
+        .generator-section:hover {
             transform: translateY(-5px);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
         }
@@ -705,119 +347,6 @@
             white-space: pre-wrap;
         }
 
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            align-items: stretch;
-        }
-
-        .pricing-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 14px;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .pricing-card.featured {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .popular-badge {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: white;
-            padding: 8px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-align: center;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.05);
-        }
-
-        .plan-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 8px;
-            margin-top: 8px;
-        }
-
-        .pricing-card .plan-name {
-            margin-top: 5px;
-        }
-
-        .pricing-card.featured .plan-name {
-            margin-top: 18px;
-        }
-
-        .plan-price {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 3px;
-        }
-
-        .plan-period {
-            color: #94a3b8;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
-        }
-
-        .free-trial-badge {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: inline-block;
-        }
-
-        .plan-features {
-            list-style: none;
-            margin-bottom: 15px;
-            flex-grow: 1;
-            text-align: left;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .plan-features li {
-            color: #cbd5e1;
-            margin-bottom: 4px;
-            font-size: 0.8rem;
-            line-height: 1.3;
-            text-align: left;
-        }
-
-        .plan-features li::before {
-            content: '✓';
-            color: #10b981;
-            font-weight: bold;
-            margin-right: 8px;
-        }
 
         .stats-section {
             text-align: center;
@@ -866,10 +395,6 @@
                 gap: 30px;
             }
 
-            .pricing-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
 
             .header {
                 padding: 40px 0;
@@ -883,7 +408,7 @@
                 font-size: 1.1rem;
             }
 
-            .generator-section, .pricing-section {
+            .generator-section {
                 padding: 30px 20px;
             }
 
@@ -1019,23 +544,7 @@
             margin-bottom: 3px;
         }
 
-        .paypal-button-container {
-            margin-top: 15px;
-            display: none;
-        }
 
-        .paypal-button-container.show {
-            display: block;
-        }
-
-        .clickable-plan {
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .clickable-plan:hover {
-            transform: translateY(-2px);
-        }
 
         .notification {
             position: fixed;
@@ -1063,18 +572,6 @@
         }
 
 
-        .plan-choose-btn {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 15px;
-        }
     </style>
 </head>
 <body>
@@ -1164,6 +661,75 @@
         </div>
         
         <div class="company-name">SolTecSol - Solid Tech Solutions</div>
+
+        <!-- Navigation Links -->
+        <div style="position: absolute; top: 70px; left: 20px; z-index: 1000; display: flex; gap: 12px;">
+            <a href="https://subscriptions.soltecsol.com" target="_blank" rel="noopener noreferrer" style="
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                border-radius: 8px;
+                color: #ffffff;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                backdrop-filter: blur(10px);
+                transition: all 0.3s ease;
+            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+                <span>💳</span>
+                <span data-translate="subscriptionPlans">Subscription Plans</span>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openSignupWithReturn()" target="_blank" rel="noopener noreferrer" style="
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                border: none;
+                border-radius: 8px;
+                color: #ffffff;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+                backdrop-filter: blur(10px);
+                transition: all 0.3s ease;
+            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(16, 185, 129, 0.4)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(16, 185, 129, 0.3)'">
+                <span>👤</span>
+                <span data-translate="createAccount">Create Account</span>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openSigninWithReturn()" style="
+                background: rgba(255, 255, 255, 0.1);
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                border-radius: 8px;
+                color: #ffffff;
+                padding: 8px 18px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                backdrop-filter: blur(10px);
+                transition: all 0.3s ease;
+            " onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.borderColor='rgba(255, 255, 255, 0.3)'"
+               onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.borderColor='rgba(255, 255, 255, 0.2)'">
+                <span>🔐</span>
+                <span data-translate="signIn">Sign In</span>
+            </a>
+        </div>
+
         <h1 class="logo" data-translate="appTitle">AI Description Generator</h1>
         <p class="tagline" data-translate="tagline">Transform Product URLs into Converting Copy</p>
         <p class="subtitle" data-translate="subtitle">Generate SEO-optimized, brand-specific product descriptions that convert browsers into buyers. Save hours of writing time and boost your e-commerce sales.</p>
@@ -1180,12 +746,18 @@
                         <span data-translate="monthlyUsage">Monthly Usage</span>
                         <button onclick="refreshUsage()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 2px; font-size: 0.8rem;" title="Refresh usage data">🔄</button>
                     </div>
-                    <div style="color: #ffffff; font-weight: 600;" id="usageText">0 of 5 free descriptions used</div>
+                    <div style="color: #ffffff; font-weight: 600;" id="usageText">0 of 3 free descriptions used</div>
                     <div class="usage-bar">
                         <div class="usage-fill" id="usageFill" style="width: 0%;"></div>
                     </div>
                     <div style="color: #94a3b8; font-size: 0.8rem; margin-top: 5px;">
-                        <span id="upgradePrompt">Upgrade for unlimited descriptions</span>
+                        <a href="https://subscriptions.soltecsol.com" target="_blank" id="upgradePrompt" style="
+                            color: #667eea;
+                            text-decoration: none;
+                            cursor: pointer;
+                            transition: color 0.3s ease;
+                        " onmouseover="this.style.color='#764ba2'"
+                           onmouseout="this.style.color='#667eea'">Upgrade for unlimited descriptions →</a>
                     </div>
                 </div>
                 
@@ -1326,54 +898,6 @@
                 </div>
             </div>
 
-            <div class="pricing-section">
-                <h2 class="section-title" data-translate="pricingTitle">💰 Choose Your Plan</h2>
-                
-                <div class="pricing-grid">
-                    <div class="pricing-card clickable-plan" data-plan="starter">
-                        <div class="plan-name" data-translate="starter">Starter</div>
-                        <div class="free-trial-badge" data-translate="firstMonthFree">🎉 First Month FREE</div>
-                        <div class="plan-price">$19.99</div>
-                        <div class="plan-period" data-translate="perMonthAfterTrial">per month after trial</div>
-                        <ul class="plan-features">
-                            <li data-translate="fiftyDescriptions">50 descriptions/month</li>
-                            <li data-translate="fiveBrandTones">5 brand tones</li>
-                            <li data-translate="seoOptimization">SEO optimization</li>
-                            <li data-translate="emailSupport">Email support</li>
-                        </ul>
-                        <div id="paypal-starter" class="paypal-button-container"></div>
-                    </div>
-
-                    <div class="pricing-card featured clickable-plan" data-plan="professional">
-                        <div class="popular-badge" data-translate="mostPopular">MOST POPULAR</div>
-                        <div class="plan-name" data-translate="professional">Professional</div>
-                        <div class="plan-price">$49.99</div>
-                        <div class="plan-period" data-translate="perMonth">per month</div>
-                        <ul class="plan-features">
-                            <li data-translate="twoHundredDescriptions">200 descriptions/month</li>
-                            <li data-translate="allBrandTones">All brand tones</li>
-                            <li data-translate="advancedSeo">Advanced SEO</li>
-                            <li data-translate="bulkExport">Bulk export</li>
-                            <li data-translate="prioritySupport">Priority support</li>
-                        </ul>
-                        <div id="paypal-professional" class="paypal-button-container"></div>
-                    </div>
-
-                    <div class="pricing-card clickable-plan" data-plan="enterprise">
-                        <div class="plan-name" data-translate="enterprise">Enterprise</div>
-                        <div class="plan-price">$99.99</div>
-                        <div class="plan-period" data-translate="perMonth">per month</div>
-                        <ul class="plan-features">
-                            <li data-translate="unlimitedDescriptions">Unlimited descriptions</li>
-                            <li data-translate="customBrandTones">Custom brand tones</li>
-                            <li data-translate="apiAccess">API access</li>
-                            <li data-translate="teamCollaboration">Team collaboration</li>
-                            <li data-translate="dedicatedSupport">Dedicated support</li>
-                        </ul>
-                        <div id="paypal-enterprise" class="paypal-button-container"></div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="stats-section">
@@ -1410,6 +934,9 @@
                 pageTitle: 'SolTecSol - AI Product Description Generator',
                 companyName: 'SolTecSol',
                 appTitle: 'AI Description Generator',
+                subscriptionPlans: 'Subscription Plans',
+                createAccount: 'Create Account',
+                signIn: 'Sign In',
                 tagline: 'Transform Product URLs into Converting Copy',
                 subtitle: 'Generate SEO-optimized, brand-specific product descriptions that convert browsers into buyers. Save hours of writing time and boost your e-commerce sales.',
                 
@@ -1472,44 +999,6 @@
                 // Results
                 optimizedDescription: '✨ Your Optimized Product Description',
                 
-                // Pricing Section
-                pricingTitle: '💰 Choose Your Plan',
-                pricingSubtitle: 'Unlock unlimited AI-powered descriptions',
-                
-                // Plan Names
-                starter: 'Starter',
-                professional: 'Professional', 
-                enterprise: 'Enterprise',
-                mostPopular: 'MOST POPULAR',
-                
-                // Plan Features
-                firstMonthFree: '🎉 First Month FREE',
-                perMonth: 'per month',
-                perMonthAfterTrial: 'per month after trial',
-                
-                // Starter Plan Features  
-                fiftyDescriptions: '50 descriptions/month',
-                fiveBrandTones: '5 brand tones',
-                seoOptimization: 'SEO optimization',
-                emailSupport: 'Email support',
-                
-                // Professional Plan Features
-                twoHundredDescriptions: '200 descriptions/month',
-                allBrandTones: 'All brand tones',
-                advancedSeo: 'Advanced SEO',
-                bulkExport: 'Bulk export',
-                prioritySupport: 'Priority support',
-                
-                // Enterprise Plan Features
-                unlimitedDescriptions: 'Unlimited descriptions',
-                customBrandTones: 'Custom brand tones',
-                apiAccess: 'API access',
-                teamCollaboration: 'Team collaboration',
-                dedicatedSupport: 'Dedicated support',
-                
-                // Plan Buttons
-                currentPlan: 'Current Plan',
-                choosePlan: 'Choose Plan',
                 
                 // Stats
                 descriptionsGenerated: 'Descriptions Generated',
@@ -1518,7 +1007,6 @@
                 
                 // Notifications
                 descriptionCopied: 'Description copied to clipboard!',
-                subscriptionSuccess: 'Successfully subscribed to',
                 usageDataRefreshed: 'Usage data refreshed',
                 
                 // Language Switcher
@@ -1530,6 +1018,7 @@
                 pageTitle: 'SolTecSol - Generador de Descripciones de Productos con IA',
                 companyName: 'SolTecSol (Soluciones Tecnológicas Sólidas)',
                 appTitle: 'Generador de Descripciones con IA',
+                subscriptionPlans: 'Planes de Suscripción',
                 tagline: 'Transforma URLs de Productos en Textos que Convierten',
                 subtitle: 'Genera descripciones de productos optimizadas para SEO y específicas de marca que convierten navegadores en compradores. Ahorra horas de tiempo de escritura y aumenta tus ventas de comercio electrónico.',
                 
@@ -1592,44 +1081,6 @@
                 // Results
                 optimizedDescription: '✨ Tu Descripción de Producto Optimizada',
                 
-                // Pricing Section
-                pricingTitle: '💰 Elige Tu Plan',
-                pricingSubtitle: 'Desbloquea descripciones ilimitadas con IA',
-                
-                // Plan Names
-                starter: 'Inicial',
-                professional: 'Profesional',
-                enterprise: 'Empresa',
-                mostPopular: 'MÁS POPULAR',
-                
-                // Plan Features
-                firstMonthFree: '🎉 Primer Mes GRATIS',
-                perMonth: 'por mes',
-                perMonthAfterTrial: 'por mes después del periodo de prueba',
-                
-                // Starter Plan Features  
-                fiftyDescriptions: '50 descripciones/mes',
-                fiveBrandTones: '5 tonos de marca',
-                seoOptimization: 'Optimización SEO',
-                emailSupport: 'Soporte por email',
-                
-                // Professional Plan Features
-                twoHundredDescriptions: '200 descripciones/mes',
-                allBrandTones: 'Todos los tonos de marca',
-                advancedSeo: 'SEO Avanzado',
-                bulkExport: 'Exportación masiva',
-                prioritySupport: 'Soporte prioritario',
-                
-                // Enterprise Plan Features
-                unlimitedDescriptions: 'Descripciones ilimitadas',
-                customBrandTones: 'Tonos de marca personalizados',
-                apiAccess: 'Acceso a API',
-                teamCollaboration: 'Colaboración en equipo',
-                dedicatedSupport: 'Soporte dedicado',
-                
-                // Plan Buttons
-                currentPlan: 'Plan Actual',
-                choosePlan: 'Elegir Plan',
                 
                 // Stats
                 descriptionsGenerated: 'Descripciones Generadas',
@@ -1638,7 +1089,6 @@
                 
                 // Notifications
                 descriptionCopied: '¡Descripción copiada al portapapeles!',
-                subscriptionSuccess: 'Suscripción exitosa a',
                 usageDataRefreshed: 'Datos de uso actualizados',
                 
                 // Language Switcher
@@ -1650,6 +1100,7 @@
                 pageTitle: 'SolTecSol - Générateur de Descriptions de Produits IA',
                 companyName: 'SolTecSol (Solutions Technologiques Solides)',
                 appTitle: 'Générateur de Descriptions IA',
+                subscriptionPlans: 'Plans d\'Abonnement',
                 tagline: 'Transformez les URLs de Produits en Textes qui Convertissent',
                 subtitle: 'Générez des descriptions de produits optimisées SEO et spécifiques à la marque qui convertissent les visiteurs en acheteurs. Économisez des heures de rédaction et augmentez vos ventes e-commerce.',
                 
@@ -1710,45 +1161,7 @@
                 // Results
                 optimizedDescription: '✨ Votre Description de Produit Optimisée',
                 
-                // Pricing Section
-                pricingTitle: '💰 Choisissez Votre Plan',
-                pricingSubtitle: 'Débloquez des descriptions IA illimitées',
                 
-                // Plan Names
-                starter: 'Démarrage',
-                professional: 'Professionnel',
-                enterprise: 'Entreprise',
-                mostPopular: 'LE PLUS POPULAIRE',
-                
-                // Plan Features
-                firstMonthFree: '🎉 Premier Mois GRATUIT',
-                perMonth: 'par mois',
-                perMonthAfterTrial: 'par mois après la période d\'essai',
-                // CACHE BUST: Updated French translations
-                
-                // Starter Plan Features  
-                fiftyDescriptions: '50 descriptions/mois',
-                fiveBrandTones: '5 tons de marque',
-                seoOptimization: 'Optimisation SEO',
-                emailSupport: 'Support par email',
-                
-                // Professional Plan Features
-                twoHundredDescriptions: '200 descriptions/mois',
-                allBrandTones: 'Tous les tons de marque',
-                advancedSeo: 'SEO Avancé',
-                bulkExport: 'Export en masse',
-                prioritySupport: 'Support prioritaire',
-                
-                // Enterprise Plan Features
-                unlimitedDescriptions: 'Descriptions illimitées',
-                customBrandTones: 'Tons de marque personnalisés',
-                apiAccess: 'Accès API',
-                teamCollaboration: 'Collaboration d\'équipe',
-                dedicatedSupport: 'Support dédié',
-                
-                // Plan Buttons
-                currentPlan: 'Plan Actuel',
-                choosePlan: 'Choisir le Plan',
                 
                 // Stats
                 descriptionsGenerated: 'Descriptions Générées',
@@ -1757,7 +1170,6 @@
                 
                 // Notifications
                 descriptionCopied: 'Description copiée dans le presse-papiers !',
-                subscriptionSuccess: 'Abonnement réussi à',
                 usageDataRefreshed: 'Données d\'usage actualisées',
                 
                 // Language Switcher
@@ -1769,6 +1181,7 @@
                 pageTitle: 'SolTecSol - KI Produktbeschreibungs-Generator',
                 companyName: 'SolTecSol',
                 appTitle: 'KI Produktbeschreibungs-Generator',
+                subscriptionPlans: 'Abonnementpläne',
                 tagline: 'Produkt-URLs in verkaufsfördernde Texte verwandeln',
                 subtitle: 'Erstellen Sie SEO-optimierte, markenspezifische Produktbeschreibungen, die Besucher in Käufer verwandeln. Sparen Sie Stunden beim Schreiben und steigern Sie Ihre E-Commerce-Verkäufe.',
                 
@@ -1856,6 +1269,7 @@
                 pageTitle: 'SolTecSol - Generatore di Descrizioni Prodotto AI',
                 companyName: 'SolTecSol (Soluzioni Tecnologiche Solide)',
                 appTitle: 'Generatore di Descrizioni AI',
+                subscriptionPlans: 'Piani di Abbonamento',
                 tagline: 'Trasforma gli URL dei Prodotti in Testi che Convertono',
                 subtitle: 'Genera descrizioni di prodotti ottimizzate SEO e specifiche del marchio che convertono i visitatori in acquirenti. Risparmia ore di scrittura e aumenta le vendite e-commerce.',
                 
@@ -1918,6 +1332,7 @@
                 pageTitle: 'SolTecSol - Gerador de Descrições de Produtos IA',
                 companyName: 'SolTecSol (Soluções Tecnológicas Sólidas)',
                 appTitle: 'Gerador de Descrições IA',
+                subscriptionPlans: 'Planos de Assinatura',
                 tagline: 'Transforme URLs de Produtos em Textos que Convertem',
                 subtitle: 'Gere descrições de produtos otimizadas para SEO e específicas da marca que convertem visitantes em compradores. Economize horas de escrita e aumente suas vendas de e-commerce.',
                 
@@ -2426,66 +1841,6 @@
         let currentProductInfo = null;
         let inputMode = 'url'; // 'url' or 'barcode'
         
-        // PayPal SDK loader - dynamically loads PayPal SDK with secure Client ID
-        const PayPalLoader = {
-            clientId: null,
-            sdkLoaded: false,
-            loadPromise: null,
-            
-            // Fetch PayPal Client ID from secure endpoint
-            async fetchClientId() {
-                try {
-                    const response = await fetch('/.netlify/functions/paypal-config');
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch PayPal configuration');
-                    }
-                    const data = await response.json();
-                    return data.clientId;
-                } catch (error) {
-                    console.error('PayPal Client ID fetch error:', error);
-                    throw error;
-                }
-            },
-            
-            // Dynamically inject PayPal SDK script
-            async loadSDK() {
-                if (this.loadPromise) {
-                    return this.loadPromise;
-                }
-                
-                this.loadPromise = new Promise(async (resolve, reject) => {
-                    try {
-                        // Get Client ID if not already fetched
-                        if (!this.clientId) {
-                            this.clientId = await this.fetchClientId();
-                        }
-                        
-                        // Create and inject PayPal SDK script
-                        const script = document.createElement('script');
-                        script.src = `https://www.paypal.com/sdk/js?client-id=${this.clientId}&vault=true&intent=subscription`;
-                        script.onload = () => {
-                            this.sdkLoaded = true;
-                            console.log('PayPal SDK loaded successfully');
-                            resolve();
-                        };
-                        script.onerror = () => {
-                            reject(new Error('Failed to load PayPal SDK'));
-                        };
-                        
-                        document.head.appendChild(script);
-                    } catch (error) {
-                        reject(error);
-                    }
-                });
-                
-                return this.loadPromise;
-            },
-            
-            // Check if PayPal SDK is ready for use
-            isReady() {
-                return this.sdkLoaded && window.paypal;
-            }
-        };
 
         // Global error handler
         window.addEventListener('unhandledrejection', function(event) {
@@ -2598,11 +1953,6 @@
             setupEventListeners();
             updateAllTranslations(); // Apply translations after everything is loaded
             
-            // Setup PayPal buttons once on page load
-            setupPayPalButtons().catch(error => {
-                console.error('PayPal setup failed:', error);
-                showNotification('Payment system temporarily unavailable', 'error');
-            });
             
             addEntranceAnimations();
         });
@@ -2757,16 +2107,6 @@
                 lookupBarcodeBtn.addEventListener('click', handleBarcodeLookup);
             }
 
-            // Add click handlers for pricing cards
-            const pricingCards = document.querySelectorAll('.clickable-plan');
-            console.log('Found pricing cards:', pricingCards.length);
-            pricingCards.forEach(card => {
-                card.addEventListener('click', (e) => {
-                    const planType = card.getAttribute('data-plan');
-                    console.log('Plan card clicked:', planType);
-                    showPayPalButton(planType);
-                });
-            });
         }
 
         function handleFormSubmission(event) {
@@ -2911,138 +2251,7 @@
             productPreview.style.display = 'block';
         }
 
-        async function setupPayPalButtons() {
-            try {
-                // Load PayPal SDK dynamically with secure Client ID
-                await PayPalLoader.loadSDK();
-                
-                // Check if PayPal SDK is ready
-                if (!PayPalLoader.isReady()) {
-                    throw new Error('PayPal SDK not ready');
-                }
-                
-                // Fetch plan IDs from backend
-                const planResponse = await fetch('/.netlify/functions/paypal', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'get_plan_ids' })
-                });
-                
-                if (!planResponse.ok) {
-                    throw new Error('Failed to fetch PayPal plan IDs');
-                }
-                
-                const planIds = await planResponse.json();
-                console.log('Retrieved plan IDs:', planIds);
-                
-                // PayPal Starter Subscription  
-                paypal.Buttons({
-                    createSubscription: function(data, actions) {
-                        return actions.subscription.create({
-                            'plan_id': planIds.starter
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        alert('Subscription successful!');
-                        console.log('Subscription ID:', data.subscriptionID);
-                    },
-                    onError: function(err) {
-                        console.error('PayPal Subscription Error:', err);
-                        alert('Subscription failed');
-                    }
-                }).render('#paypal-starter');
 
-                // PayPal Professional Plan
-                paypal.Buttons({
-                    style: {
-                        color: 'blue',
-                        shape: 'rect',
-                        label: 'subscribe'
-                    },
-                    createSubscription: function(data, actions) {
-                        return actions.subscription.create({
-                            'plan_id': planIds.professional
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        handlePayPalSuccess('professional', data.subscriptionID);
-                    },
-                    onError: function(err) {
-                        console.error('PayPal Error:', err);
-                        showNotification('Payment failed. Please try again.', 'error');
-                    }
-                }).render('#paypal-professional');
-
-                // PayPal Enterprise Plan
-                paypal.Buttons({
-                    style: {
-                        color: 'blue',
-                        shape: 'rect',
-                        label: 'subscribe'
-                    },
-                    createSubscription: function(data, actions) {
-                        return actions.subscription.create({
-                            'plan_id': planIds.enterprise
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        handlePayPalSuccess('enterprise', data.subscriptionID);
-                    },
-                    onError: function(err) {
-                        console.error('PayPal Error:', err);
-                        showNotification('Payment failed. Please try again.', 'error');
-                    }
-                }).render('#paypal-enterprise');
-            } catch (error) {
-                console.error('PayPal setup failed:', error);
-                showNotification('Payment system unavailable. Please try again later.', 'error');
-            }
-        }
-
-        async function handlePayPalSuccess(planName, subscriptionId) {
-            showNotification('Processing your subscription...', 'info');
-            
-            try {
-                // Get Firebase authentication token
-                const auth = window.firebaseAuth;
-                const user = auth?.currentUser;
-                if (!user) {
-                    throw new Error('User not authenticated');
-                }
-                
-                const idToken = await user.getIdToken();
-                
-                // Send subscription data to server for processing
-                const response = await fetch('/.netlify/functions/firebase-user', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${idToken}`
-                    },
-                    body: JSON.stringify({
-                        action: 'verify_subscription',
-                        userId: userState.userId,
-                        planName: planName,
-                        subscriptionId: subscriptionId,
-                        paymentProvider: 'paypal'
-                    })
-                });
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.success) {
-                        showNotification(`Successfully subscribed to ${planName.charAt(0).toUpperCase() + planName.slice(1)} plan!`, 'success');
-                    } else {
-                        throw new Error(result.error || 'Subscription processing failed');
-                    }
-                } else {
-                    throw new Error('Server processing failed');
-                }
-            } catch (error) {
-                console.error('Subscription processing error:', error);
-                showNotification('Subscription processing failed. Please contact support.', 'error');
-            }
-        }
 
         async function syncUserToServer(userData) {
             const response = await fetch('/.netlify/functions/admin', {
@@ -3055,12 +2264,9 @@
                     password: 'demo123', // This would be better handled differently in production
                     userId: userData.userId || generateUserIdFromData(userData),
                     userData: {
-                        email: userData.email || 'subscriber@unknown.com',
-                        subscriptionType: userData.subscriptionType,
+                        email: userData.email || 'user@unknown.com',
                         monthlyUsage: userData.monthlyUsage || 0,
                         maxUsage: userData.maxUsage,
-                        isSubscribed: userData.isSubscribed,
-                        subscriptionId: userData.subscriptionId,
                         lastActive: new Date().toISOString(),
                         syncedFromClient: true
                     }
@@ -3083,59 +2289,10 @@
             }
             
             // Fallback for cases where Firebase is not ready
-            console.warn('Firebase user not available, using subscription-based ID');
-            return `paypal_${userData.subscriptionId || 'unknown'}`;
+            console.warn('Firebase user not available, using anonymous ID');
+            return `anonymous_${Date.now()}`;
         }
 
-        async function handlePaymentButtonClick(button) {
-            try {
-                const planName = button.getAttribute('data-plan');
-                const price = button.getAttribute('data-price');
-                const limit = parseInt(button.getAttribute('data-limit'));
-
-                if (!planName || !price || !limit) {
-                    console.error('Missing payment button data attributes');
-                    return;
-                }
-
-                // Show loading state
-                button.disabled = true;
-                button.textContent = 'Processing...';
-
-                // Create checkout session
-                const response = await fetch('/.netlify/functions/stripe', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'create_checkout_session',
-                        planName: planName,
-                        email: userState.email || ''
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.checkout_url) {
-                    // Redirect to Stripe Checkout
-                    window.location.href = data.checkout_url;
-                } else {
-                    throw new Error(data.error || 'Failed to create checkout session');
-                }
-
-            } catch (error) {
-                console.error('Payment button click error:', error);
-                showNotification('Payment processing error. Please try again.', 'error');
-                
-                // Reset button
-                button.disabled = false;
-                const originalText = button.getAttribute('data-plan') === 'starter' ? 'Start Free Trial' : 
-                                   button.getAttribute('data-plan') === 'professional' ? 'Choose Professional' : 
-                                   'Choose Enterprise';
-                button.textContent = originalText;
-            }
-        }
 
         async function generateDescription() {
             // Get form values
@@ -3220,11 +2377,22 @@
                 } else {
                     throw new Error(data.error || 'Failed to generate description');
                 }
-                
+
             } catch (error) {
                 console.error('Error generating description:', error);
-                showError('productUrl', 'Failed to generate description. Please try again.');
-                showNotification('Generation failed. Please try again.', 'error');
+
+                // Check if it's a usage limit error and provide subscription guidance
+                const errorMessage = error.message;
+                if (errorMessage.includes('Usage limit exceeded') ||
+                    errorMessage.includes('limit reached') ||
+                    errorMessage.includes('upgrade') ||
+                    errorMessage.includes('subscription')) {
+
+                    showUsageLimitDialog(errorMessage);
+                } else {
+                    showError('productUrl', 'Failed to generate description. Please try again.');
+                    showNotification('Generation failed. Please try again.', 'error');
+                }
             } finally {
                 // Reset button
                 generateBtn.classList.remove('loading');
@@ -3399,7 +2567,7 @@
 
         function addEntranceAnimations() {
             // Add subtle entrance animations
-            const sections = document.querySelectorAll('.generator-section, .pricing-section');
+            const sections = document.querySelectorAll('.generator-section');
             sections.forEach((section, index) => {
                 section.style.opacity = '0';
                 section.style.transform = 'translateY(30px)';
@@ -3439,21 +2607,181 @@
             }, 4000);
         }
 
+        // Show usage limit dialog with subscription guidance
+        function showUsageLimitDialog(errorMessage) {
+            const dialog = document.createElement('div');
+            dialog.className = 'usage-limit-dialog-overlay';
+            dialog.innerHTML = `
+                <div class="usage-limit-dialog">
+                    <div class="dialog-header">
+                        <h3>⚡ Usage Limit Reached</h3>
+                        <button class="dialog-close" onclick="this.closest('.usage-limit-dialog-overlay').remove()">×</button>
+                    </div>
+                    <div class="dialog-body">
+                        <p class="error-message">${errorMessage}</p>
+                        <p class="upgrade-message">Upgrade to unlock unlimited AI-generated descriptions and boost your e-commerce success!</p>
+                        <div class="dialog-actions">
+                            <a href="https://subscriptions.soltecsol.com" target="_blank" class="upgrade-btn">
+                                💳 View Subscription Plans
+                            </a>
+                            <button class="dialog-close-btn" onclick="this.closest('.usage-limit-dialog-overlay').remove()">
+                                Maybe Later
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add dialog styles if not already present
+            if (!document.getElementById('usage-limit-dialog-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'usage-limit-dialog-styles';
+                styles.textContent = `
+                    .usage-limit-dialog-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.7);
+                        backdrop-filter: blur(5px);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 10000;
+                        animation: fadeIn 0.3s ease;
+                    }
+                    .usage-limit-dialog {
+                        background: white;
+                        border-radius: 16px;
+                        max-width: 500px;
+                        width: 90%;
+                        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                        overflow: hidden;
+                        animation: slideUp 0.3s ease;
+                    }
+                    .dialog-header {
+                        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+                        color: white;
+                        padding: 20px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    .dialog-header h3 {
+                        margin: 0;
+                        font-size: 1.2rem;
+                    }
+                    .dialog-close {
+                        background: none;
+                        border: none;
+                        color: white;
+                        font-size: 24px;
+                        cursor: pointer;
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: background 0.2s ease;
+                    }
+                    .dialog-close:hover {
+                        background: rgba(255, 255, 255, 0.2);
+                    }
+                    .dialog-body {
+                        padding: 30px;
+                        text-align: center;
+                    }
+                    .error-message {
+                        color: #e74c3c;
+                        font-weight: 600;
+                        margin-bottom: 15px;
+                    }
+                    .upgrade-message {
+                        color: #2c3e50;
+                        margin-bottom: 25px;
+                        line-height: 1.5;
+                    }
+                    .dialog-actions {
+                        display: flex;
+                        gap: 15px;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                    }
+                    .upgrade-btn {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        text-decoration: none;
+                        font-weight: 600;
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+                    .upgrade-btn:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                    }
+                    .dialog-close-btn {
+                        background: #95a5a6;
+                        color: white;
+                        border: none;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        transition: background 0.2s ease;
+                    }
+                    .dialog-close-btn:hover {
+                        background: #7f8c8d;
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes slideUp {
+                        from { transform: translateY(50px); opacity: 0; }
+                        to { transform: translateY(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+
+            document.body.appendChild(dialog);
+
+            // Close on outside click
+            dialog.addEventListener('click', (e) => {
+                if (e.target === dialog) {
+                    dialog.remove();
+                }
+            });
+        }
+
         // Check for successful payment on page load
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('success') === 'true') {
             showNotification('Payment processed successfully!', 'success');
-            
+
             // Clean up URL
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-        
-        function showPayPalButton(planType) {
-            document.querySelectorAll('.paypal-button-container').forEach(container => {
-                container.classList.remove('show');
-            });
-            document.getElementById('paypal-' + planType).classList.add('show');
+
+        // SESSION 3C: Enhanced navigation with return URL support
+        function openSignupWithReturn() {
+            const currentUrl = window.location.href;
+            const signupUrl = `https://signup.soltecsol.com?return_to=${encodeURIComponent(currentUrl)}`;
+            window.open(signupUrl, '_blank', 'noopener,noreferrer');
         }
+
+        function openSigninWithReturn() {
+            const currentUrl = window.location.href;
+            const signinUrl = `https://signup.soltecsol.com?tab=signin&return_to=${encodeURIComponent(currentUrl)}`;
+            window.open(signinUrl, '_blank', 'noopener,noreferrer');
+        }
+
     </script>
     
     <!-- Support Footer -->

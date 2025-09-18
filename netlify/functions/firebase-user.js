@@ -3,9 +3,10 @@
 
 const { getFirestore } = require('./firebase-config');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
+const distributedRateLimiter = require('./distributed-rate-limiter');
 
-// SECURITY FIX: Rate limiting implementation
-const rateLimitMap = new Map();
+// SESSION 1C-2: Rate limiting configuration for distributed system
+// SECURITY FIX: Replaced stateful Map with distributed rate limiting
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const RATE_LIMIT_MAX_REQUESTS = 20; // 20 requests per minute for user operations
 
@@ -13,7 +14,10 @@ exports.handler = async (event, context) => {
     // Production-only CORS configuration
     const allowedOrigins = [
         'https://www.soltecsol.com',
-        'https://ai-generator.soltecsol.com'
+        'https://ai-generator.soltecsol.com',
+        'https://app.soltecsol.com',
+        'https://subscriptions.soltecsol.com',
+        'https://signup.soltecsol.com'
     ];
 
     const origin = event.headers.origin || event.headers.Origin || '';
@@ -71,9 +75,9 @@ exports.handler = async (event, context) => {
         };
     }
 
-    // SECURITY FIX: Rate limiting check
+    // SESSION 1C-2: Distributed rate limiting check
     const clientIP = event.headers['x-forwarded-for'] || event.headers['x-real-ip'] || 'unknown';
-    if (!checkRateLimit(clientIP)) {
+    if (!(await checkRateLimit(clientIP))) {
         return {
             statusCode: 429,
             headers: {
@@ -309,9 +313,9 @@ async function createUser(db, userId, email, headers) {
             };
         }
 
-        // SESSION 4D4: Enhanced registration rate limiting with IP validation
+        // SESSION 1C-2: Enhanced registration rate limiting with distributed system
         const clientIP = event.headers['x-forwarded-for'] || event.headers['x-real-ip'] || 'unknown';
-        if (!checkRegistrationRateLimit(clientIP)) {
+        if (!(await checkRegistrationRateLimit(clientIP))) {
             return {
                 statusCode: 429,
                 headers: {
@@ -557,8 +561,10 @@ const dns = require('dns').promises;
 // Domain whitelist for approved email providers
 const approvedDomains = ['gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'yahoo.com', 'icloud.com', 'protonmail.com', 'aol.com'];
 
-// Registration rate limiting - 5 attempts per hour per IP
-const registrationAttempts = new Map();
+// SESSION 1C-2: Registration rate limiting configuration for distributed system
+// SECURITY FIX: Replaced stateful Map with distributed rate limiting
+const REGISTRATION_RATE_LIMIT_WINDOW = 3600000; // 1 hour
+const MAX_REGISTRATION_ATTEMPTS = 5; // 5 attempts per hour per IP
 
 async function isValidEmail(email) {
     // SESSION 4D4: Enhanced email validation with detailed security checks
@@ -700,68 +706,51 @@ async function isValidEmail(email) {
     };
 }
 
-// CRITICAL: Registration rate limiting function
-function checkRegistrationRateLimit(clientIP) {
-    const now = Date.now();
-    const attempts = registrationAttempts.get(clientIP) || [];
-    const validAttempts = attempts.filter(timestamp => now - timestamp < 3600000); // 1 hour
-    
-    if (validAttempts.length >= 5) {
-        return false;
+// SESSION 1C-2: Registration rate limiting using distributed system
+async function checkRegistrationRateLimit(clientIP) {
+    try {
+        const result = await distributedRateLimiter.checkRateLimit(`registration:${clientIP}`, {
+            maxRequests: MAX_REGISTRATION_ATTEMPTS,
+            windowMs: REGISTRATION_RATE_LIMIT_WINDOW,
+            type: 'registration',
+            clientIP: clientIP,
+            endpoint: 'user-registration'
+        });
+
+        return result.allowed;
+    } catch (error) {
+        console.error('Registration rate limit check failed:', error);
+        // Fail safe - allow registration but log the error
+        return true;
     }
-    
-    validAttempts.push(now);
-    registrationAttempts.set(clientIP, validAttempts);
-    return true;
 }
 
-// Clean up old registration attempts periodically
-setInterval(() => {
-    const now = Date.now();
-    for (const [ip, attempts] of registrationAttempts.entries()) {
-        const validAttempts = attempts.filter(timestamp => now - timestamp < 3600000);
-        if (validAttempts.length === 0) {
-            registrationAttempts.delete(ip);
-        } else {
-            registrationAttempts.set(ip, validAttempts);
-        }
-    }
-}, 10 * 60 * 1000); // Clean every 10 minutes
+// REMOVED: setInterval for serverless compatibility
+// Cleanup will be handled by infrastructure or periodic cloud functions
 
 function getCurrentBillingPeriod() {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 }
 
-// SECURITY FIX: Rate limiting function
-function checkRateLimit(clientIP) {
-    const now = Date.now();
-    const userRequests = rateLimitMap.get(clientIP) || [];
-    
-    // Remove requests outside the current window
-    const validRequests = userRequests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
-    
-    // Check if user has exceeded rate limit
-    if (validRequests.length >= RATE_LIMIT_MAX_REQUESTS) {
-        return false;
+// SESSION 1C-2: User operations rate limiting using distributed system
+async function checkRateLimit(clientIP) {
+    try {
+        const result = await distributedRateLimiter.checkRateLimit(`user_ops:${clientIP}`, {
+            maxRequests: RATE_LIMIT_MAX_REQUESTS,
+            windowMs: RATE_LIMIT_WINDOW,
+            type: 'user_operations',
+            clientIP: clientIP,
+            endpoint: 'firebase-user'
+        });
+
+        return result.allowed;
+    } catch (error) {
+        console.error('User operations rate limit check failed:', error);
+        // Fail safe - allow operation but log the error
+        return true;
     }
-    
-    // Add current request timestamp
-    validRequests.push(now);
-    rateLimitMap.set(clientIP, validRequests);
-    
-    return true;
 }
 
-// Clean up old entries periodically
-setInterval(() => {
-    const now = Date.now();
-    for (const [ip, requests] of rateLimitMap.entries()) {
-        const validRequests = requests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
-        if (validRequests.length === 0) {
-            rateLimitMap.delete(ip);
-        } else {
-            rateLimitMap.set(ip, validRequests);
-        }
-    }
-}, 5 * 60 * 1000);
+// REMOVED: setInterval for serverless compatibility
+// Cleanup will be handled by infrastructure or periodic cloud functions

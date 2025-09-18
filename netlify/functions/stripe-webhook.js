@@ -5,9 +5,10 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { getFirestore } = require('./firebase-config');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 const securityLogger = require('./security-logger');
+const distributedRateLimiter = require('./distributed-rate-limiter');
 
-// Webhook validation and rate limiting
-const webhookRequestMap = new Map();
+// SESSION 1C-2: Webhook validation and distributed rate limiting
+// SECURITY FIX: Replaced stateful Map with Firestore-based rate limiting
 const WEBHOOK_RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_WEBHOOK_REQUESTS = 100; // 100 webhooks per minute
 
@@ -16,19 +17,35 @@ exports.handler = async (event, context) => {
   const sourceIP = event.headers['x-forwarded-for'] || event.headers['x-real-ip'] || 'unknown';
   
   try {
-    // SECURITY: Webhook rate limiting
-    if (!checkWebhookRateLimit(sourceIP)) {
+    // SESSION 1C-2: Distributed webhook rate limiting with enhanced security
+    const rateLimitResult = await distributedRateLimiter.checkRateLimit(sourceIP, {
+      maxRequests: MAX_WEBHOOK_REQUESTS,
+      windowMs: WEBHOOK_RATE_LIMIT_WINDOW,
+      type: 'webhook',
+      clientIP: sourceIP,
+      userAgent: event.headers['user-agent'] || 'stripe-webhook',
+      endpoint: 'stripe-webhook'
+    });
+
+    if (!rateLimitResult.allowed) {
       securityLogger.logSuspiciousActivity({
         activityType: 'webhook_rate_limit_exceeded',
         description: 'Stripe webhook rate limit exceeded',
         clientIP: sourceIP,
-        endpoint: 'stripe-webhook'
+        endpoint: 'stripe-webhook',
+        retryAfter: rateLimitResult.retryAfter
       });
-      
+
       return {
         statusCode: 429,
-        headers: firebaseAuthMiddleware.createSecureHeaders('', { webhook: true, contentType: 'application/json' }),
-        body: JSON.stringify({ error: 'Webhook rate limit exceeded' })
+        headers: {
+          ...firebaseAuthMiddleware.createSecureHeaders('', { webhook: true, contentType: 'application/json' }),
+          'Retry-After': rateLimitResult.retryAfter?.toString() || '60'
+        },
+        body: JSON.stringify({
+          error: 'Webhook rate limit exceeded',
+          retryAfter: rateLimitResult.retryAfter
+        })
       };
     }
 
@@ -226,28 +243,23 @@ exports.handler = async (event, context) => {
 };
 
 /**
- * Check webhook rate limiting
+ * SESSION 1C-2: Check webhook rate limiting using distributed system
  * @param {string} sourceIP - Source IP address
- * @returns {boolean} True if within rate limit
+ * @param {Object} options - Additional options
+ * @returns {Promise<boolean>} True if within rate limit
  */
-function checkWebhookRateLimit(sourceIP) {
+async function checkWebhookRateLimit(sourceIP, options = {}) {
   try {
-    const now = Date.now();
-    const requests = webhookRequestMap.get(sourceIP) || [];
-    
-    // Remove old requests
-    const validRequests = requests.filter(timestamp => now - timestamp < WEBHOOK_RATE_LIMIT_WINDOW);
-    
-    // Check rate limit
-    if (validRequests.length >= MAX_WEBHOOK_REQUESTS) {
-      return false;
-    }
-    
-    // Add current request
-    validRequests.push(now);
-    webhookRequestMap.set(sourceIP, validRequests);
-    
-    return true;
+    const result = await distributedRateLimiter.checkRateLimit(sourceIP, {
+      maxRequests: MAX_WEBHOOK_REQUESTS,
+      windowMs: WEBHOOK_RATE_LIMIT_WINDOW,
+      type: 'webhook',
+      clientIP: sourceIP,
+      userAgent: options.userAgent || 'webhook',
+      endpoint: options.endpoint || 'webhook'
+    });
+
+    return result.allowed;
   } catch (error) {
     console.error('Webhook rate limit check failed:', error);
     return true; // Fail open to avoid blocking legitimate webhooks
@@ -743,15 +755,5 @@ function getCurrentBillingPeriod() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 }
 
-// Clean up old webhook request records periodically
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, requests] of webhookRequestMap.entries()) {
-    const validRequests = requests.filter(timestamp => now - timestamp < WEBHOOK_RATE_LIMIT_WINDOW);
-    if (validRequests.length === 0) {
-      webhookRequestMap.delete(ip);
-    } else {
-      webhookRequestMap.set(ip, validRequests);
-    }
-  }
-}, 5 * 60 * 1000); // Clean every 5 minutes
+// REMOVED: setInterval for serverless compatibility
+// Cleanup will be handled by infrastructure or periodic cloud functions

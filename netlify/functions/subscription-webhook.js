@@ -6,6 +6,7 @@ const fetch = require('node-fetch');
 const firebaseAuthMiddleware = require('./firebase-auth-middleware');
 const securityLogger = require('./security-logger');
 const crypto = require('crypto');
+const distributedRateLimiter = require('./distributed-rate-limiter');
 
 exports.handler = async (event, context) => {
   const clientIP = event.headers['x-forwarded-for'] || event.headers['x-real-ip'] || 'unknown';
@@ -47,19 +48,35 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // SESSION 4D6: Enhanced webhook validation and rate limiting
-    if (!checkWebhookRateLimit(clientIP)) {
+    // SESSION 1C-2: Enhanced distributed webhook validation and rate limiting
+    const rateLimitResult = await distributedRateLimiter.checkRateLimit(clientIP, {
+      maxRequests: 50, // 50 webhook requests per minute per IP
+      windowMs: 60 * 1000, // 1 minute
+      type: 'webhook_subscription',
+      clientIP: clientIP,
+      userAgent: event.headers['user-agent'] || 'paypal-webhook',
+      endpoint: 'subscription-webhook'
+    });
+
+    if (!rateLimitResult.allowed) {
       securityLogger.logSuspiciousActivity({
         activityType: 'webhook_rate_limit_exceeded',
         description: 'PayPal subscription webhook rate limit exceeded',
         clientIP: clientIP,
-        endpoint: 'subscription-webhook'
+        endpoint: 'subscription-webhook',
+        retryAfter: rateLimitResult.retryAfter
       });
-      
+
       return {
         statusCode: 429,
-        headers,
-        body: JSON.stringify({ error: 'Rate limit exceeded' })
+        headers: {
+          ...headers,
+          'Retry-After': rateLimitResult.retryAfter?.toString() || '60'
+        },
+        body: JSON.stringify({
+          error: 'Webhook rate limit exceeded',
+          retryAfter: rateLimitResult.retryAfter
+        })
       };
     }
 
@@ -229,29 +246,29 @@ function getPlanAmount(planName) {
   return amounts[planName] || 'unknown';
 }
 
-// SESSION 4D6: Webhook rate limiting implementation
-const webhookRateLimitMap = new Map();
+// SESSION 1C-2: Webhook rate limiting configuration
+// SECURITY FIX: Replaced stateful Map with distributed rate limiting
 const WEBHOOK_RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_WEBHOOK_REQUESTS = 50; // 50 webhook requests per minute per IP
 
-function checkWebhookRateLimit(clientIP) {
+/**
+ * SESSION 1C-2: Check webhook rate limiting using distributed system
+ * @param {string} clientIP - Client IP address
+ * @param {Object} options - Additional options
+ * @returns {Promise<boolean>} True if within rate limit
+ */
+async function checkWebhookRateLimit(clientIP, options = {}) {
   try {
-    const now = Date.now();
-    const ipRequests = webhookRateLimitMap.get(clientIP) || [];
-    
-    // Remove requests outside the current window
-    const validRequests = ipRequests.filter(timestamp => now - timestamp < WEBHOOK_RATE_LIMIT_WINDOW);
-    
-    // Check if IP has exceeded rate limit
-    if (validRequests.length >= MAX_WEBHOOK_REQUESTS) {
-      return false;
-    }
-    
-    // Add current request timestamp
-    validRequests.push(now);
-    webhookRateLimitMap.set(clientIP, validRequests);
-    
-    return true;
+    const result = await distributedRateLimiter.checkRateLimit(clientIP, {
+      maxRequests: MAX_WEBHOOK_REQUESTS,
+      windowMs: WEBHOOK_RATE_LIMIT_WINDOW,
+      type: 'webhook_subscription',
+      clientIP: clientIP,
+      userAgent: options.userAgent || 'webhook',
+      endpoint: options.endpoint || 'subscription-webhook'
+    });
+
+    return result.allowed;
   } catch (error) {
     console.error('Webhook rate limit check failed:', error);
     // Allow request on error to avoid breaking functionality
@@ -259,15 +276,5 @@ function checkWebhookRateLimit(clientIP) {
   }
 }
 
-// Cleanup old rate limit entries
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, requests] of webhookRateLimitMap.entries()) {
-    const validRequests = requests.filter(timestamp => now - timestamp < WEBHOOK_RATE_LIMIT_WINDOW);
-    if (validRequests.length === 0) {
-      webhookRateLimitMap.delete(ip);
-    } else {
-      webhookRateLimitMap.set(ip, validRequests);
-    }
-  }
-}, 5 * 60 * 1000); // Clean every 5 minutes
+// REMOVED: setInterval for serverless compatibility
+// Cleanup will be handled by infrastructure or periodic cloud functions

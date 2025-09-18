@@ -48,17 +48,20 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# API headers for CORS - Cross-domain authentication support
+# API headers for CORS - Secure cross-domain authentication support
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
-    Access-Control-Allow-Headers = "Content-Type, Authorization, X-CSRF-Token, PayPal-Request-Id"
-    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Origin = "https://app.soltecsol.com, https://www.soltecsol.com, https://ai-generator.soltecsol.com, https://subscriptions.soltecsol.com, https://signup.soltecsol.com"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, X-CSRF-Token, X-Requested-With"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
     Access-Control-Allow-Credentials = "true"
+    Access-Control-Max-Age = "86400"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.paypal.com https://js.paypal.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://app.soltecsol.com https://subscriptions.soltecsol.com https://signup.soltecsol.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.openai.com https://www.paypal.com; frame-src https://www.paypal.com; object-src 'none'; base-uri 'self'; form-action 'self' https://www.paypal.com; frame-ancestors 'none'; upgrade-insecure-requests"
 
 # Environment-specific settings
 [context.production.environment]
