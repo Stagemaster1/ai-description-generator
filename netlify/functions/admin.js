@@ -405,6 +405,11 @@ async function deleteUser(db, userId, headers) {
 
 async function createTestUser(db, userData, headers) {
   try {
+    // Safety check: provide default userData if undefined
+    if (!userData) {
+      userData = {};
+    }
+
     // CRITICAL: Validate email if provided
     if (userData.email && !userData.email.includes('@example.com')) {
       const emailValidation = await isValidEmailForAdmin(userData.email);
