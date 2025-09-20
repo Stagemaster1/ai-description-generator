@@ -9,6 +9,61 @@
   NPM_VERSION = "9.6.7"
   SECRETS_SCAN_OMIT_PATHS = "package-lock.json"
 
+# Subdomain redirects for multi-domain architecture
+[[redirects]]
+  from = "https://tos.soltecsol.com/*"
+  to = "/tos.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://dpa.soltecsol.com/*"
+  to = "/dpa.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://gdpr.soltecsol.com/*"
+  to = "/gdpr.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://helpdesk.soltecsol.com/*"
+  to = "/helpdesk.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://genyx.soltecsol.com/*"
+  to = "/plyvo.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://subscriptions.soltecsol.com/*"
+  to = "/subscriptions.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://pricing.soltecsol.com/*"
+  to = "/pricing.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://signup.soltecsol.com/*"
+  to = "/signup.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://login.soltecsol.com/*"
+  to = "/login.html"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
@@ -26,7 +81,7 @@
   to = "/index.html?cancelled=true"
   status = 200
 
-# SPA fallback
+# SPA fallback - must be last
 [[redirects]]
   from = "/*"
   to = "/index.html"
