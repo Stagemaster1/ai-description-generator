@@ -74,24 +74,54 @@ async function isValidEmailForAdmin(email) {
 // Legacy rate limiting and password auth removed in favor of Firebase Auth + RBAC
 
 exports.handler = async (event, context) => {
-  // SESSION 4D3: Use firebase-auth-middleware for secure admin authentication
-  const authResult = await firebaseAuthMiddleware.authenticateRequest(event, {
-    requireAuth: true,
-    requireSubscription: false, // Admin endpoints don't need subscription validation
-    requireAdmin: true, // CRITICAL: Require admin role
-    allowedMethods: ['POST', 'GET'],
-    rateLimit: true
-  });
+  // Parse request body to check for password authentication
+  const requestBody = JSON.parse(event.body || '{}');
+  const { password, action, userId, userData } = requestBody;
 
-  // Handle authentication failures
-  if (!authResult.success) {
-    return authResult.response;
+  let headers, user;
+
+  // Check for password authentication (legacy admin panel)
+  if (password) {
+    // Password-based authentication
+    if (password !== process.env.ADMIN_PASSWORD) {
+      return {
+        statusCode: 401,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ error: 'Invalid admin password' })
+      };
+    }
+
+    // Set basic headers for password auth
+    headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Content-Type': 'application/json'
+    };
+    user = { uid: 'password-admin', email: 'admin@local' };
+  } else {
+    // Firebase authentication (preferred method)
+    const authResult = await firebaseAuthMiddleware.authenticateRequest(event, {
+      requireAuth: true,
+      requireSubscription: false, // Admin endpoints don't need subscription validation
+      requireAdmin: true, // CRITICAL: Require admin role
+      allowedMethods: ['POST', 'GET'],
+      rateLimit: true
+    });
+
+    // Handle authentication failures
+    if (!authResult.success) {
+      return authResult.response;
+    }
+
+    headers = authResult.headers;
+    user = authResult.user;
   }
 
-  const { headers, user } = authResult;
-
   try {
-    const { action, userId, userData } = JSON.parse(event.body || '{}');
 
     // Initialize Firebase
     const db = getFirestore();
