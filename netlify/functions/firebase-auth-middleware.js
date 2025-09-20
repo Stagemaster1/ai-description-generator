@@ -1444,8 +1444,6 @@ class StatelessFirebaseAuthMiddleware {
     }
 }
 
-}
-
 // Export singleton instance with enterprise stateless architecture
 const statelessFirebaseAuthMiddleware = new StatelessFirebaseAuthMiddleware();
 
