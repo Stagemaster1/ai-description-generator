@@ -291,7 +291,7 @@ async function resetUserSubscription(db, userId, headers) {
     const updateData = {
       isSubscribed: false,
       subscriptionType: 'free',
-      maxUsage: 5,
+      maxUsage: 3,
       subscriptionId: null,
       subscriptionReset: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -345,7 +345,7 @@ async function updateUser(db, userId, userData, headers) {
         email: userData.email || 'unknown@example.com',
         subscriptionType: 'free',
         monthlyUsage: 0,
-        maxUsage: 5,
+        maxUsage: 3,
         isSubscribed: false,
         createdAt: new Date().toISOString(),
         ...updateData
@@ -433,7 +433,7 @@ async function createTestUser(db, userData, headers) {
       email: userData.email || `test-${userId}@example.com`,
       subscriptionType: 'free',
       monthlyUsage: 0,
-      maxUsage: 5,
+      maxUsage: 3,
       isSubscribed: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -514,7 +514,7 @@ async function syncUser(db, userId, userData, headers) {
       email: userData.email || existingUser.email || 'subscriber@unknown.com',
       subscriptionType: userData.subscriptionType || 'free',
       monthlyUsage: userData.monthlyUsage || existingUser.monthlyUsage || 0,
-      maxUsage: userData.maxUsage || 5,
+      maxUsage: userData.maxUsage || 3,
       isSubscribed: userData.isSubscribed || false,
       subscriptionId: userData.subscriptionId || existingUser.subscriptionId,
       lastActive: userData.lastActive || new Date().toISOString(),
