@@ -11,6 +11,18 @@
 
 # Subdomain redirects for multi-domain architecture
 [[redirects]]
+  from = "https://www.soltecsol.com/*"
+  to = "/company-home.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://app.soltecsol.com/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "https://tos.soltecsol.com/*"
   to = "/tos.html"
   status = 200
