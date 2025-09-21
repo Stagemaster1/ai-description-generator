@@ -140,7 +140,7 @@
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.paypal.com https://js.paypal.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://app.soltecsol.com https://subscriptions.soltecsol.com https://signup.soltecsol.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.openai.com https://www.paypal.com; frame-src https://www.paypal.com; object-src 'none'; base-uri 'self'; form-action 'self' https://www.paypal.com; frame-ancestors 'none'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.paypal.com https://js.paypal.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.gstatic.com https://app.soltecsol.com https://subscriptions.soltecsol.com https://signup.soltecsol.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.openai.com https://www.paypal.com; frame-src https://www.paypal.com; object-src 'none'; base-uri 'self'; form-action 'self' https://www.paypal.com; frame-ancestors 'none'; upgrade-insecure-requests"
 
 # Environment-specific settings
 [context.production.environment]
