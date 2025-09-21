@@ -35,7 +35,7 @@
   force = true
 
 [[redirects]]
-  from = "https://genyx.soltecsol.com/*"
+  from = "https://plyvo.soltecsol.com/*"
   to = "/plyvo.html"
   status = 200
   force = true
@@ -61,6 +61,30 @@
 [[redirects]]
   from = "https://login.soltecsol.com/*"
   to = "/login.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://restriction.soltecsol.com/*"
+  to = "/restriction.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://upgrade.soltecsol.com/*"
+  to = "/upgrade.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://cancellation.soltecsol.com/*"
+  to = "/cancellation.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://contact.soltecsol.com/*"
+  to = "/contact.html"
   status = 200
   force = true
 

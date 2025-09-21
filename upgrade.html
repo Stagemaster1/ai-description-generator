@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade Required - SolTecSol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6b95 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .upgrade-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ff6b35;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+
+        .usage-info {
+            background: #fff3e0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            color: #bf360c;
+            border-left: 4px solid #ff9800;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-direction: column;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            color: #666;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 24px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: #ff6b35;
+            color: #ff6b35;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="upgrade-container">
+        <div class="icon">⚡</div>
+        <h1>Usage Limit Approaching</h1>
+        <p>You're approaching your monthly generation limit for your current plan. To continue using our AI description generator without interruption, consider upgrading your plan.</p>
+
+        <div class="usage-info">
+            <strong>Current Usage:</strong> You have used most of your allocated generations for this billing period.
+        </div>
+
+        <div class="cta-buttons">
+            <a href="https://subscriptions.soltecsol.com" class="btn-primary">Upgrade Your Plan</a>
+            <a href="https://app.soltecsol.com" class="btn-secondary">Continue with Current Plan</a>
+        </div>
+
+        <p style="font-size: 0.85rem; color: #999; margin-top: 1rem;">
+            Your plan will reset with new generations at the start of your next billing period.
+        </p>
+
+        <a href="https://app.soltecsol.com" class="back-link">← Back to App</a>
+    </div>
+</body>
+</html>

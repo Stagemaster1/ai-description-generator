@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Restricted - SolTecSol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .restriction-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #d73502;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+
+        .restricted-regions {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .restricted-regions h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="restriction-container">
+        <div class="icon">🚫</div>
+        <h1>Service Not Available</h1>
+        <p>We apologize, but our services are currently not available in your region due to geopolitical restrictions and compliance requirements.</p>
+
+        <div class="restricted-regions">
+            <h3>Restricted Regions:</h3>
+            <p>Russia, Afghanistan, Iran, Cuba, North Korea, and other regions subject to international sanctions.</p>
+        </div>
+
+        <p>These restrictions are automatically enforced by our payment processors and security systems to ensure compliance with international regulations.</p>
+
+        <p>If you believe this restriction has been applied in error, please contact our support team.</p>
+
+        <a href="https://soltecsol.com" class="back-link">← Return to Homepage</a>
+    </div>
+</body>
+</html>

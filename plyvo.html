@@ -92,6 +92,49 @@
     overflow: hidden;
   }
 
+  /* Navigation */
+  .nav-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 20px;
+    z-index: 10;
+  }
+
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .nav-container {
+      position: relative;
+      top: 0;
+      right: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .nav-link {
+      font-size: 0.8rem;
+      padding: 6px 12px;
+    }
+  }
+
   footer {
     text-align: center;
     padding: 40px 20px;
@@ -101,6 +144,14 @@
 </style>
 </head>
 <body>
+
+<nav class="nav-container">
+  <a href="https://pricing.soltecsol.com" class="nav-link">Pricing</a>
+  <a href="https://signup.soltecsol.com" class="nav-link">Sign Up</a>
+  <a href="https://login.soltecsol.com" class="nav-link">Login</a>
+  <a href="https://helpdesk.soltecsol.com" class="nav-link">Help</a>
+  <a href="https://contact.soltecsol.com" class="nav-link">Contact</a>
+</nav>
 
 <header>
   <h1>Plyvo — Words, Perfected.</h1>
