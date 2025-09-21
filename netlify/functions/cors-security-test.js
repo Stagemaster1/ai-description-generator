@@ -5,7 +5,7 @@
  * SESSION 3B Implementation - Verifies that unknown origins are rejected
  */
 
-const crossDomainValidator = require('./Github_Version/netlify/functions/cross-domain-validator');
+const crossDomainValidator = require('./cross-domain-validator');
 
 async function testCORSSecurityHardening() {
     console.log('🛡️  CORS Security Hardening Verification Test');
