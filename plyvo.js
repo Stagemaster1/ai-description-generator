@@ -1148,7 +1148,7 @@ function initializeFormInteractions() {
 
       if (barcodeInput && barcodeInput.value.trim()) {
         // Visual feedback
-        this.innerHTML = '🔍 Looking up...';
+        this.textContent = '🔍 Looking up...';
         this.style.opacity = '0.7';
         this.disabled = true;
 
@@ -1177,7 +1177,7 @@ function initializeFormInteractions() {
           }
 
           // Reset button
-          this.innerHTML = translations[currentLang].lookupBarcode || '🔍 Lookup Product';
+          this.textContent = translations[currentLang].lookupBarcode || '🔍 Lookup Product';
           this.style.opacity = '1';
           this.disabled = false;
         }, 1500);
