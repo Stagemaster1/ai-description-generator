@@ -1223,6 +1223,8 @@ function initializeApp() {
         console.log('Updating language to:', selectedLang);
         // Use the new universal language system
         updateLanguageUniversal(selectedLang);
+        // Update all navigation links with language parameter
+        updateNavigationLinks(selectedLang);
       } else {
         console.warn('No translation found for:', selectedLang);
       }
@@ -1243,37 +1245,20 @@ function initializeApp() {
     testFormFields();
   }, 1000);
 
-  // Load language preference - check cross-subdomain cookie first
+  // Initialize language from URL parameter or cookie (Gemini's cross-subdomain solution)
   try {
-    // Priority 1: Cross-subdomain cookie
-    let preferredLang = CrossSubdomainLanguage.getCookie();
-    console.log('Cross-subdomain cookie language:', preferredLang);
+    const detectedLang = initializeLanguageFromURL();
+    console.log('Initialized with language:', detectedLang);
 
-    // Priority 2: localStorage
-    if (!preferredLang) {
-      preferredLang = localStorage.getItem('preferredLanguage');
-      console.log('localStorage language:', preferredLang);
-    }
-
-    // Priority 3: Browser language
-    if (!preferredLang) {
-      preferredLang = navigator.language ? navigator.language.split('-')[0] : 'en';
-      console.log('Browser language:', preferredLang);
-    }
-
-    // Apply the language if valid
-    if (preferredLang && translations[preferredLang]) {
-      const selector = document.getElementById('languageSelector');
-      if (selector) {
-        selector.value = preferredLang;
-        updateLanguageUniversal(preferredLang);
-      }
-    } else {
-      // Fallback to English
-      updateLanguageUniversal('en');
+    // Set language selector and update navigation links
+    const selector = document.getElementById('languageSelector');
+    if (selector && detectedLang) {
+      selector.value = detectedLang;
+      // Update navigation links with current language
+      updateNavigationLinks(detectedLang);
     }
   } catch (error) {
-    console.warn('Could not load language preference:', error);
+    console.warn('Could not initialize language:', error);
     updateLanguageUniversal('en'); // Fallback to English
   }
 
@@ -2002,6 +1987,60 @@ window.SolTecSolLanguage = {
     return SecurityValidator.validateSecurityCompliance();
   }
 };
+
+// Update navigation links with language parameter
+function updateNavigationLinks(language) {
+  console.log('Updating navigation links with language:', language);
+
+  // Find all navigation links to soltecsol.com subdomains
+  const navLinks = document.querySelectorAll('a[href*="soltecsol.com"]');
+
+  navLinks.forEach(link => {
+    const originalHref = link.getAttribute('href');
+    if (originalHref) {
+      // Remove existing lang parameter if present
+      const url = new URL(originalHref);
+      url.searchParams.delete('lang');
+      // Add new lang parameter
+      url.searchParams.set('lang', language);
+      link.setAttribute('href', url.toString());
+      console.log('Updated link:', originalHref, '->', url.toString());
+    }
+  });
+}
+
+// Read language from URL parameter
+function getLanguageFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const langParam = urlParams.get('lang');
+  console.log('Language from URL parameter:', langParam);
+  return langParam;
+}
+
+// Initialize language from URL parameter or cookie
+function initializeLanguageFromURL() {
+  console.log('Initializing language from URL...');
+
+  // First check URL parameter
+  const urlLang = getLanguageFromURL();
+  if (urlLang && validateLanguageCode(urlLang)) {
+    console.log('Using language from URL:', urlLang);
+    updateLanguageUniversal(urlLang);
+    return urlLang;
+  }
+
+  // Fall back to cookie
+  const cookieLang = CrossSubdomainLanguage.getCookie();
+  if (cookieLang && validateLanguageCode(cookieLang)) {
+    console.log('Using language from cookie:', cookieLang);
+    updateLanguageUniversal(cookieLang);
+    return cookieLang;
+  }
+
+  // Default to English
+  console.log('Using default language: en');
+  return 'en';
+}
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {

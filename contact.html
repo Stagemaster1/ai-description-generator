@@ -405,8 +405,16 @@ function handleFormSubmit(event) {
   submitButton.textContent = 'Send Message';
 }
 
-// Initialize contact form only
+// Initialize contact form and language system (Gemini's cross-subdomain solution)
 document.addEventListener('DOMContentLoaded', function() {
+  // Initialize language from URL parameter (from plyvo.soltecsol.com navigation)
+  if (typeof initializeLanguageFromURL === 'function') {
+    console.log('Initializing language from URL on contact page...');
+    const detectedLang = initializeLanguageFromURL();
+    console.log('Contact page language initialized:', detectedLang);
+  }
+
+  // Initialize contact form
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
     contactForm.addEventListener('submit', handleFormSubmit);
