@@ -8,11 +8,18 @@ function initializeLanguageFromURL() {
 function updateNavigationLinks(lang) {
   const links = document.querySelectorAll('a');
   links.forEach(link => {
+    console.log('Selected Link:', link.href);
     // Only update internal links or links to your domains
     if (link.href.includes('soltecsol.com')) {
-      const url = new URL(link.href);
-      url.searchParams.set('lang', lang);
-      link.href = url.toString();
+      try {
+        const url = new URL(link.href);
+        console.log('Original URL:', url.toString());
+        url.searchParams.set('lang', lang);
+        console.log('Modified URL:', url.toString());
+        link.href = url.toString();
+      } catch (error) {
+        console.error('Error updating link:', link.href, error);
+      }
     }
   });
 }
