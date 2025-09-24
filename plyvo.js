@@ -1275,10 +1275,12 @@ function initializeApp() {
       updateNavigationLinks(preferredLang);
     } else {
       updateLanguageUniversal('en');
+      updateNavigationLinks('en');
     }
   } catch (error) {
     console.warn('Could not load language preference:', error);
     updateLanguageUniversal('en');
+    updateNavigationLinks('en');
   }
 
   // Start ghost typing animation
