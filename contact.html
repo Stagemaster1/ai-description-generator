@@ -415,37 +415,16 @@ function handleFormSubmit(event) {
   submitButton.textContent = 'Send Message';
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  // 1. Check URL first
-  let preferredLang = initializeLanguageFromURL();
-
-  // 2. Fallback to cross-subdomain cookie
-  if (!preferredLang) {
-    preferredLang = CrossSubdomainLanguage.getCookie();
-  }
-
-  // 3. Fallback to localStorage
-  if (!preferredLang) {
-    preferredLang = localStorage.getItem('preferredLanguage');
-  }
-
-  // 4. Fallback to browser language
-  if (!preferredLang) {
-    preferredLang = navigator.language ? navigator.language.split('-')[0] : 'en';
-  }
-
-  // Apply the language
-  if (preferredLang && translations[preferredLang]) {
-    updateLanguageUniversal(preferredLang);
-  } else {
-    updateLanguageUniversal('en');
-  }
-
-  // Initialize contact form
+// Wait for plyvo.js to load completely before initializing
+window.addEventListener('load', function() {
+  // Initialize contact form first
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
     contactForm.addEventListener('submit', handleFormSubmit);
   }
+
+  // Language initialization is handled by plyvo.js automatically
+  // No need to manually call language functions here
 });
 </script>
 
