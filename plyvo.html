@@ -1042,28 +1042,6 @@ function sanitizeText(text) {
   return div.innerHTML;
 }
 
-// Rate limiting for sensitive operations
-const rateLimiter = {
-  actions: new Map(),
-  isAllowed: function(action, limit = 10, windowMs = 60000) {
-    const now = Date.now();
-    const actionData = this.actions.get(action) || { count: 0, windowStart: now };
-
-    if (now - actionData.windowStart > windowMs) {
-      actionData.count = 0;
-      actionData.windowStart = now;
-    }
-
-    if (actionData.count >= limit) {
-      console.warn(`Rate limit exceeded for action: ${action}`);
-      return false;
-    }
-
-    actionData.count++;
-    this.actions.set(action, actionData);
-    return true;
-  }
-};
 
 // Secure DOM manipulation
 function setElementContent(element, content) {
