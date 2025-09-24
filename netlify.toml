@@ -47,6 +47,12 @@
   force = true
 
 [[redirects]]
+  from = "https://plyvo.soltecsol.com"
+  to = "/plyvo.html"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "https://subscriptions.soltecsol.com/*"
   to = "/subscriptions.html"
   status = 200
@@ -111,13 +117,11 @@
   to = "/index.html?cancelled=true"
   status = 200
 
-# Secure SPA fallback - excludes plyvo subdomain
+# SPA fallback - must be last
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  conditions = {Host = ["!plyvo.soltecsol.com"]}
-  force = false
 
 # Headers for security and performance
 [[headers]]
