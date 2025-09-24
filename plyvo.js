@@ -1267,6 +1267,10 @@ function initializeApp() {
 
     // Apply the language and update links
     if (preferredLang && translations[preferredLang]) {
+      const selector = document.getElementById('languageSelector');
+      if (selector) {
+        selector.value = preferredLang;
+      }
       updateLanguageUniversal(preferredLang);
       updateNavigationLinks(preferredLang);
     } else {

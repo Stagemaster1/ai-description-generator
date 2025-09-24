@@ -426,8 +426,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Apply the language
-  if (preferredLang) {
+  if (preferredLang && translations[preferredLang]) {
     updateLanguageUniversal(preferredLang);
+  } else {
+    updateLanguageUniversal('en');
   }
 
   // Initialize contact form
