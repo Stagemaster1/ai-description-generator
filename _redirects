@@ -1,3 +1,8 @@
+# Exclude JavaScript files from redirects or rewrites
+/language-shared.js /language-shared.js 200!
+/plyvo.js /plyvo.js 200!
+/contact.js /contact.js 200!
+
 # Subdomain routing
 https://plyvo.soltecsol.com/*         /plyvo.html         200!
 https://contact.soltecsol.com/*       /contact.html       200!
