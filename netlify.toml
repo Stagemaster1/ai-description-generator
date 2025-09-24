@@ -111,11 +111,13 @@
   to = "/index.html?cancelled=true"
   status = 200
 
-# SPA fallback - must be last
+# Secure SPA fallback - excludes plyvo subdomain
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  conditions = {Host = ["!plyvo.soltecsol.com"]}
+  force = false
 
 # Headers for security and performance
 [[headers]]
