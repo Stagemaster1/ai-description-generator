@@ -117,11 +117,7 @@
   to = "/index.html?cancelled=true"
   status = 200
 
-# SPA fallback - must be last
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Removed catch-all to allow plyvo.soltecsol.com -> /plyvo.html
 
 # Headers for security and performance
 [[headers]]
