@@ -1,89 +1,418 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - SolTecSol</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-plyvo2025secure' 'unsafe-inline'; style-src 'self' 'nonce-plyvo2025secure' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.soltecsol.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.soltecsol.com; upgrade-insecure-requests;">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta name="robots" content="index, follow">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
+<title data-translate="contactPageTitle">Contact Us - SolTecSol</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<style nonce="plyvo2025secure">
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+  body {
+    margin: 0;
+    font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background:
+      linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 100%);
+    color: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 60% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
 
-        .contact-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-        }
+  .language-selector {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 8px 16px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    pointer-events: auto;
+    user-select: none;
+  }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #2c5aa0;
-            text-align: center;
-        }
+  .language-selector option {
+    background: #1e293b;
+    color: white;
+    padding: 8px;
+  }
 
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 2rem;
-        }
+  .language-selector:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
 
-        .placeholder-content {
-            background: #f8f9fa;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            padding: 2rem;
-            text-align: center;
-            color: #666;
-            margin: 2rem 0;
-        }
+  .nav-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 16px;
+    z-index: 1000;
+  }
 
-        .back-link {
-            text-align: center;
-            margin-top: 2rem;
-        }
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
 
-        .back-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
+  .nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 100px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .contact-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: white;
+    text-align: center;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .form-input, .form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: rgba(99, 102, 241, 0.5);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .submit-button {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+  }
+
+  .submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .back-link {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .back-link a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .back-link a:hover {
+    color: white;
+  }
+
+  .status-message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .status-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+  }
+
+  .status-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+  }
+
+  @media (max-width: 768px) {
+    .nav-container {
+      position: relative;
+      top: 0;
+      right: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+      order: -1;
+    }
+
+    .nav-link {
+      font-size: 0.8rem;
+      padding: 8px 14px;
+    }
+
+    .container {
+      padding: 40px 20px;
+    }
+
+    .contact-card {
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+  }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="contact-card">
-            <h1>Contact Us</h1>
-            <p class="subtitle">Get in touch with our support team</p>
 
-            <div class="placeholder-content">
-                <p><strong>PLACEHOLDER CONTENT</strong></p>
-                <p>Replace this with your actual contact form with email integration</p>
-                <p>Should include form fields and email submission functionality</p>
-            </div>
-        </div>
+<select id="languageSelector" class="language-selector">
+  <option value="en">🇺🇸 English</option>
+  <option value="es">🇪🇸 Español</option>
+  <option value="fr">🇫🇷 Français</option>
+  <option value="de">🇩🇪 Deutsch</option>
+  <option value="it">🇮🇹 Italiano</option>
+  <option value="pt">🇵🇹 Português</option>
+  <option value="nl">🇳🇱 Nederlands</option>
+  <option value="ja">🇯🇵 日本語</option>
+  <option value="zh">🇨🇳 中文</option>
+  <option value="ru">🇷🇺 Русский</option>
+  <option value="ar">🇸🇦 العربية</option>
+  <option value="hi">🇮🇳 हिन्दी</option>
+  <option value="ko">🇰🇷 한국어</option>
+</select>
 
-        <div class="back-link">
-            <a href="https://soltecsol.com">← Back to Homepage</a>
-        </div>
-    </div>
+
+<div class="container">
+  <div class="contact-card">
+    <h1 data-translate="contactTitle">Contact Us</h1>
+    <p class="subtitle" data-translate="contactSubtitle">Get in touch with our support team</p>
+
+    <div id="statusMessage" class="status-message" style="display: none;"></div>
+
+    <form id="contactForm" class="contact-form" name="contact" method="POST" data-netlify="true">
+      <div class="form-group">
+        <label for="name" class="form-label" data-translate="contactNameLabel">Full Name</label>
+        <input type="text" id="name" name="name" class="form-input"
+               data-translate-placeholder="contactNamePlaceholder"
+               placeholder="Enter your full name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label" data-translate="contactEmailLabel">Email Address</label>
+        <input type="email" id="email" name="email" class="form-input"
+               data-translate-placeholder="contactEmailPlaceholder"
+               placeholder="Enter your email address" required>
+      </div>
+
+      <div class="form-group">
+        <label for="subject" class="form-label" data-translate="contactSubjectLabel">Subject</label>
+        <input type="text" id="subject" name="subject" class="form-input"
+               data-translate-placeholder="contactSubjectPlaceholder"
+               placeholder="What is this regarding?" required>
+      </div>
+
+      <div class="form-group">
+        <label for="message" class="form-label" data-translate="contactMessageLabel">Message</label>
+        <textarea id="message" name="message" class="form-textarea"
+                  data-translate-placeholder="contactMessagePlaceholder"
+                  placeholder="Tell us how we can help you..." required></textarea>
+      </div>
+
+      <button type="submit" class="submit-button" data-translate="contactSendButton">
+        Send Message
+      </button>
+    </form>
+  </div>
+
+  <div class="back-link">
+    <a href="https://plyvo.soltecsol.com" data-translate="backToHomepage">← Back to Homepage</a>
+  </div>
+</div>
+
+<!-- Import the main language system -->
+<script src="plyvo.js" nonce="plyvo2025secure"></script>
+
+<script nonce="plyvo2025secure">
+'use strict';
+
+// Contact form functionality only - language system handled by main plyvo.js
+
+function showMessage(message, isSuccess = true) {
+  const statusMessage = document.getElementById('statusMessage');
+  statusMessage.textContent = message;
+  statusMessage.className = `status-message ${isSuccess ? 'status-success' : 'status-error'}`;
+  statusMessage.style.display = 'block';
+
+  setTimeout(() => {
+    statusMessage.style.display = 'none';
+  }, 5000);
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+
+  const form = event.target;
+  const submitButton = form.querySelector('.submit-button');
+
+  submitButton.disabled = true;
+  submitButton.textContent = 'Sending...';
+
+  const formData = new FormData(form);
+  const data = {
+    name: formData.get('name'),
+    email: formData.get('email'),
+    subject: formData.get('subject'),
+    message: formData.get('message')
+  };
+
+  // Basic validation
+  if (!data.name || !data.email || !data.subject || !data.message) {
+    showMessage('Please fill in all fields.', false);
+    submitButton.disabled = false;
+    submitButton.textContent = 'Send Message';
+    return;
+  }
+
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(data.email)) {
+    showMessage('Please enter a valid email address.', false);
+    submitButton.disabled = false;
+    submitButton.textContent = 'Send Message';
+    return;
+  }
+
+  // Mailto fallback (replace with actual form service)
+  const mailtoLink = `mailto:support@soltecsol.com?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(
+    `Name: ${data.name}\nEmail: ${data.email}\n\nMessage:\n${data.message}`
+  )}`;
+
+  window.location.href = mailtoLink;
+  showMessage('Opening your email client...', true);
+  form.reset();
+
+  submitButton.disabled = false;
+  submitButton.textContent = 'Send Message';
+}
+
+// Initialize contact form only
+document.addEventListener('DOMContentLoaded', function() {
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', handleFormSubmit);
+  }
+});
+</script>
+
 </body>
 </html>
