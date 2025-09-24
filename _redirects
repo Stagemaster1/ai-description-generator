@@ -1,4 +1,7 @@
 # Subdomain routing
+https://plyvo.soltecsol.com/*         /plyvo.html         200!
+https://contact.soltecsol.com/*       /contact.html       200!
+https://app.soltecsol.com/*           /index.html         200!
 https://tos.soltecsol.com/*           /tos.html           200!
 https://dpa.soltecsol.com/*           /dpa.html           200!
 https://gdpr.soltecsol.com/*          /gdpr.html          200!
