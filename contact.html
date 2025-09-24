@@ -405,13 +405,28 @@ function handleFormSubmit(event) {
   submitButton.textContent = 'Send Message';
 }
 
-// Initialize contact form and language system (Gemini's cross-subdomain solution)
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize language from URL parameter (from plyvo.soltecsol.com navigation)
-  if (typeof initializeLanguageFromURL === 'function') {
-    console.log('Initializing language from URL on contact page...');
-    const detectedLang = initializeLanguageFromURL();
-    console.log('Contact page language initialized:', detectedLang);
+  // 1. Check URL first
+  let preferredLang = initializeLanguageFromURL();
+
+  // 2. Fallback to cross-subdomain cookie
+  if (!preferredLang) {
+    preferredLang = CrossSubdomainLanguage.getCookie();
+  }
+
+  // 3. Fallback to localStorage
+  if (!preferredLang) {
+    preferredLang = localStorage.getItem('preferredLanguage');
+  }
+
+  // 4. Fallback to browser language
+  if (!preferredLang) {
+    preferredLang = navigator.language ? navigator.language.split('-')[0] : 'en';
+  }
+
+  // Apply the language
+  if (preferredLang) {
+    updateLanguageUniversal(preferredLang);
   }
 
   // Initialize contact form

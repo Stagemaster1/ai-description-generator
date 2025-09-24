@@ -1245,21 +1245,36 @@ function initializeApp() {
     testFormFields();
   }, 1000);
 
-  // Initialize language from URL parameter or cookie (Gemini's cross-subdomain solution)
+  // ... inside your DOMContentLoaded or language init function
   try {
-    const detectedLang = initializeLanguageFromURL();
-    console.log('Initialized with language:', detectedLang);
+    // 1. Check URL first
+    let preferredLang = initializeLanguageFromURL();
 
-    // Set language selector and update navigation links
-    const selector = document.getElementById('languageSelector');
-    if (selector && detectedLang) {
-      selector.value = detectedLang;
-      // Update navigation links with current language
-      updateNavigationLinks(detectedLang);
+    // 2. Fallback to cross-subdomain cookie
+    if (!preferredLang) {
+      preferredLang = CrossSubdomainLanguage.getCookie();
+    }
+
+    // 3. Fallback to localStorage
+    if (!preferredLang) {
+      preferredLang = localStorage.getItem('preferredLanguage');
+    }
+
+    // 4. Fallback to browser language
+    if (!preferredLang) {
+      preferredLang = navigator.language ? navigator.language.split('-')[0] : 'en';
+    }
+
+    // Apply the language and update links
+    if (preferredLang && translations[preferredLang]) {
+      updateLanguageUniversal(preferredLang);
+      updateNavigationLinks(preferredLang);
+    } else {
+      updateLanguageUniversal('en');
     }
   } catch (error) {
-    console.warn('Could not initialize language:', error);
-    updateLanguageUniversal('en'); // Fallback to English
+    console.warn('Could not load language preference:', error);
+    updateLanguageUniversal('en');
   }
 
   // Start ghost typing animation
@@ -1988,58 +2003,23 @@ window.SolTecSolLanguage = {
   }
 };
 
-// Update navigation links with language parameter
-function updateNavigationLinks(language) {
-  console.log('Updating navigation links with language:', language);
+// Function to initialize language from URL parameter
+function initializeLanguageFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('lang');
+}
 
-  // Find all navigation links to soltecsol.com subdomains
-  const navLinks = document.querySelectorAll('a[href*="soltecsol.com"]');
-
-  navLinks.forEach(link => {
-    const originalHref = link.getAttribute('href');
-    if (originalHref) {
-      // Remove existing lang parameter if present
-      const url = new URL(originalHref);
-      url.searchParams.delete('lang');
-      // Add new lang parameter
-      url.searchParams.set('lang', language);
-      link.setAttribute('href', url.toString());
-      console.log('Updated link:', originalHref, '->', url.toString());
+// Function to update links with language parameter
+function updateNavigationLinks(lang) {
+  const links = document.querySelectorAll('a');
+  links.forEach(link => {
+    // Only update internal links or links to your domains
+    if (link.href.includes('soltecsol.com')) {
+      const url = new URL(link.href);
+      url.searchParams.set('lang', lang);
+      link.href = url.toString();
     }
   });
-}
-
-// Read language from URL parameter
-function getLanguageFromURL() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const langParam = urlParams.get('lang');
-  console.log('Language from URL parameter:', langParam);
-  return langParam;
-}
-
-// Initialize language from URL parameter or cookie
-function initializeLanguageFromURL() {
-  console.log('Initializing language from URL...');
-
-  // First check URL parameter
-  const urlLang = getLanguageFromURL();
-  if (urlLang && validateLanguageCode(urlLang)) {
-    console.log('Using language from URL:', urlLang);
-    updateLanguageUniversal(urlLang);
-    return urlLang;
-  }
-
-  // Fall back to cookie
-  const cookieLang = CrossSubdomainLanguage.getCookie();
-  if (cookieLang && validateLanguageCode(cookieLang)) {
-    console.log('Using language from cookie:', cookieLang);
-    updateLanguageUniversal(cookieLang);
-    return cookieLang;
-  }
-
-  // Default to English
-  console.log('Using default language: en');
-  return 'en';
 }
 
 // Initialize when DOM is ready
