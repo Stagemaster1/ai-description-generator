@@ -1054,8 +1054,7 @@ function initializeFormInteractions() {
 
   methodButtons.forEach((button, index) => {
     // Ensure button is interactive
-    button.style.pointerEvents = 'auto';
-    button.style.cursor = 'pointer';
+    button.classList.add('interactive-auto');
     button.disabled = false;
     button.tabIndex = 0;
 
@@ -1101,13 +1100,10 @@ function initializeFormInteractions() {
     input.removeAttribute('disabled');
 
     // Force enable interaction
-    input.style.pointerEvents = 'auto';
     if (input.classList.contains('form-select')) {
-      input.style.cursor = 'pointer';
-      input.style.userSelect = 'none';
+      input.classList.add('interactive-select');
     } else {
-      input.style.userSelect = 'text';
-      input.style.cursor = 'text';
+      input.classList.add('interactive-input');
     }
     input.tabIndex = 0;
 
@@ -1149,7 +1145,7 @@ function initializeFormInteractions() {
       if (barcodeInput && barcodeInput.value.trim()) {
         // Visual feedback
         this.textContent = '🔍 Looking up...';
-        this.style.opacity = '0.7';
+        this.classList.add('opacity-dimmed');
         this.disabled = true;
 
         // Simulate API lookup delay
@@ -1172,13 +1168,14 @@ function initializeFormInteractions() {
             productNameInput.value = randomProduct;
 
             // Add success styling
-            barcodeInput.style.borderColor = '#10b981';
-            productNameInput.style.borderColor = '#10b981';
+            barcodeInput.classList.add('border-success');
+            productNameInput.classList.add('border-success');
           }
 
           // Reset button
           this.textContent = translations[currentLang].lookupBarcode || '🔍 Lookup Product';
-          this.style.opacity = '1';
+          this.classList.remove('opacity-dimmed');
+          this.classList.add('opacity-normal');
           this.disabled = false;
         }, 1500);
       } else {
@@ -1213,7 +1210,7 @@ function initializeApp() {
 
   if (languageSelector) {
     // Ensure the selector is interactive
-    languageSelector.style.pointerEvents = 'auto';
+    languageSelector.classList.add('interactive-select');
     languageSelector.disabled = false;
 
     languageSelector.addEventListener('change', function(e) {
@@ -1349,8 +1346,7 @@ function testFormFields() {
     console.log(`Select ${i}: options=${select.options.length}, disabled=${select.disabled}`);
 
     // Force enable selects
-    select.style.pointerEvents = 'auto';
-    select.style.cursor = 'pointer';
+    select.classList.add('interactive-select');
     select.disabled = false;
     select.tabIndex = 0;
 
