@@ -16,6 +16,8 @@ https://subscriptions.soltecsol.com/* /subscriptions.html 200!
 https://pricing.soltecsol.com/*       /pricing.html       200!
 https://signup.soltecsol.com/*        /signup.html        200!
 https://login.soltecsol.com/*         /login.html         200!
+/plyvo-design.css /plyvo-design.css 200!
+/firebase-init.js /firebase-init.js 200!
 
 # App success/cancel pages
 /success    /success.html   200
@@ -24,5 +26,5 @@ https://login.soltecsol.com/*         /login.html         200!
 # API routes to Netlify Functions
 /api/*      /.netlify/functions/:splat   200
 
-# SPA fallback for app domain
-/*          /index.html     200
+
+
