@@ -1,3 +1,5 @@
+console.log("ENV:", process.env);
+
 // SESSION 4C: Public Firebase Configuration Endpoint
 // Provides Firebase client configuration for public access (non-admin)
 // This is safe as it only exposes public configuration values
