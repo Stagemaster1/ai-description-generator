@@ -1002,10 +1002,31 @@
     <p data-translate="featuresHint">Discover premium features below</p>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const selector = document.getElementById("language-selector");
+    if (!selector) return;
 
+    selector.addEventListener("change", function () {
+      const selectedLang = selector.value;
+      localStorage.setItem('preferredLanguage', selectedLang);
+
+      // Update all outbound links with ?lang=xx
+      document.querySelectorAll('a').forEach(link => {
+        if (link.href.includes('soltecsol.com')) {
+          const url = new URL(link.href);
+          url.searchParams.set('lang', selectedLang);
+          link.href = url.toString();
+        }
+      });
+
+      location.search = '?lang=' + selectedLang;
+    });
+  });
+</script>
 <script src="language-shared.js" nonce="plyvo2025secure"></script>
 <script src="plyvo.js" nonce="plyvo2025secure"></script>
-
+<!-- Language propagation patch confirmed -->
 
 </body>
 </html>
