@@ -1,0 +1,2 @@
+/plyvo.html
+  Content-Security-Policy: script-src 'self' 'nonce-plyvo2025secure'; style-src 'self' 'nonce-plyvo2025secure' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.soltecsol.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.soltecsol.com; upgrade-insecure-requests;

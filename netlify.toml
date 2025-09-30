@@ -46,11 +46,19 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
+# <-- Inserted block for plyvo.html CSP -->
+[[headers]]
+  for = "/plyvo.html"
+  [headers.values]
+    Content-Security-Policy = "script-src 'self' 'nonce-plyvo2025secure'; style-src 'self' 'nonce-plyvo2025secure' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.soltecsol.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.soltecsol.com; upgrade-insecure-requests;"
+
+# No cache for CSS
 [[headers]]
   for = "/*.css"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
+# No cache for JS
 [[headers]]
   for = "/*.js"
   [headers.values]
@@ -87,5 +95,3 @@
 [context.branch-deploy.environment]
   NODE_ENV = "development"
 
-# Skip secret scanning for package-lock.json (contains dependency metadata with values matching env vars)
-# SECRETS_SCAN_OMIT_PATHS is configured in the [build.environment] section above
