@@ -26,8 +26,4 @@ https://login.soltecsol.com/*         /login.html         200!
 # API routes to Netlify Functions
 /api/*      /.netlify/functions/:splat   200
 
-# Serve JS and CSS files directly—prevent fallback to plyvo.html
-/plyvo.js                 /plyvo.js                 200
-/language-shared.js       /language-shared.js       200
-
 
