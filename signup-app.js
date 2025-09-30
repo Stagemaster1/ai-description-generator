@@ -1,278 +1,4 @@
-        // SECURITY ENHANCEMENT: Centralized Firebase token management
-        class FirebaseTokenManager {
-            constructor() {
-                this.currentToken = null;
-                this.tokenRefreshThreshold = 300000; // 5 minutes before expiry
-                this.refreshTimer = null;
-                this.tokenListeners = new Set();
-            }
-
-            // Get current valid token, refreshing if needed
-            async getValidToken() {
-                try {
-                    const auth = window.firebaseAuth;
-                    if (!auth || !auth.currentUser) {
-                        this.clearToken();
-                        return null;
-                    }
-
-                    // Get token with force refresh if close to expiry
-                    const forceRefresh = this.shouldForceRefresh();
-                    const token = await auth.currentUser.getIdToken(forceRefresh);
-
-                    this.currentToken = token;
-                    this.scheduleTokenRefresh();
-                    this.notifyTokenListeners(token);
-
-                    return token;
-
-                } catch (error) {
-                    console.error('Token refresh failed:', error);
-                    this.clearToken();
-                    throw error;
-                }
-            }
-
-            // Check if token should be force refreshed
-            shouldForceRefresh() {
-                if (!this.currentToken) return true;
-
-                try {
-                    const payload = JSON.parse(atob(this.currentToken.split('.')[1]));
-                    const expiry = payload.exp * 1000;
-                    const timeToExpiry = expiry - Date.now();
-
-                    return timeToExpiry < this.tokenRefreshThreshold;
-                } catch (error) {
-                    console.warn('Token validation failed:', error);
-                    return true;
-                }
-            }
-
-            // Schedule automatic token refresh
-            scheduleTokenRefresh() {
-                if (this.refreshTimer) {
-                    clearTimeout(this.refreshTimer);
-                }
-
-                if (!this.currentToken) return;
-
-                try {
-                    const payload = JSON.parse(atob(this.currentToken.split('.')[1]));
-                    const expiry = payload.exp * 1000;
-                    const refreshTime = expiry - Date.now() - this.tokenRefreshThreshold;
-
-                    if (refreshTime > 0) {
-                        this.refreshTimer = setTimeout(() => {
-                            this.getValidToken().catch(error => {
-                                console.error('Scheduled token refresh failed:', error);
-                            });
-                        }, refreshTime);
-                    }
-                } catch (error) {
-                    console.warn('Token refresh scheduling failed:', error);
-                }
-            }
-
-            // Clear cached token and timers
-            clearToken() {
-                this.currentToken = null;
-                if (this.refreshTimer) {
-                    clearTimeout(this.refreshTimer);
-                    this.refreshTimer = null;
-                }
-                this.notifyTokenListeners(null);
-            }
-
-            // Add token change listener
-            addTokenListener(callback) {
-                this.tokenListeners.add(callback);
-            }
-
-            // Remove token change listener
-            removeTokenListener(callback) {
-                this.tokenListeners.delete(callback);
-            }
-
-            // Notify all listeners of token changes
-            notifyTokenListeners(token) {
-                this.tokenListeners.forEach(callback => {
-                    try {
-                        callback(token);
-                    } catch (error) {
-                        console.error('Token listener error:', error);
-                    }
-                });
-            }
-        }
-
-        // SECURITY ENHANCEMENT: Secure Cookie Manager for enhanced security
-        class SecureCookieManager {
-            constructor() {
-                this.cookieSettings = {
-                    secure: true,
-                    sameSite: 'Strict',
-                    httpOnly: false, // Can't be httpOnly for client-side access
-                    maxAge: 3600 // 1 hour
-                };
-            }
-
-            // Set a secure cookie with enhanced security settings
-            setCookie(name, value, options = {}) {
-                try {
-                    const settings = { ...this.cookieSettings, ...options };
-                    let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
-
-                    if (settings.maxAge) {
-                        cookieString += `; Max-Age=${settings.maxAge}`;
-                    }
-
-                    if (settings.path) {
-                        cookieString += `; Path=${settings.path}`;
-                    }
-
-                    if (settings.domain) {
-                        cookieString += `; Domain=${settings.domain}`;
-                    }
-
-                    if (settings.secure && window.location.protocol === 'https:') {
-                        cookieString += '; Secure';
-                    }
-
-                    if (settings.sameSite) {
-                        cookieString += `; SameSite=${settings.sameSite}`;
-                    }
-
-                    document.cookie = cookieString;
-                    return true;
-
-                } catch (error) {
-                    console.error('Failed to set secure cookie:', error);
-                    return false;
-                }
-            }
-
-            // Get cookie value
-            getCookie(name) {
-                try {
-                    const encodedName = encodeURIComponent(name);
-                    const cookies = document.cookie.split(';');
-
-                    for (const cookie of cookies) {
-                        const [cookieName, cookieValue] = cookie.trim().split('=');
-                        if (cookieName === encodedName) {
-                            return decodeURIComponent(cookieValue);
-                        }
-                    }
-
-                    return null;
-
-                } catch (error) {
-                    console.error('Failed to get cookie:', error);
-                    return null;
-                }
-            }
-
-            // Delete cookie
-            deleteCookie(name, options = {}) {
-                try {
-                    const settings = { ...options, maxAge: 0, expires: 'Thu, 01 Jan 1970 00:00:00 UTC' };
-                    this.setCookie(name, '', settings);
-                    return true;
-
-                } catch (error) {
-                    console.error('Failed to delete cookie:', error);
-                    return false;
-                }
-            }
-
-            // Initialize secure cookies for authenticated sessions
-            async initializeSecureCookies() {
-                try {
-                    const auth = window.firebaseAuth;
-                    if (!auth || !auth.currentUser) {
-                        console.log('No authenticated user for cookie initialization');
-                        return false;
-                    }
-
-                    // Get fresh Firebase token
-                    const token = await window.tokenManager.getValidToken();
-                    if (!token) {
-                        throw new Error('Failed to get valid authentication token');
-                    }
-
-                    // Set authentication cookie
-                    const authSuccess = this.setCookie('soltecsol_auth_token', token, {
-                        path: '/',
-                        maxAge: 3600,
-                        secure: window.location.protocol === 'https:',
-                        sameSite: 'Strict'
-                    });
-
-                    // Generate and set CSRF token
-                    const csrfToken = this.generateCSRFToken();
-                    const csrfSuccess = this.setCookie('soltecsol_csrf_token', csrfToken, {
-                        path: '/',
-                        maxAge: 3600,
-                        secure: window.location.protocol === 'https:',
-                        sameSite: 'Strict'
-                    });
-
-                    // Set session identifier
-                    const sessionId = this.generateSessionId();
-                    const sessionSuccess = this.setCookie('soltecsol_session_id', sessionId, {
-                        path: '/',
-                        maxAge: 3600,
-                        secure: window.location.protocol === 'https:',
-                        sameSite: 'Strict'
-                    });
-
-                    const allSuccess = authSuccess && csrfSuccess && sessionSuccess;
-                    console.log(`Secure cookies initialized: ${allSuccess ? 'SUCCESS' : 'PARTIAL/FAILED'}`);
-
-                    return allSuccess;
-
-                } catch (error) {
-                    console.error('Secure cookie initialization failed:', error);
-                    return false;
-                }
-            }
-
-            // Generate CSRF token
-            generateCSRFToken() {
-                const array = new Uint8Array(32);
-                window.crypto.getRandomValues(array);
-                return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-            }
-
-            // Generate session identifier
-            generateSessionId() {
-                const timestamp = Date.now().toString(36);
-                const randomBytes = new Uint8Array(16);
-                window.crypto.getRandomValues(randomBytes);
-                const randomString = Array.from(randomBytes, byte => byte.toString(36)).join('');
-                return `${timestamp}_${randomString}`;
-            }
-
-            // Clear all authentication-related cookies
-            clearAllCookies() {
-                try {
-                    this.deleteCookie('soltecsol_auth_token', { path: '/' });
-                    this.deleteCookie('soltecsol_csrf_token', { path: '/' });
-                    this.deleteCookie('soltecsol_session_id', { path: '/' });
-                    console.log('All secure cookies cleared');
-                    return true;
-
-                } catch (error) {
-                    console.error('Failed to clear secure cookies:', error);
-                    return false;
-                }
-            }
-        }
-
-        // Global instances
-        window.tokenManager = new FirebaseTokenManager();
-        window.secureCookieManager = new SecureCookieManager();
+        // Token manager and secure cookie manager are loaded from external files
 
         // Initialize token management with automatic refresh monitoring
         function initializeTokenManager() {
@@ -591,27 +317,27 @@
         // Show ToS Modal
         function showTosModal() {
             const modal = document.getElementById('tosModal');
-            modal.style.display = 'flex';
+            modal.classList.add('show');
             loadTosContent();
         }
 
         // Hide ToS Modal
         function hideTosModal() {
             const modal = document.getElementById('tosModal');
-            modal.style.display = 'none';
+            modal.classList.remove('show');
         }
 
         // Show DPA Modal
         function showDpaModal() {
             const modal = document.getElementById('dpaModal');
-            modal.style.display = 'flex';
+            modal.classList.add('show');
             loadDpaContent();
         }
 
         // Hide DPA Modal
         function hideDpaModal() {
             const modal = document.getElementById('dpaModal');
-            modal.style.display = 'none';
+            modal.classList.remove('show');
         }
 
         // Setup ToS checkbox handler
@@ -661,7 +387,7 @@
                 // Show loading state
                 submitBtn.disabled = true;
                 buttonText.style.display = 'none';
-                spinner.style.display = 'inline-block';
+                spinner.classList.add('show');
 
                 // Create user with Firebase
                 const userCredential = await window.firebaseCreateUserWithEmailAndPassword(window.firebaseAuth, email, password);
@@ -706,7 +432,7 @@
                 // Reset loading state
                 submitBtn.disabled = false;
                 buttonText.style.display = 'inline';
-                spinner.style.display = 'none';
+                spinner.classList.remove('show');
             }
         }
 
@@ -1205,7 +931,7 @@
         }
 
         function setupLanguageSelector() {
-            const languageSelect = document.getElementById('languageSelect');
+            const languageSelect = document.getElementById('languageSelector');
             if (languageSelect) {
                 languageSelect.addEventListener('change', (event) => {
                     currentLanguage = event.target.value;

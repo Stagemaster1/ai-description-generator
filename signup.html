@@ -534,7 +534,7 @@
 <body>
     <!-- Language Selector -->
     <div class="language-selector">
-        <select id="languageSelect" class="language-select">
+        <select id="languageSelector" class="language-select">
             <option value="en" data-translate="english">English</option>
             <option value="es" data-translate="spanish">Español</option>
             <option value="fr" data-translate="french">Français</option>
@@ -595,7 +595,7 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-full" id="signupSubmit">
                             <span id="signupButtonText" data-translate="createAccount">Create Account</span>
-                            <span class="loading-spinner" id="signupSpinner" style="display: none;"></span>
+                            <span class="loading-spinner" id="signupSpinner"></span>
                         </button>
                     </div>
                 </form>
@@ -604,7 +604,7 @@
     </div>
 
     <!-- ToS Modal -->
-    <div class="modal-overlay" id="tosModal" style="display: none;">
+    <div class="modal-overlay" id="tosModal">
         <div class="modal-content">
             <h2>Terms of Service</h2>
             <div class="modal-body" id="tosContent">
@@ -621,7 +621,7 @@
     </div>
 
     <!-- DPA/GDPR Modal -->
-    <div class="modal-overlay" id="dpaModal" style="display: none;">
+    <div class="modal-overlay" id="dpaModal">
         <div class="modal-content">
             <h2>Data Protection Agreement</h2>
             <div class="modal-body" id="dpaContent">
