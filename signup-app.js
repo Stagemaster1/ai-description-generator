@@ -173,10 +173,10 @@
 
             // Update strength text
             const strengthLabels = {
-                weak: signupTranslations[currentLanguage]?.passwordWeak || 'Weak',
-                fair: signupTranslations[currentLanguage]?.passwordFair || 'Fair',
-                good: signupTranslations[currentLanguage]?.passwordGood || 'Good',
-                strong: signupTranslations[currentLanguage]?.passwordStrong || 'Strong'
+                weak: 'Weak',
+                fair: 'Fair',
+                good: 'Good',
+                strong: 'Strong'
             };
 
             strengthText.textContent = strengthLabels[result.strength];
@@ -399,7 +399,7 @@
                 // Set signup cookie to prevent repeat signups from this device
                 antiAbuse.setSignupCookie();
 
-                showMessage(signupTranslations[currentLanguage]?.verificationEmailSent || 'Account created! Please check your email to verify your account.', 'success');
+                showMessage('Account created! Please check your email to verify your account.', 'success');
 
                 // Reset form
                 document.getElementById('signupForm').reset();
@@ -409,19 +409,19 @@
             } catch (error) {
                 console.error('Sign up error:', error);
 
-                let errorMessage = signupTranslations[currentLanguage]?.signupError || 'Failed to create account. Please try again.';
+                let errorMessage = 'Failed to create account. Please try again.';
 
                 switch (error.code) {
                     case 'auth/email-already-in-use':
-                        errorMessage = signupTranslations[currentLanguage]?.emailInUse || 'Email address is already in use';
+                        errorMessage = 'Email address is already in use';
                         showFieldError('signupEmail', errorMessage);
                         break;
                     case 'auth/weak-password':
-                        errorMessage = signupTranslations[currentLanguage]?.passwordWeak || 'Password is too weak';
+                        errorMessage = 'Password is too weak';
                         showFieldError('signupPassword', errorMessage);
                         break;
                     case 'auth/invalid-email':
-                        errorMessage = signupTranslations[currentLanguage]?.emailInvalid || 'Invalid email address';
+                        errorMessage = 'Invalid email address';
                         showFieldError('signupEmail', errorMessage);
                         break;
                     default:
@@ -454,10 +454,10 @@
 
             // Validate email
             if (!email) {
-                showFieldError('signupEmail', signupTranslations[currentLanguage]?.emailRequired || 'Email is required');
+                showFieldError('signupEmail', 'Email is required');
                 isValid = false;
             } else if (!validateEmail(email)) {
-                showFieldError('signupEmail', signupTranslations[currentLanguage]?.emailInvalid || 'Please enter a valid email address');
+                showFieldError('signupEmail', 'Please enter a valid email address');
                 isValid = false;
             } else if (antiAbuse.isDisposableEmail(email)) {
                 showFieldError('signupEmail', 'Disposable email addresses are not allowed. Please use a permanent email address.');
@@ -468,12 +468,12 @@
 
             // Validate password
             if (!password) {
-                showFieldError('signupPassword', signupTranslations[currentLanguage]?.passwordRequired || 'Password is required');
+                showFieldError('signupPassword', 'Password is required');
                 isValid = false;
             } else {
                 const strengthResult = validatePasswordStrength(password);
                 if (strengthResult.score < 3) {
-                    showFieldError('signupPassword', signupTranslations[currentLanguage]?.passwordWeak || 'Password is too weak');
+                    showFieldError('signupPassword', 'Password is too weak');
                     isValid = false;
                 } else {
                     showFieldSuccess('signupPassword');
@@ -482,10 +482,10 @@
 
             // Validate password confirmation
             if (!confirmPassword) {
-                showFieldError('confirmPassword', signupTranslations[currentLanguage]?.confirmPasswordRequired || 'Please confirm your password');
+                showFieldError('confirmPassword', 'Please confirm your password');
                 isValid = false;
             } else if (password !== confirmPassword) {
-                showFieldError('confirmPassword', signupTranslations[currentLanguage]?.passwordMismatch || 'Passwords do not match');
+                showFieldError('confirmPassword', 'Passwords do not match');
                 isValid = false;
             } else {
                 showFieldSuccess('confirmPassword');
@@ -537,418 +537,7 @@
             }
         }
 
-        // Internationalization framework with 6 languages
-        const signupTranslations = {
-            en: {
-                // Language names
-                english: 'English',
-                spanish: 'Español',
-                french: 'Français',
-                german: 'Deutsch',
-                italian: 'Italiano',
-                portuguese: 'Português',
-
-                // Header
-                signupTitle: 'Create Account',
-                signupSubtitle: 'Join SolTecSol and unlock AI-powered product description generation',
-                backToApp: 'Back to App',
-
-                // Navigation
-                signUp: 'Sign Up',
-                signIn: 'Sign In',
-
-                // Form labels
-                emailLabel: 'Email Address',
-                passwordLabel: 'Password',
-                confirmPasswordLabel: 'Confirm Password',
-
-                // Placeholders
-                emailPlaceholder: 'Enter your email address',
-                passwordPlaceholder: 'Create a strong password',
-                confirmPasswordPlaceholder: 'Confirm your password',
-                signinPasswordPlaceholder: 'Enter your password',
-
-                // Buttons
-                createAccount: 'Create Account',
-                signInButton: 'Sign In',
-                forgotPassword: 'Forgot Password?',
-
-                // Validation messages
-                emailRequired: 'Email is required',
-                emailInvalid: 'Please enter a valid email address',
-                emailInUse: 'Email address is already in use',
-                emailNotFound: 'No account found with this email address',
-                passwordRequired: 'Password is required',
-                confirmPasswordRequired: 'Please confirm your password',
-                passwordMismatch: 'Passwords do not match',
-                passwordWeak: 'Weak',
-                passwordFair: 'Fair',
-                passwordGood: 'Good',
-                passwordStrong: 'Strong',
-
-                // Status messages
-                verificationEmailSent: 'Account created! Please check your email to verify your account.',
-                emailNotVerified: 'Please verify your email address before signing in.',
-                passwordResetSent: 'Password reset email sent. Please check your inbox.',
-                signinSuccess: 'Sign in successful! Redirecting...',
-
-                // Error messages
-                signupError: 'Failed to create account. Please try again.',
-                signinError: 'Failed to sign in. Please try again.',
-                passwordResetError: 'Failed to send password reset email.',
-                invalidCredentials: 'Invalid email or password',
-                accountDisabled: 'This account has been disabled',
-                tooManyRequests: 'Too many failed attempts. Please try again later'
-            },
-            es: {
-                // Language names
-                english: 'English',
-                spanish: 'Español',
-                french: 'Français',
-                german: 'Deutsch',
-                italian: 'Italiano',
-                portuguese: 'Português',
-
-                // Header
-                signupTitle: 'Crear Cuenta',
-                signupSubtitle: 'Únete a SolTecSol y desbloquea la generación de descripciones de productos con IA',
-                backToApp: 'Volver a la App',
-
-                // Navigation
-                signUp: 'Registrarse',
-                signIn: 'Iniciar Sesión',
-
-                // Form labels
-                emailLabel: 'Dirección de Email',
-                passwordLabel: 'Contraseña',
-                confirmPasswordLabel: 'Confirmar Contraseña',
-
-                // Placeholders
-                emailPlaceholder: 'Ingresa tu dirección de email',
-                passwordPlaceholder: 'Crea una contraseña segura',
-                confirmPasswordPlaceholder: 'Confirma tu contraseña',
-                signinPasswordPlaceholder: 'Ingresa tu contraseña',
-
-                // Buttons
-                createAccount: 'Crear Cuenta',
-                signInButton: 'Iniciar Sesión',
-                forgotPassword: '¿Olvidaste la contraseña?',
-
-                // Validation messages
-                emailRequired: 'El email es requerido',
-                emailInvalid: 'Por favor ingresa una dirección de email válida',
-                emailInUse: 'La dirección de email ya está en uso',
-                emailNotFound: 'No se encontró ninguna cuenta con esta dirección de email',
-                passwordRequired: 'La contraseña es requerida',
-                confirmPasswordRequired: 'Por favor confirma tu contraseña',
-                passwordMismatch: 'Las contraseñas no coinciden',
-                passwordWeak: 'Débil',
-                passwordFair: 'Regular',
-                passwordGood: 'Buena',
-                passwordStrong: 'Fuerte',
-
-                // Status messages
-                verificationEmailSent: '¡Cuenta creada! Por favor revisa tu email para verificar tu cuenta.',
-                emailNotVerified: 'Por favor verifica tu dirección de email antes de iniciar sesión.',
-                passwordResetSent: 'Email de restablecimiento de contraseña enviado. Por favor revisa tu bandeja de entrada.',
-                signinSuccess: '¡Inicio de sesión exitoso! Redirigiendo...',
-
-                // Error messages
-                signupError: 'Error al crear la cuenta. Por favor intenta de nuevo.',
-                signinError: 'Error al iniciar sesión. Por favor intenta de nuevo.',
-                passwordResetError: 'Error al enviar el email de restablecimiento de contraseña.',
-                invalidCredentials: 'Email o contraseña inválidos',
-                accountDisabled: 'Esta cuenta ha sido deshabilitada',
-                tooManyRequests: 'Demasiados intentos fallidos. Por favor intenta de nuevo más tarde'
-            },
-            fr: {
-                // Language names
-                english: 'English',
-                spanish: 'Español',
-                french: 'Français',
-                german: 'Deutsch',
-                italian: 'Italiano',
-                portuguese: 'Português',
-
-                // Header
-                signupTitle: 'Créer un Compte',
-                signupSubtitle: 'Rejoignez SolTecSol et débloquez la génération de descriptions de produits alimentée par l\'IA',
-                backToApp: 'Retour à l\'App',
-
-                // Navigation
-                signUp: 'S\'inscrire',
-                signIn: 'Se Connecter',
-
-                // Form labels
-                emailLabel: 'Adresse Email',
-                passwordLabel: 'Mot de Passe',
-                confirmPasswordLabel: 'Confirmer le Mot de Passe',
-
-                // Placeholders
-                emailPlaceholder: 'Entrez votre adresse email',
-                passwordPlaceholder: 'Créez un mot de passe fort',
-                confirmPasswordPlaceholder: 'Confirmez votre mot de passe',
-                signinPasswordPlaceholder: 'Entrez votre mot de passe',
-
-                // Buttons
-                createAccount: 'Créer un Compte',
-                signInButton: 'Se Connecter',
-                forgotPassword: 'Mot de passe oublié?',
-
-                // Validation messages
-                emailRequired: 'L\'email est requis',
-                emailInvalid: 'Veuillez entrer une adresse email valide',
-                emailInUse: 'L\'adresse email est déjà utilisée',
-                emailNotFound: 'Aucun compte trouvé avec cette adresse email',
-                passwordRequired: 'Le mot de passe est requis',
-                confirmPasswordRequired: 'Veuillez confirmer votre mot de passe',
-                passwordMismatch: 'Les mots de passe ne correspondent pas',
-                passwordWeak: 'Faible',
-                passwordFair: 'Correct',
-                passwordGood: 'Bon',
-                passwordStrong: 'Fort',
-
-                // Status messages
-                verificationEmailSent: 'Compte créé! Veuillez vérifier votre email pour vérifier votre compte.',
-                emailNotVerified: 'Veuillez vérifier votre adresse email avant de vous connecter.',
-                passwordResetSent: 'Email de réinitialisation du mot de passe envoyé. Veuillez vérifier votre boîte de réception.',
-                signinSuccess: 'Connexion réussie! Redirection...',
-
-                // Error messages
-                signupError: 'Échec de la création du compte. Veuillez réessayer.',
-                signinError: 'Échec de la connexion. Veuillez réessayer.',
-                passwordResetError: 'Échec de l\'envoi de l\'email de réinitialisation du mot de passe.',
-                invalidCredentials: 'Email ou mot de passe invalide',
-                accountDisabled: 'Ce compte a été désactivé',
-                tooManyRequests: 'Trop de tentatives échouées. Veuillez réessayer plus tard'
-            },
-            de: {
-                // Language names
-                english: 'English',
-                spanish: 'Español',
-                french: 'Français',
-                german: 'Deutsch',
-                italian: 'Italiano',
-                portuguese: 'Português',
-
-                // Header
-                signupTitle: 'Konto Erstellen',
-                signupSubtitle: 'Treten Sie SolTecSol bei und schalten Sie KI-gestützte Produktbeschreibungsgenerierung frei',
-                backToApp: 'Zurück zur App',
-
-                // Navigation
-                signUp: 'Registrieren',
-                signIn: 'Anmelden',
-
-                // Form labels
-                emailLabel: 'E-Mail-Adresse',
-                passwordLabel: 'Passwort',
-                confirmPasswordLabel: 'Passwort Bestätigen',
-
-                // Placeholders
-                emailPlaceholder: 'Geben Sie Ihre E-Mail-Adresse ein',
-                passwordPlaceholder: 'Erstellen Sie ein sicheres Passwort',
-                confirmPasswordPlaceholder: 'Bestätigen Sie Ihr Passwort',
-                signinPasswordPlaceholder: 'Geben Sie Ihr Passwort ein',
-
-                // Buttons
-                createAccount: 'Konto Erstellen',
-                signInButton: 'Anmelden',
-                forgotPassword: 'Passwort vergessen?',
-
-                // Validation messages
-                emailRequired: 'E-Mail ist erforderlich',
-                emailInvalid: 'Bitte geben Sie eine gültige E-Mail-Adresse ein',
-                emailInUse: 'E-Mail-Adresse wird bereits verwendet',
-                emailNotFound: 'Kein Konto mit dieser E-Mail-Adresse gefunden',
-                passwordRequired: 'Passwort ist erforderlich',
-                confirmPasswordRequired: 'Bitte bestätigen Sie Ihr Passwort',
-                passwordMismatch: 'Passwörter stimmen nicht überein',
-                passwordWeak: 'Schwach',
-                passwordFair: 'Angemessen',
-                passwordGood: 'Gut',
-                passwordStrong: 'Stark',
-
-                // Status messages
-                verificationEmailSent: 'Konto erstellt! Bitte überprüfen Sie Ihre E-Mail, um Ihr Konto zu verifizieren.',
-                emailNotVerified: 'Bitte verifizieren Sie Ihre E-Mail-Adresse bevor Sie sich anmelden.',
-                passwordResetSent: 'Passwort-Reset-E-Mail gesendet. Bitte überprüfen Sie Ihren Posteingang.',
-                signinSuccess: 'Anmeldung erfolgreich! Weiterleitung...',
-
-                // Error messages
-                signupError: 'Fehler beim Erstellen des Kontos. Bitte versuchen Sie es erneut.',
-                signinError: 'Fehler beim Anmelden. Bitte versuchen Sie es erneut.',
-                passwordResetError: 'Fehler beim Senden der Passwort-Reset-E-Mail.',
-                invalidCredentials: 'Ungültige E-Mail oder Passwort',
-                accountDisabled: 'Dieses Konto wurde deaktiviert',
-                tooManyRequests: 'Zu viele fehlgeschlagene Versuche. Bitte versuchen Sie es später erneut'
-            },
-            it: {
-                // Language names
-                english: 'English',
-                spanish: 'Español',
-                french: 'Français',
-                german: 'Deutsch',
-                italian: 'Italiano',
-                portuguese: 'Português',
-
-                // Header
-                signupTitle: 'Crea Account',
-                signupSubtitle: 'Unisciti a SolTecSol e sblocca la generazione di descrizioni prodotto alimentata dall\'IA',
-                backToApp: 'Torna all\'App',
-
-                // Navigation
-                signUp: 'Registrati',
-                signIn: 'Accedi',
-
-                // Form labels
-                emailLabel: 'Indirizzo Email',
-                passwordLabel: 'Password',
-                confirmPasswordLabel: 'Conferma Password',
-
-                // Placeholders
-                emailPlaceholder: 'Inserisci il tuo indirizzo email',
-                passwordPlaceholder: 'Crea una password sicura',
-                confirmPasswordPlaceholder: 'Conferma la tua password',
-                signinPasswordPlaceholder: 'Inserisci la tua password',
-
-                // Buttons
-                createAccount: 'Crea Account',
-                signInButton: 'Accedi',
-                forgotPassword: 'Password dimenticata?',
-
-                // Validation messages
-                emailRequired: 'L\'email è richiesta',
-                emailInvalid: 'Per favore inserisci un indirizzo email valido',
-                emailInUse: 'L\'indirizzo email è già in uso',
-                emailNotFound: 'Nessun account trovato con questo indirizzo email',
-                passwordRequired: 'La password è richiesta',
-                confirmPasswordRequired: 'Per favore conferma la tua password',
-                passwordMismatch: 'Le password non corrispondono',
-                passwordWeak: 'Debole',
-                passwordFair: 'Discreta',
-                passwordGood: 'Buona',
-                passwordStrong: 'Forte',
-
-                // Status messages
-                verificationEmailSent: 'Account creato! Per favore controlla la tua email per verificare il tuo account.',
-                emailNotVerified: 'Per favore verifica il tuo indirizzo email prima di accedere.',
-                passwordResetSent: 'Email di reset password inviata. Per favore controlla la tua casella di posta.',
-                signinSuccess: 'Accesso riuscito! Reindirizzamento...',
-
-                // Error messages
-                signupError: 'Errore nella creazione dell\'account. Per favore riprova.',
-                signinError: 'Errore nell\'accesso. Per favore riprova.',
-                passwordResetError: 'Errore nell\'invio dell\'email di reset password.',
-                invalidCredentials: 'Email o password non valide',
-                accountDisabled: 'Questo account è stato disabilitato',
-                tooManyRequests: 'Troppi tentativi falliti. Per favore riprova più tardi'
-            },
-            pt: {
-                // Language names
-                english: 'English',
-                spanish: 'Español',
-                french: 'Français',
-                german: 'Deutsch',
-                italian: 'Italiano',
-                portuguese: 'Português',
-
-                // Header
-                signupTitle: 'Criar Conta',
-                signupSubtitle: 'Junte-se ao SolTecSol e desbloqueie a geração de descrições de produtos alimentada por IA',
-                backToApp: 'Voltar ao App',
-
-                // Navigation
-                signUp: 'Cadastrar',
-                signIn: 'Entrar',
-
-                // Form labels
-                emailLabel: 'Endereço de Email',
-                passwordLabel: 'Senha',
-                confirmPasswordLabel: 'Confirmar Senha',
-
-                // Placeholders
-                emailPlaceholder: 'Digite seu endereço de email',
-                passwordPlaceholder: 'Crie uma senha forte',
-                confirmPasswordPlaceholder: 'Confirme sua senha',
-                signinPasswordPlaceholder: 'Digite sua senha',
-
-                // Buttons
-                createAccount: 'Criar Conta',
-                signInButton: 'Entrar',
-                forgotPassword: 'Esqueceu a senha?',
-
-                // Validation messages
-                emailRequired: 'Email é obrigatório',
-                emailInvalid: 'Por favor digite um endereço de email válido',
-                emailInUse: 'Endereço de email já está em uso',
-                emailNotFound: 'Nenhuma conta encontrada com este endereço de email',
-                passwordRequired: 'Senha é obrigatória',
-                confirmPasswordRequired: 'Por favor confirme sua senha',
-                passwordMismatch: 'Senhas não coincidem',
-                passwordWeak: 'Fraca',
-                passwordFair: 'Razoável',
-                passwordGood: 'Boa',
-                passwordStrong: 'Forte',
-
-                // Status messages
-                verificationEmailSent: 'Conta criada! Por favor verifique seu email para verificar sua conta.',
-                emailNotVerified: 'Por favor verifique seu endereço de email antes de entrar.',
-                passwordResetSent: 'Email de redefinição de senha enviado. Por favor verifique sua caixa de entrada.',
-                signinSuccess: 'Login bem-sucedido! Redirecionando...',
-
-                // Error messages
-                signupError: 'Falha ao criar conta. Por favor tente novamente.',
-                signinError: 'Falha ao entrar. Por favor tente novamente.',
-                passwordResetError: 'Falha ao enviar email de redefinição de senha.',
-                invalidCredentials: 'Email ou senha inválidos',
-                accountDisabled: 'Esta conta foi desabilitada',
-                tooManyRequests: 'Muitas tentativas falharam. Por favor tente novamente mais tarde'
-            }
-        };
-
-        let currentLanguage = 'en';
-
-        function updateTranslations(language = currentLanguage) {
-            const elements = document.querySelectorAll('[data-translate]');
-            const langData = signupTranslations[language] || signupTranslations.en;
-
-            elements.forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (langData[key]) {
-                    element.textContent = langData[key];
-                }
-            });
-
-            // Update placeholders
-            const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
-            placeholderElements.forEach(element => {
-                const key = element.getAttribute('data-translate-placeholder');
-                if (langData[key]) {
-                    element.placeholder = langData[key];
-                }
-            });
-        }
-
-        function setupLanguageSelector() {
-            const languageSelect = document.getElementById('languageSelector');
-            if (languageSelect) {
-                languageSelect.addEventListener('change', (event) => {
-                    currentLanguage = event.target.value;
-                    updateTranslations(currentLanguage);
-                    // Save language preference
-                    localStorage.setItem('soltecsol_language', currentLanguage);
-                });
-
-                // Load saved language preference
-                const savedLanguage = localStorage.getItem('soltecsol_language');
-                if (savedLanguage && signupTranslations[savedLanguage]) {
-                    currentLanguage = savedLanguage;
-                    languageSelect.value = currentLanguage;
-                    updateTranslations(currentLanguage);
-                }
-            }
-        }
+        // Language is handled globally by plyvo.js universal translation system
 
         // Enhanced error handling with user-friendly messages
         window.addEventListener('error', function(event) {
@@ -967,12 +556,6 @@
 
         // Initialize everything when DOM is ready and Firebase is available
         document.addEventListener('DOMContentLoaded', function() {
-            // Setup language selector
-            setupLanguageSelector();
-
-            // Update translations
-            updateTranslations();
-
             // Setup form event listeners
             const signupForm = document.getElementById('signupForm');
             const signupPassword = document.getElementById('signupPassword');
