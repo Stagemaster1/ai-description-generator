@@ -231,14 +231,14 @@
 <body>
     <div class="login-container">
         <!-- Navigation -->
-        <a href="https://app.soltecsol.com" class="nav-link">
+        <a href="https://app.soltecsol.com" class="nav-link" data-translate="backToApp">
             ← Back to App
         </a>
 
         <!-- Header -->
         <div class="login-header">
-            <h1>Subscriber Sign In</h1>
-            <p>Access your user management dashboard</p>
+            <h1 data-translate="loginTitle">Subscriber Sign In</h1>
+            <p data-translate="loginSubtitle">Access your user management dashboard</p>
         </div>
 
         <!-- Form Container -->
@@ -249,32 +249,32 @@
             <!-- Sign In Form -->
             <form id="signinForm">
                 <div class="form-group">
-                    <label for="signinEmail" class="form-label">Email Address</label>
-                    <input type="email" id="signinEmail" class="form-input" required placeholder="Enter your email address">
+                    <label for="signinEmail" class="form-label" data-translate="emailLabel">Email Address</label>
+                    <input type="email" id="signinEmail" class="form-input" required data-translate-placeholder="emailPlaceholder" placeholder="Enter your email address">
                     <div class="field-error" id="signinEmailError"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="signinPassword" class="form-label">Password</label>
-                    <input type="password" id="signinPassword" class="form-input" required placeholder="Enter your password">
+                    <label for="signinPassword" class="form-label" data-translate="passwordLabel">Password</label>
+                    <input type="password" id="signinPassword" class="form-input" required data-translate-placeholder="signinPasswordPlaceholder" placeholder="Enter your password">
                     <div class="field-error" id="signinPasswordError"></div>
                 </div>
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary" id="signinSubmit">
-                        <span id="signinButtonText">Sign In</span>
+                        <span id="signinButtonText" data-translate="signInButton">Sign In</span>
                         <span class="loading-spinner" id="signinSpinner" style="display: none;"></span>
                     </button>
                 </div>
 
                 <div class="form-group">
-                    <button type="button" class="btn btn-secondary" id="forgotPasswordBtn">Forgot Password?</button>
+                    <button type="button" class="btn btn-secondary" id="forgotPasswordBtn" data-translate="forgotPassword">Forgot Password?</button>
                 </div>
             </form>
 
             <!-- Trial User Notice -->
             <div class="trial-notice">
-                <strong>Trial users:</strong> Please sign in on the <a href="https://app.soltecsol.com">app page</a> to use your free generations.
+                <strong data-translate="trialUsersNotice">Trial users:</strong> <span data-translate="trialUsersInstruction">Please sign in on the</span> <a href="https://app.soltecsol.com" data-translate="appPage">app page</a> <span data-translate="trialUsersReason">to use your free generations.</span>
             </div>
         </div>
     </div>
@@ -505,5 +505,9 @@
                 window.addEventListener('firebaseReady', () => {
                     console.log('Firebase Auth initialized for login page');
     </script> -->
+
+    <!-- Language System -->
+    <script src="language-shared.js"></script>
+    <script src="plyvo.js"></script>
 </body>
 </html>

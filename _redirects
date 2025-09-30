@@ -18,8 +18,16 @@ https://helpdesk.soltecsol.com/*      /helpdesk.html      200!
 https://genyx.soltecsol.com/*         /genyx.html         200!
 https://subscriptions.soltecsol.com/* /subscriptions.html 200!
 https://pricing.soltecsol.com/*       /pricing.html       200!
-https://signup.soltecsol.com/*        /signup.html        200!
-https://login.soltecsol.com/*         /login.html         200!
+https://signup.soltecsol.com/language-shared.js /language-shared.js 200
+https://signup.soltecsol.com/plyvo.js          /plyvo.js          200
+https://signup.soltecsol.com/signup-app.js     /signup-app.js     200
+https://signup.soltecsol.com/signup-styles.css /signup-styles.css 200
+https://signup.soltecsol.com/*                 /signup.html        200!
+https://login.soltecsol.com/language-shared.js /language-shared.js 200
+https://login.soltecsol.com/plyvo.js           /plyvo.js           200
+https://login.soltecsol.com/login-app.js       /login-app.js       200
+https://login.soltecsol.com/login-styles.css   /login-styles.css   200
+https://login.soltecsol.com/*                  /login.html         200!
 /plyvo-design.css /plyvo-design.css 200!
 /firebase-init.js /firebase-init.js 200!
 
