@@ -27,4 +27,3 @@ https://login.soltecsol.com/*         /login.html         200!
 /api/*      /.netlify/functions/:splat   200
 
 
-
