@@ -316,40 +316,40 @@ const translations = {
       'Smartwatch di lusso con monitoraggio completo della salute, GPS e materiali premium. Rimani connesso e in salute...'
     ]
   },
-  pt: {
+  'pt-BR': {
     heroTitle: 'Plyvo — Palavras, Aperfeiçoadas.',
     heroSubtitle: 'Aumente suas vendas e economize horas de trabalho. Plyvo cria descrições de produtos convincentes em segundos com IA.',
     ctaButton: 'Experimente Grátis',
-    appName: 'SolTecSol Gerador IA',
+    appName: 'Gerador de Descrições com IA',
     monthlyUsage: 'Uso Mensal: 32 de 50 descrições',
     productIdentification: 'Identificação do Produto',
     productURL: '🔗 URL do Produto',
     barcodeUPC: '📊 Código de Barras/UPC',
     manualEntry: '✏️ Entrada Manual',
     productUrlPlaceholder: 'https://www.aliexpress.com/item/...',
-    barcodePlaceholder: 'Digite código de barras/UPC (ex. 123456789012)',
-    productNamePlaceholder: 'Digite nome do produto (ex. \'Fones Bluetooth Sem Fio\')',
+    barcodePlaceholder: 'Digite o código de barras ou número UPC',
+    productNamePlaceholder: 'Digite o nome do produto (ex. \'Fones de Ouvido Bluetooth Sem Fio\')',
     lookupBarcode: '🔍 Buscar Produto',
     brandTone: 'Tom da Marca',
     selectBrandVoice: 'Selecione a voz da sua marca...',
-    luxuryPremium: 'Luxo & Premium',
-    casualFriendly: 'Casual & Amigável',
-    professionalAuthoritative: 'Profissional & Autoritário',
-    funQuirky: 'Divertido & Peculiar',
-    minimalistClean: 'Minimalista & Limpo',
+    luxuryPremium: 'Luxo e Premium',
+    casualFriendly: 'Casual e Amigável',
+    professionalAuthoritative: 'Profissional e Autoritativo',
+    funQuirky: 'Divertido e Peculiar',
+    minimalistClean: 'Minimalista e Limpo',
     descriptionLength: 'Comprimento da Descrição',
-    shortLength: 'Curta (50-100 palavras) - Rápida & Direta',
+    shortLength: 'Curta (50-100 palavras) - Rápida e Direta',
     mediumLength: 'Média (150-250 palavras) - Recomendada',
-    extensiveLength: 'Extensiva (300-500 palavras) - Detalhada',
+    extensiveLength: 'Extensa (300-500 palavras) - Detalhada',
     language: 'Idioma',
-    targetAudience: 'Público-Alvo (Opcional)',
-    targetAudiencePlaceholder: 'ex. pais ocupados, entusiastas fitness, profissionais tech',
-    keyFeatures: 'Características Principais (Opcional)',
-    keyFeaturesPlaceholder: 'Liste as características mais importantes a destacar...',
-    generateDescription: 'Gerar Descrição IA',
+    targetAudience: 'Público-alvo (Opcional)',
+    targetAudiencePlaceholder: 'ex.: pais ocupados, entusiastas de fitness, profissionais de tecnologia',
+    keyFeatures: 'Recursos Principais a Destacar (Opcional)',
+    keyFeaturesPlaceholder: 'Liste os recursos mais importantes que você deseja enfatizar...',
+    generateDescription: 'Gerar Descrição com IA',
     optimizedDescription: '✨ Sua Descrição de Produto Otimizada',
     urlLabel: 'URL do Produto',
-    urlPlaceholder: 'https://exemplo.com/produto',
+    urlPlaceholder: 'https://exemplo.com/pagina-produto',
     toneLabel: 'Tom',
     lengthLabel: 'Comprimento',
     generateButton: 'Gerar Descrição',
@@ -357,28 +357,28 @@ const translations = {
     resultLabel: 'Descrição Gerada',
     featuresHint: 'Descubra recursos premium abaixo',
     // Navigation links
-    signup: 'Cadastro',
-    login: 'Login',
+    signup: 'Criar Conta',
+    login: 'Entrar',
     pricing: 'Preços',
     helpdesk: 'Suporte',
     contact: 'Contato',
     // Contact page translations
-    contactTitle: 'Contate-nos',
+    contactTitle: 'Fale Conosco',
     contactSubtitle: 'Entre em contato com nossa equipe de suporte',
     contactNameLabel: 'Nome Completo',
     contactNamePlaceholder: 'Digite seu nome completo',
-    contactEmailLabel: 'Endereço de Email',
-    contactEmailPlaceholder: 'Digite seu endereço de email',
+    contactEmailLabel: 'Endereço de E-mail',
+    contactEmailPlaceholder: 'Digite seu endereço de e-mail',
     contactSubjectLabel: 'Assunto',
     contactSubjectPlaceholder: 'Sobre o que é?',
     contactMessageLabel: 'Mensagem',
-    contactMessagePlaceholder: 'Nos diga como podemos ajudá-lo...',
+    contactMessagePlaceholder: 'Conte-nos como podemos ajudá-lo...',
     contactSendButton: 'Enviar Mensagem',
-    backToHomepage: '← Voltar ao Início',
+    backToHomepage: '← Voltar para a Página Inicial',
     ghostTexts: [
-      'Transforme qualquer URL de produto em texto convincente que converte visitantes em compradores. Nossa IA analisa detalhes...',
-      'Fones de ouvido sem fio premium com tecnologia avançada de cancelamento de ruído. Experimente áudio cristalino com graves profundos...',
-      'Smartwatch de luxo com monitoramento abrangente de saúde, GPS e materiais premium. Mantenha-se conectado e saudável...'
+      'Transforme qualquer URL de produto em texto convincente que converte navegadores em compradores. Nossa IA analisa detalhes do produto e cria descrições otimizadas para SEO...',
+      'Fones de ouvido sem fio premium com tecnologia avançada de cancelamento de ruído. Experimente áudio cristalino com graves profundos e agudos nítidos...',
+      'Smartwatch de luxo com monitoramento abrangente de saúde, rastreamento GPS e materiais premium. Mantenha-se conectado e saudável...'
     ]
   },
   nl: {
@@ -846,7 +846,7 @@ let typingInterval;
 
 // Enhanced security validation functions
 function validateLanguageCode(lang) {
-  const allowedLanguages = ['en', 'es', 'fr', 'de', 'it', 'pt', 'nl', 'ja', 'zh', 'ru', 'ar', 'hi', 'ko'];
+  const allowedLanguages = ['en', 'es', 'fr', 'de', 'it', 'pt-BR', 'nl', 'ja', 'zh', 'ru', 'ar', 'hi', 'ko'];
   return typeof lang === 'string' && allowedLanguages.includes(lang);
 }
 
@@ -956,7 +956,7 @@ function updateLanguage(lang) {
         'fr': 'french',
         'de': 'german',
         'it': 'italian',
-        'pt': 'portuguese',
+        'pt-BR': 'portuguese',
         'nl': 'dutch',
         'ja': 'japanese',
         'zh': 'chinese',
