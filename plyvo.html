@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-plyvo2025secure' 'unsafe-inline'; style-src 'self' 'nonce-plyvo2025secure' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.soltecsol.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.soltecsol.com; upgrade-insecure-requests;">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta name="robots" content="index, follow">
@@ -1002,31 +1002,9 @@
     <p data-translate="featuresHint">Discover premium features below</p>
   </div>
 </div>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const selector = document.getElementById("language-selector");
-    if (!selector) return;
 
-    selector.addEventListener("change", function () {
-      const selectedLang = selector.value;
-      localStorage.setItem('preferredLanguage', selectedLang);
-
-      // Update all outbound links with ?lang=xx
-      document.querySelectorAll('a').forEach(link => {
-        if (link.href.includes('soltecsol.com')) {
-          const url = new URL(link.href);
-          url.searchParams.set('lang', selectedLang);
-          link.href = url.toString();
-        }
-      });
-
-      location.search = '?lang=' + selectedLang;
-    });
-  });
-</script>
 <script src="language-shared.js" nonce="plyvo2025secure"></script>
 <script src="plyvo.js" nonce="plyvo2025secure"></script>
-<!-- Language propagation patch confirmed -->
 
 </body>
 </html>
