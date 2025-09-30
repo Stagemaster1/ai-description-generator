@@ -3,45 +3,507 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SolTecSol</title>
-    <meta http-equiv="refresh" content="0;url=https://signup.soltecsol.com?tab=signin">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; text-align: center; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; }
-        h1 { color: #333; }
-        .message { color: #666; font-style: italic; margin: 20px 0; }
-        .redirect-link { color: #3b82f6; text-decoration: none; font-weight: 600; }
-        .redirect-link:hover { text-decoration: underline; }
-    </style>
-    <script>
-        // SESSION 4C: Redirect to unified authentication page with return URL handling
-        (function() {
-            // Get current return URL parameter if any
-            const urlParams = new URLSearchParams(window.location.search);
-            const returnUrl = urlParams.get('return_to') || urlParams.get('returnUrl');
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; frame-src 'none'; font-src 'self' https://fonts.gstatic.com;">
+    <title>Sign In - SolTecSol</title>
 
-            // Build redirect URL to signup page with signin tab
-            let redirectUrl = 'https://signup.soltecsol.com?tab=signin';
+    <!-- External CSS -->
+    <link rel="stylesheet" href="plyvo-design.css">
 
-            // Add return URL if provided
-            if (returnUrl) {
-                redirectUrl += `&return_to=${encodeURIComponent(returnUrl)}`;
-            }
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-            // Redirect immediately
-            window.location.href = redirectUrl;
-        })();
-    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK -->
+    <script src="./js/token-manager.js"></script>
+    <script src="./js/secure-cookies.js"></script>
+    <script type="module" src="./js/firebase-init.js"></script>
+
+    <!-- Cross-Domain Authentication Client -->
+    <script src="./cross-domain-auth-client.js"></script>
+
+    <!-- External CSS Styles -->
+    <link rel="stylesheet" href="login-styles.css">
+
+    <!-- REMOVED: Inline styles extracted to login-styles.css for CSP compliance -->
+    <!-- <style>
+        .login-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .login-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1rem;
+        }
+
+        .login-header p {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .form-container {
+            background: var(--bg-primary, #ffffff);
+            border-radius: 1rem;
+            padding: 3rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #ffffff;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+
+        .message {
+            padding: 0.875rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .message.warning {
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            border: 1px solid rgba(249, 115, 22, 0.2);
+        }
+
+        .field-error {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .field-error.show {
+            display: block;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            border-top-color: currentColor;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.75rem 0;
+            transition: all 0.2s ease;
+            margin-bottom: 2rem;
+        }
+
+        .nav-link:hover {
+            color: #2563eb;
+        }
+
+        .trial-notice {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #1f2937;
+        }
+
+        .trial-notice a {
+            color: #3b82f6;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .trial-notice a:hover {
+    </style> -->
 </head>
 <body>
-    <div class="container">
-        <h1>Redirecting to Login...</h1>
-        <p class="message">You are being redirected to the unified authentication page.</p>
-        <p>
-            If you are not redirected automatically,
-            <a href="https://signup.soltecsol.com?tab=signin" class="redirect-link">click here to sign in</a>
-        </p>
-        <p><a href="https://app.soltecsol.com">← Back to App</a></p>
+    <div class="login-container">
+        <!-- Navigation -->
+        <a href="https://app.soltecsol.com" class="nav-link">
+            ← Back to App
+        </a>
+
+        <!-- Header -->
+        <div class="login-header">
+            <h1>Subscriber Sign In</h1>
+            <p>Access your user management dashboard</p>
+        </div>
+
+        <!-- Form Container -->
+        <div class="form-container">
+            <!-- Messages Area -->
+            <div id="messageArea"></div>
+
+            <!-- Sign In Form -->
+            <form id="signinForm">
+                <div class="form-group">
+                    <label for="signinEmail" class="form-label">Email Address</label>
+                    <input type="email" id="signinEmail" class="form-input" required placeholder="Enter your email address">
+                    <div class="field-error" id="signinEmailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signinPassword" class="form-label">Password</label>
+                    <input type="password" id="signinPassword" class="form-input" required placeholder="Enter your password">
+                    <div class="field-error" id="signinPasswordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" id="signinSubmit">
+                        <span id="signinButtonText">Sign In</span>
+                        <span class="loading-spinner" id="signinSpinner" style="display: none;"></span>
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-secondary" id="forgotPasswordBtn">Forgot Password?</button>
+                </div>
+            </form>
+
+            <!-- Trial User Notice -->
+            <div class="trial-notice">
+                <strong>Trial users:</strong> Please sign in on the <a href="https://app.soltecsol.com">app page</a> to use your free generations.
+            </div>
+        </div>
     </div>
+
+    <!-- External JavaScript Application -->
+    <script src="login-app.js"></script>
+
+    <!-- REMOVED: Inline JavaScript extracted to login-app.js for CSP compliance -->
+    <!-- <script>
+        // Email validation
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Show message
+        function showMessage(message, type = 'info') {
+            const messageArea = document.getElementById('messageArea');
+            messageArea.innerHTML = `<div class="message ${type}">${message}</div>`;
+        }
+
+        // Clear message
+        function clearMessage() {
+            const messageArea = document.getElementById('messageArea');
+            messageArea.innerHTML = '';
+        }
+
+        // Show field error
+        function showFieldError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+
+            if (errorElement && inputElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+                inputElement.classList.add('error');
+            }
+        }
+
+        // Clear field error
+        function clearFieldError(fieldId) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+
+            if (errorElement && inputElement) {
+                errorElement.classList.remove('show');
+                inputElement.classList.remove('error');
+            }
+        }
+
+        // Check user subscription status from Firestore
+        async function checkUserStatus(userId) {
+            try {
+                // TODO: Replace with actual Firestore query
+                // const userDoc = await getDoc(doc(db, 'users', userId));
+                // const userData = userDoc.data();
+                // return userData.status; // 'trial', 'starter', 'professional', 'enterprise'
+
+                // Placeholder - will be implemented with Firestore
+                console.log('Checking user status for:', userId);
+                return 'starter'; // Default for now
+            } catch (error) {
+                console.error('Error checking user status:', error);
+                return null;
+            }
+        }
+
+        // Handle Sign In
+        async function handleSignIn(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('signinEmail').value.trim();
+            const password = document.getElementById('signinPassword').value;
+
+            const submitBtn = document.getElementById('signinSubmit');
+            const buttonText = document.getElementById('signinButtonText');
+            const spinner = document.getElementById('signinSpinner');
+
+            // Clear previous errors
+            clearMessage();
+            clearFieldError('signinEmail');
+            clearFieldError('signinPassword');
+
+            let isValid = true;
+
+            // Validate email
+            if (!email) {
+                showFieldError('signinEmail', 'Email is required');
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                showFieldError('signinEmail', 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            // Validate password
+            if (!password) {
+                showFieldError('signinPassword', 'Password is required');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            try {
+                // Show loading state
+                submitBtn.disabled = true;
+                buttonText.style.display = 'none';
+                spinner.style.display = 'inline-block';
+
+                // Sign in with Firebase
+                const userCredential = await window.firebaseSignInWithEmailAndPassword(window.firebaseAuth, email, password);
+                const user = userCredential.user;
+
+                if (!user.emailVerified) {
+                    showMessage('Please verify your email address before signing in.', 'warning');
+                    await window.firebaseAuth.signOut();
+                    return;
+                }
+
+                // Check user subscription status
+                const userStatus = await checkUserStatus(user.uid);
+
+                // Block trial users
+                if (userStatus === 'trial') {
+                    showMessage('Trial users must sign in on the app page. Redirecting...', 'warning');
+                    await window.firebaseAuth.signOut();
+                    setTimeout(() => {
+                        window.location.href = 'https://app.soltecsol.com';
+                    }, 2000);
+                    return;
+                }
+
+                // Allow subscribed users - redirect to user management
+                if (userStatus === 'starter' || userStatus === 'professional' || userStatus === 'enterprise') {
+                    showMessage('Sign in successful! Redirecting to dashboard...', 'success');
+                    setTimeout(() => {
+                        // TODO: Update with actual user management page URL
+                        window.location.href = 'https://app.soltecsol.com/dashboard'; // Placeholder
+                    }, 1500);
+                } else {
+                    showMessage('Unable to verify subscription status. Please contact support.', 'error');
+                    await window.firebaseAuth.signOut();
+                }
+
+            } catch (error) {
+                console.error('Sign in error:', error);
+
+                let errorMessage = 'Failed to sign in. Please try again.';
+
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                    case 'auth/invalid-credential':
+                        errorMessage = 'Invalid email or password';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'This account has been disabled';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Too many failed attempts. Please try again later';
+                        break;
+                }
+
+                showMessage(errorMessage, 'error');
+
+            } finally {
+                // Reset loading state
+                submitBtn.disabled = false;
+                buttonText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Handle Forgot Password
+        async function handleForgotPassword() {
+            const email = document.getElementById('signinEmail').value.trim();
+
+            if (!email) {
+                showFieldError('signinEmail', 'Please enter your email address');
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                showFieldError('signinEmail', 'Please enter a valid email address');
+                return;
+            }
+
+            try {
+                await window.firebaseSendPasswordResetEmail(window.firebaseAuth, email);
+                showMessage('Password reset email sent. Please check your inbox.', 'success');
+
+            } catch (error) {
+                console.error('Password reset error:', error);
+
+                let errorMessage = 'Failed to send password reset email.';
+
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'No account found with this email address';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Invalid email address';
+                        break;
+                }
+
+                showMessage(errorMessage, 'error');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            const signinForm = document.getElementById('signinForm');
+            const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+
+            if (signinForm) {
+                signinForm.addEventListener('submit', handleSignIn);
+            }
+
+            if (forgotPasswordBtn) {
+                forgotPasswordBtn.addEventListener('click', handleForgotPassword);
+            }
+
+            // Wait for Firebase to be ready
+            if (window.firebaseAuth) {
+                console.log('Firebase Auth ready for login page');
+            } else {
+                window.addEventListener('firebaseReady', () => {
+                    console.log('Firebase Auth initialized for login page');
+    </script> -->
 </body>
 </html>
