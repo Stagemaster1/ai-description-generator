@@ -173,10 +173,10 @@
 
             // Update strength text
             const strengthLabels = {
-                weak: translations[currentLanguage]?.passwordWeak || 'Weak',
-                fair: translations[currentLanguage]?.passwordFair || 'Fair',
-                good: translations[currentLanguage]?.passwordGood || 'Good',
-                strong: translations[currentLanguage]?.passwordStrong || 'Strong'
+                weak: signupTranslations[currentLanguage]?.passwordWeak || 'Weak',
+                fair: signupTranslations[currentLanguage]?.passwordFair || 'Fair',
+                good: signupTranslations[currentLanguage]?.passwordGood || 'Good',
+                strong: signupTranslations[currentLanguage]?.passwordStrong || 'Strong'
             };
 
             strengthText.textContent = strengthLabels[result.strength];
@@ -399,7 +399,7 @@
                 // Set signup cookie to prevent repeat signups from this device
                 antiAbuse.setSignupCookie();
 
-                showMessage(translations[currentLanguage]?.verificationEmailSent || 'Account created! Please check your email to verify your account.', 'success');
+                showMessage(signupTranslations[currentLanguage]?.verificationEmailSent || 'Account created! Please check your email to verify your account.', 'success');
 
                 // Reset form
                 document.getElementById('signupForm').reset();
@@ -409,19 +409,19 @@
             } catch (error) {
                 console.error('Sign up error:', error);
 
-                let errorMessage = translations[currentLanguage]?.signupError || 'Failed to create account. Please try again.';
+                let errorMessage = signupTranslations[currentLanguage]?.signupError || 'Failed to create account. Please try again.';
 
                 switch (error.code) {
                     case 'auth/email-already-in-use':
-                        errorMessage = translations[currentLanguage]?.emailInUse || 'Email address is already in use';
+                        errorMessage = signupTranslations[currentLanguage]?.emailInUse || 'Email address is already in use';
                         showFieldError('signupEmail', errorMessage);
                         break;
                     case 'auth/weak-password':
-                        errorMessage = translations[currentLanguage]?.passwordWeak || 'Password is too weak';
+                        errorMessage = signupTranslations[currentLanguage]?.passwordWeak || 'Password is too weak';
                         showFieldError('signupPassword', errorMessage);
                         break;
                     case 'auth/invalid-email':
-                        errorMessage = translations[currentLanguage]?.emailInvalid || 'Invalid email address';
+                        errorMessage = signupTranslations[currentLanguage]?.emailInvalid || 'Invalid email address';
                         showFieldError('signupEmail', errorMessage);
                         break;
                     default:
@@ -454,10 +454,10 @@
 
             // Validate email
             if (!email) {
-                showFieldError('signupEmail', translations[currentLanguage]?.emailRequired || 'Email is required');
+                showFieldError('signupEmail', signupTranslations[currentLanguage]?.emailRequired || 'Email is required');
                 isValid = false;
             } else if (!validateEmail(email)) {
-                showFieldError('signupEmail', translations[currentLanguage]?.emailInvalid || 'Please enter a valid email address');
+                showFieldError('signupEmail', signupTranslations[currentLanguage]?.emailInvalid || 'Please enter a valid email address');
                 isValid = false;
             } else if (antiAbuse.isDisposableEmail(email)) {
                 showFieldError('signupEmail', 'Disposable email addresses are not allowed. Please use a permanent email address.');
@@ -468,12 +468,12 @@
 
             // Validate password
             if (!password) {
-                showFieldError('signupPassword', translations[currentLanguage]?.passwordRequired || 'Password is required');
+                showFieldError('signupPassword', signupTranslations[currentLanguage]?.passwordRequired || 'Password is required');
                 isValid = false;
             } else {
                 const strengthResult = validatePasswordStrength(password);
                 if (strengthResult.score < 3) {
-                    showFieldError('signupPassword', translations[currentLanguage]?.passwordWeak || 'Password is too weak');
+                    showFieldError('signupPassword', signupTranslations[currentLanguage]?.passwordWeak || 'Password is too weak');
                     isValid = false;
                 } else {
                     showFieldSuccess('signupPassword');
@@ -482,10 +482,10 @@
 
             // Validate password confirmation
             if (!confirmPassword) {
-                showFieldError('confirmPassword', translations[currentLanguage]?.confirmPasswordRequired || 'Please confirm your password');
+                showFieldError('confirmPassword', signupTranslations[currentLanguage]?.confirmPasswordRequired || 'Please confirm your password');
                 isValid = false;
             } else if (password !== confirmPassword) {
-                showFieldError('confirmPassword', translations[currentLanguage]?.passwordMismatch || 'Passwords do not match');
+                showFieldError('confirmPassword', signupTranslations[currentLanguage]?.passwordMismatch || 'Passwords do not match');
                 isValid = false;
             } else {
                 showFieldSuccess('confirmPassword');
@@ -538,7 +538,7 @@
         }
 
         // Internationalization framework with 6 languages
-        const translations = {
+        const signupTranslations = {
             en: {
                 // Language names
                 english: 'English',
@@ -911,7 +911,7 @@
 
         function updateTranslations(language = currentLanguage) {
             const elements = document.querySelectorAll('[data-translate]');
-            const langData = translations[language] || translations.en;
+            const langData = signupTranslations[language] || signupTranslations.en;
 
             elements.forEach(element => {
                 const key = element.getAttribute('data-translate');
@@ -942,7 +942,7 @@
 
                 // Load saved language preference
                 const savedLanguage = localStorage.getItem('soltecsol_language');
-                if (savedLanguage && translations[savedLanguage]) {
+                if (savedLanguage && signupTranslations[savedLanguage]) {
                     currentLanguage = savedLanguage;
                     languageSelect.value = currentLanguage;
                     updateTranslations(currentLanguage);
