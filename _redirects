@@ -4,7 +4,9 @@
 /js/*.js /js/:splat.js 200!
 
 # Subdomain routing
-https://plyvo.soltecsol.com/*         /plyvo.html         200!
+https://plyvo.soltecsol.com/language-shared.js /language-shared.js 200
+https://plyvo.soltecsol.com/plyvo.js          /plyvo.js          200
+https://plyvo.soltecsol.com/*                 /plyvo.html         200!
 https://contact.soltecsol.com/*       /contact.html       200!
 https://app.soltecsol.com/           /index.html         200
 https://tos.soltecsol.com/*           /tos.html           200!
