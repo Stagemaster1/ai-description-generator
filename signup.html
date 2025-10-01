@@ -594,16 +594,16 @@
     <!-- ToS Modal -->
     <div class="modal-overlay" id="tosModal">
         <div class="modal-content">
-            <h2>Terms of Service</h2>
+            <h2 data-translate="tosTitle">Terms of Service</h2>
             <div class="modal-body" id="tosContent">
-                <p>Loading Terms of Service...</p>
+                <p data-translate="tosLoading">Loading Terms of Service...</p>
             </div>
             <div class="modal-footer">
                 <label class="checkbox-label">
                     <input type="checkbox" id="tosCheckbox">
-                    <span>I have read and accept the Terms of Service</span>
+                    <span data-translate="tosAcceptLabel">I have read and accept the Terms of Service</span>
                 </label>
-                <button type="button" class="btn btn-primary" id="tosContinue" disabled>Continue</button>
+                <button type="button" class="btn btn-primary" id="tosContinue" disabled data-translate="tosContinue">Continue</button>
             </div>
         </div>
     </div>
@@ -611,16 +611,16 @@
     <!-- DPA/GDPR Modal -->
     <div class="modal-overlay" id="dpaModal">
         <div class="modal-content">
-            <h2>Data Protection Agreement</h2>
+            <h2 data-translate="dpaTitle">Data Protection Agreement</h2>
             <div class="modal-body" id="dpaContent">
-                <p>Loading Data Protection Agreement...</p>
+                <p data-translate="dpaLoading">Loading Data Protection Agreement...</p>
             </div>
             <div class="modal-footer">
                 <label class="checkbox-label">
                     <input type="checkbox" id="dpaCheckbox">
-                    <span>I have read and accept the Data Protection Agreement and GDPR terms</span>
+                    <span data-translate="dpaAcceptLabel">I have read and accept the Data Protection Agreement and GDPR terms</span>
                 </label>
-                <button type="button" class="btn btn-primary" id="dpaSubmit" disabled>Accept & Create Account</button>
+                <button type="button" class="btn btn-primary" id="dpaSubmit" disabled data-translate="dpaAcceptButton">Accept & Create Account</button>
             </div>
         </div>
     </div>
