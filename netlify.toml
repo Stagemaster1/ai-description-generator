@@ -9,11 +9,6 @@
   NPM_VERSION = "9.6.7"
   SECRETS_SCAN_OMIT_PATHS = "package-lock.json"
 
-# Scheduled Functions
-[[functions]]
-  name = "cleanup-unverified-accounts"
-  schedule = "0 3 * * *"  # Runs daily at 3 AM UTC
-
 # Subdomain redirects handled by _redirects file
 
 [[redirects]]
