@@ -16,7 +16,13 @@ https://dpa.soltecsol.com/*           /dpa.html           200!
 https://gdpr.soltecsol.com/*          /gdpr.html          200!
 https://helpdesk.soltecsol.com/*      /helpdesk.html      200!
 https://genyx.soltecsol.com/*         /genyx.html         200!
-https://subscriptions.soltecsol.com/* /subscriptions.html 200!
+https://subscriptions.soltecsol.com/language-shared.js           /language-shared.js           200
+https://subscriptions.soltecsol.com/plyvo.js                    /plyvo.js                    200
+https://subscriptions.soltecsol.com/cross-domain-auth-client.js /cross-domain-auth-client.js 200
+https://subscriptions.soltecsol.com/js/token-manager.js         /js/token-manager.js         200
+https://subscriptions.soltecsol.com/js/secure-cookies.js        /js/secure-cookies.js        200
+https://subscriptions.soltecsol.com/js/firebase-init.js         /js/firebase-init.js         200
+https://subscriptions.soltecsol.com/*                           /subscriptions.html           200!
 https://pricing.soltecsol.com/*       /pricing.html       200!
 https://signup.soltecsol.com/language-shared.js           /language-shared.js           200
 https://signup.soltecsol.com/plyvo.js                    /plyvo.js                    200
