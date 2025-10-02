@@ -59,7 +59,7 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // SESSION 4D5: Return PayPal Client ID for authenticated users only
+        // SESSION 4D5: Return PayPal Client ID and Plan IDs for authenticated users only
         return {
             statusCode: 200,
             headers: {
@@ -68,8 +68,14 @@ exports.handler = async (event, context) => {
                 'Pragma': 'no-cache',
                 'Expires': '0'
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 clientId: process.env.PAYPAL_CLIENT_ID,
+                starterPlanId: process.env.PAYPAL_STARTER_PLAN_ID,
+                professionalPlanId: process.env.PAYPAL_PROFESSIONAL_PLAN_ID,
+                enterprisePlanId: process.env.PAYPAL_ENTERPRISE_PLAN_ID,
+                starterAnnualPlanId: process.env.PAYPAL_STARTER_ANNUAL_PLAN_ID,
+                professionalAnnualPlanId: process.env.PAYPAL_PROFESSIONAL_ANNUAL_PLAN_ID,
+                enterpriseAnnualPlanId: process.env.PAYPAL_ENTERPRISE_ANNUAL_PLAN_ID,
                 timestamp: new Date().toISOString()
             })
         };
