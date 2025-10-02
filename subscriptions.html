@@ -469,7 +469,12 @@
             if (planIdsLoaded) return;
 
             try {
-                const response = await fetch('/.netlify/functions/paypal-config');
+                const token = await window.tokenManager.getToken();
+                const response = await fetch('/.netlify/functions/paypal-config', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (!response.ok) throw new Error('Failed to fetch plan IDs');
 
                 const config = await response.json();
@@ -511,7 +516,12 @@
             if (paypalLoaded) return;
 
             try {
-                const response = await fetch('/.netlify/functions/paypal-config');
+                const token = await window.tokenManager.getToken();
+                const response = await fetch('/.netlify/functions/paypal-config', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (!response.ok) throw new Error('Failed to fetch PayPal config');
 
                 const { clientId } = await response.json();
