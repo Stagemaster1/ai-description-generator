@@ -13,7 +13,7 @@
                 if (user) {
                     console.log('User authenticated - initializing token management');
                     try {
-                        await window.tokenManager.getValidToken();
+                        await window.tokenManager.getToken();
 
                         // Initialize secure cookies for authenticated user
                         try {
@@ -54,7 +54,7 @@
             auth.onIdTokenChanged(async (user) => {
                 if (user) {
                     try {
-                        await window.tokenManager.getValidToken();
+                        await window.tokenManager.getToken();
                     } catch (error) {
                         console.error('Token refresh monitoring failed:', error);
                     }
@@ -184,9 +184,6 @@
 
         // No tab switching needed - signup only page
 
-        // Modal Management
-        let signupData = null; // Store signup data temporarily
-
         // Anti-Abuse System: IP Tracking + Disposable Email Blocking + Signup Cookie
         // NOTE: Cookies only prevent NEW signups, not sign-ins (users can login from any device)
         class AntiAbuseSystem {
@@ -278,107 +275,20 @@
         // Initialize anti-abuse system
         const antiAbuse = new AntiAbuseSystem();
 
-        // Load ToS content
-        async function loadTosContent() {
-            try {
-                const response = await fetch('tos.html');
-                const html = await response.text();
+        // Setup agreement checkbox to enable/disable submit button
+        function setupAgreementCheckbox() {
+            const checkbox = document.getElementById('agreementCheckbox');
+            const submitBtn = document.getElementById('signupSubmit');
 
-                // Extract body content from tos.html
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const body = doc.body;
-
-                document.getElementById('tosContent').innerHTML = body.innerHTML || '<p>Terms of Service content</p>';
-            } catch (error) {
-                console.error('Failed to load ToS:', error);
-                document.getElementById('tosContent').innerHTML = '<p>Failed to load Terms of Service. Please contact support.</p>';
+            if (checkbox && submitBtn) {
+                checkbox.addEventListener('change', () => {
+                    submitBtn.disabled = !checkbox.checked;
+                });
             }
         }
 
-        // Load DPA content
-        async function loadDpaContent() {
-            try {
-                const response = await fetch('dpa.html');
-                const html = await response.text();
-
-                // Extract body content from dpa.html
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const body = doc.body;
-
-                document.getElementById('dpaContent').innerHTML = body.innerHTML || '<p>Data Protection Agreement content</p>';
-            } catch (error) {
-                console.error('Failed to load DPA:', error);
-                document.getElementById('dpaContent').innerHTML = '<p>Failed to load Data Protection Agreement. Please contact support.</p>';
-            }
-        }
-
-        // Show ToS Modal
-        function showTosModal() {
-            const modal = document.getElementById('tosModal');
-            modal.classList.add('show');
-            loadTosContent();
-        }
-
-        // Hide ToS Modal
-        function hideTosModal() {
-            const modal = document.getElementById('tosModal');
-            modal.classList.remove('show');
-        }
-
-        // Show DPA Modal
-        function showDpaModal() {
-            const modal = document.getElementById('dpaModal');
-            modal.classList.add('show');
-            loadDpaContent();
-        }
-
-        // Hide DPA Modal
-        function hideDpaModal() {
-            const modal = document.getElementById('dpaModal');
-            modal.classList.remove('show');
-        }
-
-        // Setup ToS checkbox handler
-        function setupTosCheckbox() {
-            const checkbox = document.getElementById('tosCheckbox');
-            const continueBtn = document.getElementById('tosContinue');
-
-            checkbox.addEventListener('change', () => {
-                continueBtn.disabled = !checkbox.checked;
-            });
-
-            continueBtn.addEventListener('click', () => {
-                if (checkbox.checked) {
-                    hideTosModal();
-                    showDpaModal();
-                }
-            });
-        }
-
-        // Setup DPA checkbox handler
-        function setupDpaCheckbox() {
-            const checkbox = document.getElementById('dpaCheckbox');
-            const submitBtn = document.getElementById('dpaSubmit');
-
-            checkbox.addEventListener('change', () => {
-                submitBtn.disabled = !checkbox.checked;
-            });
-
-            submitBtn.addEventListener('click', async () => {
-                if (checkbox.checked && signupData) {
-                    hideDpaModal();
-                    // Now proceed with actual Firebase signup
-                    await createFirebaseAccount(signupData);
-                }
-            });
-        }
-
-        // Create Firebase account after both modals accepted
-        async function createFirebaseAccount(data) {
-            const { email, password } = data;
-
+        // Create Firebase account directly
+        async function createFirebaseAccount(email, password, ipAddress) {
             const submitBtn = document.getElementById('signupSubmit');
             const buttonText = document.getElementById('signupButtonText');
             const spinner = document.getElementById('signupSpinner');
@@ -404,7 +314,9 @@
                 // Reset form
                 document.getElementById('signupForm').reset();
                 document.getElementById('passwordStrength').classList.remove('show');
-                signupData = null;
+
+                // Re-disable submit button after form reset
+                document.getElementById('signupSubmit').disabled = true;
 
             } catch (error) {
                 console.error('Sign up error:', error);
@@ -502,15 +414,8 @@
                 return;
             }
 
-            // Store signup data temporarily (including IP for Firestore)
-            signupData = {
-                email,
-                password,
-                ipAddress: abuseCheck.ipAddress
-            };
-
-            // Show ToS modal instead of creating account directly
-            showTosModal();
+            // Create Firebase account directly (ToS/GDPR already agreed via checkbox)
+            await createFirebaseAccount(email, password, abuseCheck.ipAddress);
         }
 
         // Sign in moved to login.html - signup page is signup-only
@@ -556,6 +461,9 @@
 
         // Initialize everything when DOM is ready and Firebase is available
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize cross-subdomain language system
+            initializeLanguageSystem();
+
             // Setup form event listeners
             const signupForm = document.getElementById('signupForm');
             const signupPassword = document.getElementById('signupPassword');
@@ -570,9 +478,8 @@
                 });
             }
 
-            // Setup modal checkbox handlers
-            setupTosCheckbox();
-            setupDpaCheckbox();
+            // Setup agreement checkbox handler
+            setupAgreementCheckbox();
 
             // Wait for Firebase to be ready
             if (window.firebaseAuth) {
@@ -747,4 +654,57 @@
 
         // Handle URL parameters when page loads
         handleUrlParams();
+
+        // Initialize cross-subdomain language system
+        function initializeLanguageSystem() {
+            try {
+                console.log('Initializing cross-subdomain language system for signup page...');
+
+                // Check if plyvo.js loaded successfully
+                if (typeof window.updateLanguageUniversal !== 'function') {
+                    console.error('plyvo.js not loaded - language system unavailable');
+                    return;
+                }
+
+                if (typeof window.CrossSubdomainLanguage === 'undefined') {
+                    console.error('CrossSubdomainLanguage not available');
+                    return;
+                }
+
+                // Get language from cross-subdomain cookie (set by landing page)
+                let preferredLang = window.CrossSubdomainLanguage.getCookie();
+                console.log('Language from cross-subdomain cookie:', preferredLang);
+
+                // Fallback to URL parameter
+                if (!preferredLang) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    preferredLang = urlParams.get('lang');
+                    console.log('Language from URL parameter:', preferredLang);
+                }
+
+                // Fallback to localStorage
+                if (!preferredLang) {
+                    preferredLang = localStorage.getItem('preferredLanguage');
+                    console.log('Language from localStorage:', preferredLang);
+                }
+
+                // Apply language using universal system
+                if (preferredLang && window.translations && window.translations[preferredLang]) {
+                    console.log('Applying language:', preferredLang);
+                    window.updateLanguageUniversal(preferredLang);
+                } else {
+                    console.log('Defaulting to English');
+                    window.updateLanguageUniversal('en');
+                }
+
+                console.log('Cross-subdomain language system initialized successfully');
+
+            } catch (error) {
+                console.error('Language system initialization failed:', error);
+                // Fallback to English on error
+                if (typeof window.updateLanguageUniversal === 'function') {
+                    window.updateLanguageUniversal('en');
+                }
+            }
+        }
 

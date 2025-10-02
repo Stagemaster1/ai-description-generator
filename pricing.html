@@ -3,71 +3,428 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting to Subscriptions - SolTecSol</title>
-    <meta http-equiv="refresh" content="0;url=https://subscriptions.soltecsol.com">
+    <title>Pricing Plans - SolTecSol AI Description Generator</title>
+
+    <!-- Load pricing data -->
+    <script src="./js/pricing-data.js"></script>
+
     <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        * {
             margin: 0;
-            padding: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background: #d4e4f7;
             min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: #6b7280;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Info Note */
+        .info-note {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
             text-align: center;
         }
-        .container {
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+        .info-note h3 {
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
         }
-        h1 { color: white; margin-bottom: 20px; }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            margin: 20px auto;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        .info-note p {
+            color: #6b7280;
+            margin-bottom: 1rem;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        a {
-            color: white;
-            text-decoration: none;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 8px;
+
+        .info-note a {
             display: inline-block;
-            margin-top: 20px;
-            transition: background 0.3s ease;
+            background: #3b82f6;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
-        a:hover {
-            background: rgba(255, 255, 255, 0.3);
+
+        .info-note a:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Billing Toggle */
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .billing-toggle-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #3b82f6;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Pricing Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Pricing Cards - Dark Design */
+        .pricing-card {
+            background: #1f1f23;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .pricing-card.featured {
+            border-color: #3b82f6;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+        }
+
+        .pricing-card.featured:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .plan-badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .plan-badge.starter {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .plan-badge.professional {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+
+        .plan-badge.enterprise {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        }
+
+        .plan-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-period {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Plan features - Dark Design with Dividers */
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+            text-align: left;
+            width: 100%;
+            padding: 0;
+        }
+
+        .plan-features li {
+            color: rgba(255, 255, 255, 0.9);
+            padding: 1rem 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Subscribe Buttons with Glows */
+        .subscribe-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: auto;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .subscribe-button.green {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .subscribe-button.blue {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .subscribe-button.gold {
+            background: #fbbf24;
+            color: #1f1f23;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+        }
+
+        .subscribe-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .subscribe-button.green:hover {
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.7);
+        }
+
+        .subscribe-button.blue:hover {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.7);
+        }
+
+        .subscribe-button.gold:hover {
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+
+            .back-link {
+                top: 10px;
+                right: 10px;
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
         }
     </style>
-    <script>
-        // Redirect after a brief moment to ensure the page loads properly
-        setTimeout(function() {
-            window.location.href = 'https://subscriptions.soltecsol.com';
-        }, 2000);
-    </script>
 </head>
 <body>
+    <a href="https://plyvo.soltecsol.com" class="back-link">Back</a>
+
     <div class="container">
-        <h1>Redirecting to Subscription Plans</h1>
-        <div class="spinner"></div>
-        <p>You are being redirected to our subscription plans page...</p>
-        <p>If you are not redirected automatically, <a href="https://subscriptions.soltecsol.com">click here</a></p>
-        <p><a href="https://app.soltecsol.com">← Back to App</a></p>
+        <div class="header">
+            <h1>Plans & Pricing</h1>
+            <p>Choose the perfect plan for your AI-powered product description generation needs</p>
+
+            <!-- Billing Toggle -->
+            <div class="billing-toggle">
+                <span class="billing-toggle-label">Annually</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="billingToggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="billing-toggle-label">Monthly</span>
+            </div>
+        </div>
+
+        <div class="info-note">
+            <h3>🎯 Ready to Subscribe?</h3>
+            <p>This page shows pricing information only. To activate a subscription, visit our interactive subscription page.</p>
+            <a href="https://subscriptions.soltecsol.com">Go to Subscriptions Page →</a>
+        </div>
+
+        <div id="pricingGrid" class="pricing-grid">
+            <!-- Cards will be dynamically generated -->
+        </div>
+
+        <div class="info-note">
+            <p><strong>Note:</strong> All plans include secure payment processing via PayPal, monthly billing, and the ability to upgrade or cancel anytime.</p>
+        </div>
     </div>
+
+    <script>
+        // Render Pricing Cards
+        function renderPricingCards(isMonthly = true) {
+            const pricingGrid = document.getElementById('pricingGrid');
+            if (!pricingGrid || !window.pricingData) {
+                console.error('Pricing grid or pricing data not found');
+                return;
+            }
+
+            pricingGrid.innerHTML = '';
+
+            // Render each plan
+            Object.keys(pricingData).forEach(planKey => {
+                const plan = pricingData[planKey];
+                const price = isMonthly ? plan.monthlyPrice : plan.annualPrice;
+                const isFeatured = planKey === 'professional';
+
+                const cardDiv = document.createElement('div');
+                cardDiv.className = `pricing-card ${isFeatured ? 'featured' : ''}`;
+
+                const buttonColorClass = plan.buttonColor;
+
+                cardDiv.innerHTML = `
+                    ${plan.badge ? `<div class="plan-badge ${planKey}">${plan.badge}</div>` : ''}
+                    <div class="plan-name">${plan.name}</div>
+                    <div class="plan-price">$${price.toFixed(2)}</div>
+                    <div class="plan-period">per ${isMonthly ? 'month' : 'year'}</div>
+                    <ul class="plan-features">
+                        ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                    <a href="https://subscriptions.soltecsol.com" class="subscribe-button ${buttonColorClass}">Subscribe Now</a>
+                `;
+
+                pricingGrid.appendChild(cardDiv);
+            });
+        }
+
+        // Setup Toggle Event Listener
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render initial cards (monthly view)
+            renderPricingCards(true);
+
+            // Setup billing toggle
+            const billingToggle = document.getElementById('billingToggle');
+            if (billingToggle) {
+                billingToggle.addEventListener('change', (e) => {
+                    const isMonthly = e.target.checked;
+                    renderPricingCards(isMonthly);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

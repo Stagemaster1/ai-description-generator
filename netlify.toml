@@ -9,21 +9,33 @@
   NPM_VERSION = "9.6.7"
   SECRETS_SCAN_OMIT_PATHS = "package-lock.json"
 
+# Scheduled Functions
+[[functions]]
+  name = "cleanup-unverified-accounts"
+  schedule = "0 3 * * *"  # Runs daily at 3 AM UTC
+
+# Subdomain redirects handled by _redirects file
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
 
+# Success page for Stripe checkout
 [[redirects]]
   from = "/success"
   to = "/index.html?success=true"
   status = 200
 
+# Cancel page for Stripe checkout
 [[redirects]]
   from = "/cancel"
   to = "/index.html?cancelled=true"
   status = 200
 
+# Removed catch-all to allow plyvo.soltecsol.com -> /plyvo.html
+
+# Headers for security and performance
 [[headers]]
   for = "/*"
   [headers.values]
@@ -33,15 +45,11 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
 
+# No cache for HTML, CSS, JS - force fresh content
 [[headers]]
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
-
-[[headers]]
-  for = "/plyvo.html"
-  [headers.values]
-    Content-Security-Policy = "script-src 'self' 'nonce-plyvo2025secure'; style-src 'self' 'nonce-plyvo2025secure' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.soltecsol.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.soltecsol.com; upgrade-insecure-requests;"
 
 [[headers]]
   for = "/*.css"
@@ -53,11 +61,13 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
+# Cache static assets
 [[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# API headers for CORS - Secure cross-domain authentication support
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
@@ -72,6 +82,7 @@
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
     Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.paypal.com https://js.paypal.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.gstatic.com https://app.soltecsol.com https://subscriptions.soltecsol.com https://signup.soltecsol.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.openai.com https://www.paypal.com; frame-src https://www.paypal.com; object-src 'none'; base-uri 'self'; form-action 'self' https://www.paypal.com; frame-ancestors 'none'; upgrade-insecure-requests"
 
+# Environment-specific settings
 [context.production.environment]
   NODE_ENV = "production"
 
@@ -80,3 +91,6 @@
 
 [context.branch-deploy.environment]
   NODE_ENV = "development"
+
+# Skip secret scanning for package-lock.json (contains dependency metadata with values matching env vars)
+# SECRETS_SCAN_OMIT_PATHS is configured in the [build.environment] section above

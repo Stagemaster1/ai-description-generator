@@ -535,11 +535,12 @@
     <!-- User info display (for debugging) -->
     <div id="userInfo" class="user-info"></div>
 
+    <!-- Navigation -->
+    <a href="https://plyvo.soltecsol.com" class="nav-link">
+        <span data-translate="backToApp">Back</span>
+    </a>
+
     <div class="container">
-        <!-- Navigation -->
-        <a href="https://plyvo.soltecsol.com" class="nav-link">
-            ← <span data-translate="backToApp">Back</span>
-        </a>
 
         <!-- Header Section -->
         <div class="header">
@@ -581,46 +582,19 @@
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-full" id="signupSubmit">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="agreementCheckbox">
+                            <span data-translate="agreementText">I agree to the <a href="tos.html" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="gdpr.html" target="_blank" rel="noopener noreferrer">GDPR Policy</a></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-full" id="signupSubmit" disabled>
                             <span id="signupButtonText" data-translate="createAccount">Create Account</span>
                             <span class="loading-spinner" id="signupSpinner"></span>
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- ToS Modal -->
-    <div class="modal-overlay" id="tosModal">
-        <div class="modal-content">
-            <h2 data-translate="tosTitle">Terms of Service</h2>
-            <div class="modal-body" id="tosContent">
-                <p data-translate="tosLoading">Loading Terms of Service...</p>
-            </div>
-            <div class="modal-footer">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="tosCheckbox">
-                    <span data-translate="tosAcceptLabel">I have read and accept the Terms of Service</span>
-                </label>
-                <button type="button" class="btn btn-primary" id="tosContinue" disabled data-translate="tosContinue">Continue</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- DPA/GDPR Modal -->
-    <div class="modal-overlay" id="dpaModal">
-        <div class="modal-content">
-            <h2 data-translate="dpaTitle">Data Protection Agreement</h2>
-            <div class="modal-body" id="dpaContent">
-                <p data-translate="dpaLoading">Loading Data Protection Agreement...</p>
-            </div>
-            <div class="modal-footer">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="dpaCheckbox">
-                    <span data-translate="dpaAcceptLabel">I have read and accept the Data Protection Agreement and GDPR terms</span>
-                </label>
-                <button type="button" class="btn btn-primary" id="dpaSubmit" disabled data-translate="dpaAcceptButton">Accept & Create Account</button>
             </div>
         </div>
     </div>
