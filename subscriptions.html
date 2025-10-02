@@ -693,14 +693,27 @@
                 renderPricingCards();
             });
 
-            // Fetch all plan IDs first
-            fetchPlanIds();
+            // Check authentication first
+            window.firebaseAuth.onAuthStateChanged((user) => {
+                if (!user) {
+                    // User not authenticated - redirect to signup
+                    console.log('User not authenticated - redirecting to signup');
+                    window.location.href = 'https://signup.soltecsol.com?redirect=subscriptions';
+                    return;
+                }
 
-            // Initial render
-            renderPricingCards();
+                console.log('User authenticated:', user.uid);
 
-            // Load PayPal SDK
-            loadPayPalSDK();
+                // User is authenticated - proceed with loading
+                // Fetch all plan IDs first
+                fetchPlanIds();
+
+                // Initial render
+                renderPricingCards();
+
+                // Load PayPal SDK
+                loadPayPalSDK();
+            });
 
             // Initialize language system from cookie
             if (typeof initializeLanguageSystem === 'function') {
