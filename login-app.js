@@ -42,14 +42,32 @@
         // Check user subscription status from Firestore
         async function checkUserStatus(userId) {
             try {
-                // TODO: Replace with actual Firestore query
-                // const userDoc = await getDoc(doc(db, 'users', userId));
-                // const userData = userDoc.data();
-                // return userData.status; // 'trial', 'starter', 'professional', 'enterprise'
-
-                // Placeholder - will be implemented with Firestore
                 console.log('Checking user status for:', userId);
-                return 'starter'; // Default for now
+
+                // Get Firebase ID token
+                const token = await window.tokenManager.getToken();
+
+                // Call serverless function to check user status
+                const response = await fetch(`/.netlify/functions/check-user-status?userId=${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.warn('User not found in Firestore');
+                        return null;
+                    }
+                    throw new Error(`Failed to check user status: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('User status:', result);
+
+                return result.status; // 'trial', 'starter', 'professional', 'enterprise'
+
             } catch (error) {
                 console.error('Error checking user status:', error);
                 return null;

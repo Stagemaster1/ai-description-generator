@@ -599,6 +599,42 @@
         </div>
     </div>
 
+    <!-- Plan Choice Modal -->
+    <div id="planChoiceModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 data-translate="welcomeChoosePlan">Welcome! Choose Your Plan</h2>
+            <div class="modal-body">
+                <p data-translate="emailVerifiedSuccess">Your email has been verified successfully! Now choose how you'd like to get started:</p>
+
+                <div style="display: grid; gap: 1.5rem; margin-top: 2rem;">
+                    <!-- Trial Option -->
+                    <div class="plan-option" style="border: 2px solid var(--primary-color); border-radius: 0.75rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s;" onclick="chooseTrial()">
+                        <h3 style="margin: 0 0 0.5rem 0; color: var(--primary-color);" data-translate="freeTrialTitle">🎯 Start Free Trial</h3>
+                        <p style="margin: 0 0 1rem 0; color: var(--text-secondary);" data-translate="freeTrialDesc">Try Plyvo with 3 free AI-generated product descriptions. No credit card required.</p>
+                        <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-primary);">
+                            <li data-translate="trial3Descriptions">3 AI-generated descriptions</li>
+                            <li data-translate="trialAllFeatures">Access to all features</li>
+                            <li data-translate="trialNoCard">No credit card needed</li>
+                        </ul>
+                        <button type="button" class="btn btn-primary btn-full" style="margin-top: 1rem;" data-translate="startTrialButton">Start Free Trial</button>
+                    </div>
+
+                    <!-- Subscribe Option -->
+                    <div class="plan-option" style="border: 2px solid var(--secondary-color); border-radius: 0.75rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s;" onclick="chooseSubscribe()">
+                        <h3 style="margin: 0 0 0.5rem 0; color: var(--secondary-color);" data-translate="subscribeTitle">⭐ Subscribe Now</h3>
+                        <p style="margin: 0 0 1rem 0; color: var(--text-secondary);" data-translate="subscribeDesc">Get unlimited descriptions with our flexible pricing plans starting at just $9.99/month.</p>
+                        <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-primary);">
+                            <li data-translate="subscribeUnlimited">Unlimited AI descriptions</li>
+                            <li data-translate="subscribePriority">Priority support</li>
+                            <li data-translate="subscribeAdvanced">Advanced features</li>
+                        </ul>
+                        <button type="button" class="btn btn-secondary btn-full" style="margin-top: 1rem; background: var(--secondary-color); color: white;" data-translate="viewPlansButton">View Plans & Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Core JavaScript Infrastructure -->
     <!-- Language System -->
     <script src="language-shared.js"></script>

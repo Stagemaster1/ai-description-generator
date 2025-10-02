@@ -25,17 +25,24 @@
                         // Update user info display
                         updateUserInfo();
 
-                        // Redirect to app on successful authentication with secure return URL handling
+                        // Check if user has verified email and needs to choose plan
                         if (user.emailVerified) {
-                            showNotification('Sign in successful! Redirecting...', 'success');
-                            setTimeout(() => {
-                                // Get and validate return URL securely
-                                const validatedReturnUrl = getValidatedReturnUrl();
+                            console.log('Email verified - checking if user needs to choose plan');
 
-                                // Clear stored return URL before redirect
+                            // Check if user already has a plan (exists in Firestore)
+                            const hasExistingPlan = await checkUserHasPlan(user.uid);
+
+                            if (hasExistingPlan) {
+                                // User already chose a plan, redirect accordingly
+                                console.log('User has existing plan, redirecting...');
+                                const validatedReturnUrl = getValidatedReturnUrl();
                                 sessionStorage.removeItem('auth_return_url');
                                 window.location.href = validatedReturnUrl;
-                            }, 2000);
+                            } else {
+                                // New verified user - show plan choice modal
+                                console.log('New verified user - showing plan choice modal');
+                                showPlanChoiceModal();
+                            }
                         } else {
                             showMessage('Please verify your email address before continuing.', 'warning');
                         }
@@ -654,6 +661,113 @@
 
         // Handle URL parameters when page loads
         handleUrlParams();
+
+        // Check if user already has a plan in Firestore
+        async function checkUserHasPlan(userId) {
+            try {
+                // Get Firebase ID token for authentication
+                const token = await window.tokenManager.getToken();
+
+                // Call serverless function to check Firestore
+                const response = await fetch(`/.netlify/functions/check-user-status?userId=${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        // User not found in Firestore - needs to choose plan
+                        return false;
+                    }
+                    throw new Error(`Failed to check user status: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('User status check result:', result);
+
+                // User exists in either Users or users collection
+                return result.exists === true;
+
+            } catch (error) {
+                console.error('Error checking user plan:', error);
+                // On error, assume user needs to choose plan to be safe
+                return false;
+            }
+        }
+
+        // Show plan choice modal
+        function showPlanChoiceModal() {
+            const modal = document.getElementById('planChoiceModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                console.log('Plan choice modal displayed');
+            } else {
+                console.error('Plan choice modal not found in DOM');
+            }
+        }
+
+        // Handle trial choice
+        async function chooseTrial() {
+            try {
+                console.log('User chose trial plan');
+
+                const modal = document.getElementById('planChoiceModal');
+                modal.style.display = 'none';
+
+                // Show loading message
+                showMessage('Creating your trial account...', 'info');
+
+                // Get Firebase ID token
+                const token = await window.tokenManager.getToken();
+
+                // Call serverless function to create trial user in Firestore
+                const response = await fetch('/.netlify/functions/create-trial-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        ipAddress: antiAbuse.ipAddress || 'unknown'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to create trial user: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('Trial user created:', result);
+
+                showMessage('Trial account activated! Redirecting to app...', 'success');
+
+                // Redirect to app after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'https://app.soltecsol.com';
+                }, 2000);
+
+            } catch (error) {
+                console.error('Error creating trial account:', error);
+                showMessage('Failed to activate trial. Please try again or contact support.', 'error');
+                // Show modal again
+                document.getElementById('planChoiceModal').style.display = 'flex';
+            }
+        }
+
+        // Handle subscribe choice
+        function chooseSubscribe() {
+            console.log('User chose to subscribe');
+            showMessage('Redirecting to subscription page...', 'info');
+            setTimeout(() => {
+                window.location.href = 'https://subscriptions.soltecsol.com';
+            }, 1000);
+        }
+
+        // Make functions globally accessible for onclick handlers
+        window.chooseTrial = chooseTrial;
+        window.chooseSubscribe = chooseSubscribe;
 
         // Initialize cross-subdomain language system
         function initializeLanguageSystem() {
