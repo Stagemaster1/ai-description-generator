@@ -163,7 +163,7 @@ const translations = {
   },
   de: {
     heroTitle: 'Plyvo — Worte, Perfektioniert.',
-    heroSubtitle: 'Steigern Sie Ihre Verkäufe und sparen Sie Stunden Arbeit. Plyvo erstellt überzeugende Produktbeschreibungen in Sekunden mit KI.',
+    heroSubtitle: 'Steigern Sie Ihre Verkaufszahlen und sparen Sie Stunden Arbeit. Plyvo erstellt überzeugende Produktbeschreibungen in Sekunden mit KI.',
     ctaButton: 'Kostenlos Testen',
     appName: 'SolTecSol KI Generator',
     monthlyUsage: 'Monatliche Nutzung: 32 von 50 Beschreibungen',
@@ -222,7 +222,7 @@ const translations = {
     backToHomepage: '← Zurück zur Startseite',
     // Signup page translations
     signupTitle: 'Konto Erstellen',
-    signupSubtitle: 'Treten Sie SolTecSol bei und schalten Sie KI-gestützte Produktbeschreibungsgenerierung frei',
+    signupSubtitle: 'Melden Sie sich bei SolTecSol an und schalten Sie KI-gestützte Produktbeschreibungsgenerierung frei',
     backToApp: 'Zurück',
     emailLabel: 'E-Mail-Adresse',
     emailPlaceholder: 'Geben Sie Ihre E-Mail-Adresse ein',
