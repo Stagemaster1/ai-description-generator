@@ -358,15 +358,15 @@
                 <div class="stats">
                     <div class="stat-card">
                         <div class="stat-value" id="starterSubs">0</div>
-                        <div class="stat-label">Starter ($19.99)</div>
+                        <div class="stat-label">Starter ($22.99)</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="professionalSubs">0</div>
-                        <div class="stat-label">Professional ($49.99)</div>
+                        <div class="stat-label">Professional ($79.99)</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="enterpriseSubs">0</div>
-                        <div class="stat-label">Enterprise ($99.99)</div>
+                        <div class="stat-label">Enterprise ($299.99)</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="estimatedOpenAICost">$0</div>
@@ -543,7 +543,7 @@
             const professionalSubs = users.filter(u => u.subscriptionType === 'professional').length;
             const enterpriseSubs = users.filter(u => u.subscriptionType === 'enterprise').length;
             
-            const monthlyRevenue = (starterSubs * 19.99) + (professionalSubs * 49.99) + (enterpriseSubs * 99.99);
+            const monthlyRevenue = (starterSubs * 22.99) + (professionalSubs * 79.99) + (enterpriseSubs * 299.99);
             
             // Estimate OpenAI costs (rough calculation)
             const totalDescriptionsPerMonth = (starterSubs * 50) + (professionalSubs * 200) + (enterpriseSubs * 500);
